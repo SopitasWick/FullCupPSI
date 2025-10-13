@@ -1,0 +1,165 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Entidades;
+
+import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ *
+ * @author usuario
+ */
+@Entity
+@Table(name = "producto")
+@NamedQueries({
+    @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
+    @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto"),
+    @NamedQuery(name = "Producto.findByNombreProducto", query = "SELECT p FROM Producto p WHERE p.nombreProducto = :nombreProducto"),
+    @NamedQuery(name = "Producto.findByPrecioProducto", query = "SELECT p FROM Producto p WHERE p.precioProducto = :precioProducto"),
+    @NamedQuery(name = "Producto.findByCantidadDisponibleproducto", query = "SELECT p FROM Producto p WHERE p.cantidadDisponibleproducto = :cantidadDisponibleproducto"),
+    @NamedQuery(name = "Producto.findByUnidadMedidaproducto", query = "SELECT p FROM Producto p WHERE p.unidadMedidaproducto = :unidadMedidaproducto")})
+public class Producto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "idProducto")
+    private Integer idProducto;
+    @Column(name = "nombre_producto")
+    private String nombreProducto;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "precio_producto")
+    private Float precioProducto;
+    @Column(name = "cantidadDisponible_producto")
+    private Integer cantidadDisponibleproducto;
+    @Column(name = "unidadMedida_producto")
+    private String unidadMedidaproducto;
+    @OneToMany(mappedBy = "idProducto")
+    private List<Promocioncantidad> promocioncantidadList;
+    @OneToMany(mappedBy = "idProducto")
+    private List<Detallecomanda> detallecomandaList;
+    @OneToMany(mappedBy = "idProducto")
+    private List<Promocionporcentaje> promocionporcentajeList;
+    @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
+    @ManyToOne
+    private Categoria idCategoria;
+
+    public Producto() {
+    }
+
+    public Producto(Integer idProducto, String nombreProducto,Float precioProducto) {
+        this.idProducto = idProducto;
+        this.nombreProducto = nombreProducto;
+        this.precioProducto = precioProducto;
+    }
+
+    public Integer getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(Integer idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public Float getPrecioProducto() {
+        return precioProducto;
+    }
+
+    public void setPrecioProducto(Float precioProducto) {
+        this.precioProducto = precioProducto;
+    }
+
+    public Integer getCantidadDisponibleproducto() {
+        return cantidadDisponibleproducto;
+    }
+
+    public void setCantidadDisponibleproducto(Integer cantidadDisponibleproducto) {
+        this.cantidadDisponibleproducto = cantidadDisponibleproducto;
+    }
+
+    public String getUnidadMedidaproducto() {
+        return unidadMedidaproducto;
+    }
+
+    public void setUnidadMedidaproducto(String unidadMedidaproducto) {
+        this.unidadMedidaproducto = unidadMedidaproducto;
+    }
+
+    public List<Promocioncantidad> getPromocioncantidadList() {
+        return promocioncantidadList;
+    }
+
+    public void setPromocioncantidadList(List<Promocioncantidad> promocioncantidadList) {
+        this.promocioncantidadList = promocioncantidadList;
+    }
+
+    public List<Detallecomanda> getDetallecomandaList() {
+        return detallecomandaList;
+    }
+
+    public void setDetallecomandaList(List<Detallecomanda> detallecomandaList) {
+        this.detallecomandaList = detallecomandaList;
+    }
+
+    public List<Promocionporcentaje> getPromocionporcentajeList() {
+        return promocionporcentajeList;
+    }
+
+    public void setPromocionporcentajeList(List<Promocionporcentaje> promocionporcentajeList) {
+        this.promocionporcentajeList = promocionporcentajeList;
+    }
+
+    public Categoria getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Categoria idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idProducto != null ? idProducto.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Producto)) {
+            return false;
+        }
+        Producto other = (Producto) object;
+        if ((this.idProducto == null && other.idProducto != null) || (this.idProducto != null && !this.idProducto.equals(other.idProducto))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Entidades.Producto[ idProducto=" + idProducto + " ]";
+    }
+    
+}
