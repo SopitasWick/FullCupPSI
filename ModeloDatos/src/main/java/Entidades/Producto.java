@@ -47,11 +47,9 @@ public class Producto implements Serializable {
     @Column(name = "unidadMedida_producto")
     private String unidadMedidaproducto;
     @OneToMany(mappedBy = "idProducto")
-    private List<Promocioncantidad> promocioncantidadList;
+    private List<Promocion> promocionList;
     @OneToMany(mappedBy = "idProducto")
     private List<Detallecomanda> detallecomandaList;
-    @OneToMany(mappedBy = "idProducto")
-    private List<Promocionporcentaje> promocionporcentajeList;
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
     @ManyToOne
     private Categoria idCategoria;
@@ -59,11 +57,24 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-    public Producto(Integer idProducto, String nombreProducto,Float precioProducto) {
+    public Producto(Integer idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public Producto(Integer idProducto,String nombre,float precio) {
+        this.idProducto = idProducto;
+        this.nombreProducto=nombre;
+        this.precioProducto=precio;
+    }
+
+    public Producto(Integer idProducto, String nombreProducto, Float precioProducto, Integer cantidadDisponibleproducto, String unidadMedidaproducto) {
         this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;
         this.precioProducto = precioProducto;
+        this.cantidadDisponibleproducto = cantidadDisponibleproducto;
+        this.unidadMedidaproducto = unidadMedidaproducto;
     }
+    
 
     public Integer getIdProducto() {
         return idProducto;
@@ -105,12 +116,12 @@ public class Producto implements Serializable {
         this.unidadMedidaproducto = unidadMedidaproducto;
     }
 
-    public List<Promocioncantidad> getPromocioncantidadList() {
-        return promocioncantidadList;
+    public List<Promocion> getPromocionList() {
+        return promocionList;
     }
 
-    public void setPromocioncantidadList(List<Promocioncantidad> promocioncantidadList) {
-        this.promocioncantidadList = promocioncantidadList;
+    public void setPromocionList(List<Promocion> promocionList) {
+        this.promocionList = promocionList;
     }
 
     public List<Detallecomanda> getDetallecomandaList() {
@@ -119,14 +130,6 @@ public class Producto implements Serializable {
 
     public void setDetallecomandaList(List<Detallecomanda> detallecomandaList) {
         this.detallecomandaList = detallecomandaList;
-    }
-
-    public List<Promocionporcentaje> getPromocionporcentajeList() {
-        return promocionporcentajeList;
-    }
-
-    public void setPromocionporcentajeList(List<Promocionporcentaje> promocionporcentajeList) {
-        this.promocionporcentajeList = promocionporcentajeList;
     }
 
     public Categoria getIdCategoria() {

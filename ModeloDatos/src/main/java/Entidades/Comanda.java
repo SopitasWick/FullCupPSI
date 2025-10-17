@@ -31,8 +31,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Comanda.findByIdComanda", query = "SELECT c FROM Comanda c WHERE c.idComanda = :idComanda"),
     @NamedQuery(name = "Comanda.findByFechaHoracomanda", query = "SELECT c FROM Comanda c WHERE c.fechaHoracomanda = :fechaHoracomanda"),
     @NamedQuery(name = "Comanda.findByEstadoComanda", query = "SELECT c FROM Comanda c WHERE c.estadoComanda = :estadoComanda"),
-    @NamedQuery(name = "Comanda.findByTotalComanda", query = "SELECT c FROM Comanda c WHERE c.totalComanda = :totalComanda"),
-    @NamedQuery(name = "Comanda.findByCantidadComanda", query = "SELECT c FROM Comanda c WHERE c.cantidadComanda = :cantidadComanda")})
+    @NamedQuery(name = "Comanda.findByTotalComanda", query = "SELECT c FROM Comanda c WHERE c.totalComanda = :totalComanda")})
 public class Comanda implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,8 +47,6 @@ public class Comanda implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "total_comanda")
     private Float totalComanda;
-    @Column(name = "cantidad_comanda")
-    private Integer cantidadComanda;
     @OneToMany(mappedBy = "idComanda")
     private List<Venta> ventaList;
     @OneToMany(mappedBy = "idComanda")
@@ -65,6 +62,13 @@ public class Comanda implements Serializable {
         this.idComanda = idComanda;
     }
 
+    public Comanda(Integer idComanda, Date fechaHoracomanda, String estadoComanda, Float totalComanda) {
+        this.idComanda = idComanda;
+        this.fechaHoracomanda = fechaHoracomanda;
+        this.estadoComanda = estadoComanda;
+        this.totalComanda = totalComanda;
+    }
+  
     public Integer getIdComanda() {
         return idComanda;
     }
@@ -95,14 +99,6 @@ public class Comanda implements Serializable {
 
     public void setTotalComanda(Float totalComanda) {
         this.totalComanda = totalComanda;
-    }
-
-    public Integer getCantidadComanda() {
-        return cantidadComanda;
-    }
-
-    public void setCantidadComanda(Integer cantidadComanda) {
-        this.cantidadComanda = cantidadComanda;
     }
 
     public List<Venta> getVentaList() {

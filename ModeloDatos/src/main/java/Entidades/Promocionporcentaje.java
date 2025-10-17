@@ -5,7 +5,6 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -27,11 +24,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Promocionporcentaje.findAll", query = "SELECT p FROM Promocionporcentaje p"),
     @NamedQuery(name = "Promocionporcentaje.findByIdPromocionPorcentaje", query = "SELECT p FROM Promocionporcentaje p WHERE p.idPromocionPorcentaje = :idPromocionPorcentaje"),
-    @NamedQuery(name = "Promocionporcentaje.findByDescripcion", query = "SELECT p FROM Promocionporcentaje p WHERE p.descripcion = :descripcion"),
-    @NamedQuery(name = "Promocionporcentaje.findByPorcentaje", query = "SELECT p FROM Promocionporcentaje p WHERE p.porcentaje = :porcentaje"),
-    @NamedQuery(name = "Promocionporcentaje.findByFechaCreacion", query = "SELECT p FROM Promocionporcentaje p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "Promocionporcentaje.findByFechaInicio", query = "SELECT p FROM Promocionporcentaje p WHERE p.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "Promocionporcentaje.findByFechaFin", query = "SELECT p FROM Promocionporcentaje p WHERE p.fechaFin = :fechaFin")})
+    @NamedQuery(name = "Promocionporcentaje.findByPorcentajeGratis", query = "SELECT p FROM Promocionporcentaje p WHERE p.porcentajeGratis = :porcentajeGratis")})
 public class Promocionporcentaje implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,23 +32,12 @@ public class Promocionporcentaje implements Serializable {
     @Basic(optional = false)
     @Column(name = "idPromocionPorcentaje")
     private Integer idPromocionPorcentaje;
-    @Column(name = "descripcion")
-    private String descripcion;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "porcentaje")
-    private Float porcentaje;
-    @Column(name = "fechaCreacion")
-    @Temporal(TemporalType.DATE)
-    private Date fechaCreacion;
-    @Column(name = "fechaInicio")
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
-    @Column(name = "fechaFin")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
-    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
+    @Column(name = "porcentajeGratis")
+    private Float porcentajeGratis;
+    @JoinColumn(name = "idPromocion", referencedColumnName = "idPromocion")
     @ManyToOne
-    private Producto idProducto;
+    private Promocion idPromocion;
 
     public Promocionporcentaje() {
     }
@@ -72,52 +54,20 @@ public class Promocionporcentaje implements Serializable {
         this.idPromocionPorcentaje = idPromocionPorcentaje;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public Float getPorcentajeGratis() {
+        return porcentajeGratis;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setPorcentajeGratis(Float porcentajeGratis) {
+        this.porcentajeGratis = porcentajeGratis;
     }
 
-    public Float getPorcentaje() {
-        return porcentaje;
+    public Promocion getIdPromocion() {
+        return idPromocion;
     }
 
-    public void setPorcentaje(Float porcentaje) {
-        this.porcentaje = porcentaje;
-    }
-
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public Producto getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(Producto idProducto) {
-        this.idProducto = idProducto;
+    public void setIdPromocion(Promocion idPromocion) {
+        this.idPromocion = idPromocion;
     }
 
     @Override

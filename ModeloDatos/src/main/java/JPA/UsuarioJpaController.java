@@ -13,11 +13,13 @@ import Entidades.Cajaefectivo;
 import java.util.ArrayList;
 import java.util.List;
 import Entidades.Comanda;
+import Entidades.Rol;
 import Entidades.Usuario;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -25,10 +27,9 @@ import javax.persistence.EntityManagerFactory;
  */
 public class UsuarioJpaController implements Serializable {
 
-    public UsuarioJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public UsuarioJpaController() {
     }
-    private EntityManagerFactory emf = null;
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -40,6 +41,9 @@ public class UsuarioJpaController implements Serializable {
         }
         if (usuario.getComandaList() == null) {
             usuario.setComandaList(new ArrayList<Comanda>());
+        }
+        if (usuario.getRolList() == null) {
+            usuario.setRolList(new ArrayList<Rol>());
         }
         EntityManager em = null;
         try {
@@ -57,6 +61,12 @@ public class UsuarioJpaController implements Serializable {
                 attachedComandaList.add(comandaListComandaToAttach);
             }
             usuario.setComandaList(attachedComandaList);
+            List<Rol> attachedRolList = new ArrayList<Rol>();
+            for (Rol rolListRolToAttach : usuario.getRolList()) {
+                rolListRolToAttach = em.getReference(rolListRolToAttach.getClass(), rolListRolToAttach.getIdRol());
+                attachedRolList.add(rolListRolToAttach);
+            }
+            usuario.setRolList(attachedRolList);
             em.persist(usuario);
             for (Cajaefectivo cajaefectivoListCajaefectivo : usuario.getCajaefectivoList()) {
                 Usuario oldIdUsuarioOfCajaefectivoListCajaefectivo = cajaefectivoListCajaefectivo.getIdUsuario();
@@ -74,6 +84,15 @@ public class UsuarioJpaController implements Serializable {
                 if (oldIdUsuarioOfComandaListComanda != null) {
                     oldIdUsuarioOfComandaListComanda.getComandaList().remove(comandaListComanda);
                     oldIdUsuarioOfComandaListComanda = em.merge(oldIdUsuarioOfComandaListComanda);
+                }
+            }
+            for (Rol rolListRol : usuario.getRolList()) {
+                Usuario oldIdUsuarioOfRolListRol = rolListRol.getIdUsuario();
+                rolListRol.setIdUsuario(usuario);
+                rolListRol = em.merge(rolListRol);
+                if (oldIdUsuarioOfRolListRol != null) {
+                    oldIdUsuarioOfRolListRol.getRolList().remove(rolListRol);
+                    oldIdUsuarioOfRolListRol = em.merge(oldIdUsuarioOfRolListRol);
                 }
             }
             em.getTransaction().commit();
@@ -99,6 +118,8 @@ public class UsuarioJpaController implements Serializable {
             List<Cajaefectivo> cajaefectivoListNew = usuario.getCajaefectivoList();
             List<Comanda> comandaListOld = persistentUsuario.getComandaList();
             List<Comanda> comandaListNew = usuario.getComandaList();
+            List<Rol> rolListOld = persistentUsuario.getRolList();
+            List<Rol> rolListNew = usuario.getRolList();
             List<Cajaefectivo> attachedCajaefectivoListNew = new ArrayList<Cajaefectivo>();
             for (Cajaefectivo cajaefectivoListNewCajaefectivoToAttach : cajaefectivoListNew) {
                 cajaefectivoListNewCajaefectivoToAttach = em.getReference(cajaefectivoListNewCajaefectivoToAttach.getClass(), cajaefectivoListNewCajaefectivoToAttach.getIdCorte());
@@ -113,6 +134,13 @@ public class UsuarioJpaController implements Serializable {
             }
             comandaListNew = attachedComandaListNew;
             usuario.setComandaList(comandaListNew);
+            List<Rol> attachedRolListNew = new ArrayList<Rol>();
+            for (Rol rolListNewRolToAttach : rolListNew) {
+                rolListNewRolToAttach = em.getReference(rolListNewRolToAttach.getClass(), rolListNewRolToAttach.getIdRol());
+                attachedRolListNew.add(rolListNewRolToAttach);
+            }
+            rolListNew = attachedRolListNew;
+            usuario.setRolList(rolListNew);
             usuario = em.merge(usuario);
             for (Cajaefectivo cajaefectivoListOldCajaefectivo : cajaefectivoListOld) {
                 if (!cajaefectivoListNew.contains(cajaefectivoListOldCajaefectivo)) {
@@ -145,6 +173,23 @@ public class UsuarioJpaController implements Serializable {
                     if (oldIdUsuarioOfComandaListNewComanda != null && !oldIdUsuarioOfComandaListNewComanda.equals(usuario)) {
                         oldIdUsuarioOfComandaListNewComanda.getComandaList().remove(comandaListNewComanda);
                         oldIdUsuarioOfComandaListNewComanda = em.merge(oldIdUsuarioOfComandaListNewComanda);
+                    }
+                }
+            }
+            for (Rol rolListOldRol : rolListOld) {
+                if (!rolListNew.contains(rolListOldRol)) {
+                    rolListOldRol.setIdUsuario(null);
+                    rolListOldRol = em.merge(rolListOldRol);
+                }
+            }
+            for (Rol rolListNewRol : rolListNew) {
+                if (!rolListOld.contains(rolListNewRol)) {
+                    Usuario oldIdUsuarioOfRolListNewRol = rolListNewRol.getIdUsuario();
+                    rolListNewRol.setIdUsuario(usuario);
+                    rolListNewRol = em.merge(rolListNewRol);
+                    if (oldIdUsuarioOfRolListNewRol != null && !oldIdUsuarioOfRolListNewRol.equals(usuario)) {
+                        oldIdUsuarioOfRolListNewRol.getRolList().remove(rolListNewRol);
+                        oldIdUsuarioOfRolListNewRol = em.merge(oldIdUsuarioOfRolListNewRol);
                     }
                 }
             }
@@ -186,6 +231,11 @@ public class UsuarioJpaController implements Serializable {
             for (Comanda comandaListComanda : comandaList) {
                 comandaListComanda.setIdUsuario(null);
                 comandaListComanda = em.merge(comandaListComanda);
+            }
+            List<Rol> rolList = usuario.getRolList();
+            for (Rol rolListRol : rolList) {
+                rolListRol.setIdUsuario(null);
+                rolListRol = em.merge(rolListRol);
             }
             em.remove(usuario);
             em.getTransaction().commit();

@@ -55,6 +55,15 @@ public class Detallecomanda implements Serializable {
         this.idDetalleComanda = idDetalleComanda;
     }
 
+    public Detallecomanda(Integer idDetalleComanda, Integer caintidaddetalleComanda, Float subTotaldetalleComanda, Comanda idComanda, Producto idProducto) {
+        this.idDetalleComanda = idDetalleComanda;
+        this.caintidaddetalleComanda = caintidaddetalleComanda;
+        this.subTotaldetalleComanda = subTotaldetalleComanda;
+        this.idComanda = idComanda;
+        this.idProducto = idProducto;
+    }
+    
+
     public Integer getIdDetalleComanda() {
         return idDetalleComanda;
     }

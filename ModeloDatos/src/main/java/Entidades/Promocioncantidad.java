@@ -5,7 +5,6 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -27,12 +24,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Promocioncantidad.findAll", query = "SELECT p FROM Promocioncantidad p"),
     @NamedQuery(name = "Promocioncantidad.findByIdPromocionCantidad", query = "SELECT p FROM Promocioncantidad p WHERE p.idPromocionCantidad = :idPromocionCantidad"),
-    @NamedQuery(name = "Promocioncantidad.findByDescripcion", query = "SELECT p FROM Promocioncantidad p WHERE p.descripcion = :descripcion"),
-    @NamedQuery(name = "Promocioncantidad.findByCantidadRequerida", query = "SELECT p FROM Promocioncantidad p WHERE p.cantidadRequerida = :cantidadRequerida"),
-    @NamedQuery(name = "Promocioncantidad.findByCantidadGratis", query = "SELECT p FROM Promocioncantidad p WHERE p.cantidadGratis = :cantidadGratis"),
-    @NamedQuery(name = "Promocioncantidad.findByFechaCreacion", query = "SELECT p FROM Promocioncantidad p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "Promocioncantidad.findByFechaInicio", query = "SELECT p FROM Promocioncantidad p WHERE p.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "Promocioncantidad.findByFechaFin", query = "SELECT p FROM Promocioncantidad p WHERE p.fechaFin = :fechaFin")})
+    @NamedQuery(name = "Promocioncantidad.findByCantidadGratis", query = "SELECT p FROM Promocioncantidad p WHERE p.cantidadGratis = :cantidadGratis")})
 public class Promocioncantidad implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,24 +32,12 @@ public class Promocioncantidad implements Serializable {
     @Basic(optional = false)
     @Column(name = "idPromocionCantidad")
     private Integer idPromocionCantidad;
-    @Column(name = "descripcion")
-    private String descripcion;
-    @Column(name = "cantidadRequerida")
-    private Integer cantidadRequerida;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "cantidadGratis")
-    private Integer cantidadGratis;
-    @Column(name = "fechaCreacion")
-    @Temporal(TemporalType.DATE)
-    private Date fechaCreacion;
-    @Column(name = "fechaInicio")
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
-    @Column(name = "fechaFin")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
-    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
+    private Float cantidadGratis;
+    @JoinColumn(name = "idPromocion", referencedColumnName = "idPromocion")
     @ManyToOne
-    private Producto idProducto;
+    private Promocion idPromocion;
 
     public Promocioncantidad() {
     }
@@ -74,60 +54,20 @@ public class Promocioncantidad implements Serializable {
         this.idPromocionCantidad = idPromocionCantidad;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Integer getCantidadRequerida() {
-        return cantidadRequerida;
-    }
-
-    public void setCantidadRequerida(Integer cantidadRequerida) {
-        this.cantidadRequerida = cantidadRequerida;
-    }
-
-    public Integer getCantidadGratis() {
+    public Float getCantidadGratis() {
         return cantidadGratis;
     }
 
-    public void setCantidadGratis(Integer cantidadGratis) {
+    public void setCantidadGratis(Float cantidadGratis) {
         this.cantidadGratis = cantidadGratis;
     }
 
-    public Date getFechaCreacion() {
-        return fechaCreacion;
+    public Promocion getIdPromocion() {
+        return idPromocion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public Producto getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(Producto idProducto) {
-        this.idProducto = idProducto;
+    public void setIdPromocion(Promocion idPromocion) {
+        this.idPromocion = idPromocion;
     }
 
     @Override

@@ -10,14 +10,13 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Comanda;
-import Entidades.Cajaefectivo;
 import Entidades.Venta;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -25,19 +24,16 @@ import javax.persistence.EntityManagerFactory;
  */
 public class VentaJpaController implements Serializable {
 
-    public VentaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public VentaJpaController() {
     }
-    private EntityManagerFactory emf = null;
+    
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
     public void create(Venta venta) throws PreexistingEntityException, Exception {
-        if (venta.getCajaefectivoList() == null) {
-            venta.setCajaefectivoList(new ArrayList<Cajaefectivo>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -47,25 +43,10 @@ public class VentaJpaController implements Serializable {
                 idComanda = em.getReference(idComanda.getClass(), idComanda.getIdComanda());
                 venta.setIdComanda(idComanda);
             }
-            List<Cajaefectivo> attachedCajaefectivoList = new ArrayList<Cajaefectivo>();
-            for (Cajaefectivo cajaefectivoListCajaefectivoToAttach : venta.getCajaefectivoList()) {
-                cajaefectivoListCajaefectivoToAttach = em.getReference(cajaefectivoListCajaefectivoToAttach.getClass(), cajaefectivoListCajaefectivoToAttach.getIdCorte());
-                attachedCajaefectivoList.add(cajaefectivoListCajaefectivoToAttach);
-            }
-            venta.setCajaefectivoList(attachedCajaefectivoList);
             em.persist(venta);
             if (idComanda != null) {
                 idComanda.getVentaList().add(venta);
                 idComanda = em.merge(idComanda);
-            }
-            for (Cajaefectivo cajaefectivoListCajaefectivo : venta.getCajaefectivoList()) {
-                Venta oldIdVentaOfCajaefectivoListCajaefectivo = cajaefectivoListCajaefectivo.getIdVenta();
-                cajaefectivoListCajaefectivo.setIdVenta(venta);
-                cajaefectivoListCajaefectivo = em.merge(cajaefectivoListCajaefectivo);
-                if (oldIdVentaOfCajaefectivoListCajaefectivo != null) {
-                    oldIdVentaOfCajaefectivoListCajaefectivo.getCajaefectivoList().remove(cajaefectivoListCajaefectivo);
-                    oldIdVentaOfCajaefectivoListCajaefectivo = em.merge(oldIdVentaOfCajaefectivoListCajaefectivo);
-                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -88,19 +69,10 @@ public class VentaJpaController implements Serializable {
             Venta persistentVenta = em.find(Venta.class, venta.getIdVenta());
             Comanda idComandaOld = persistentVenta.getIdComanda();
             Comanda idComandaNew = venta.getIdComanda();
-            List<Cajaefectivo> cajaefectivoListOld = persistentVenta.getCajaefectivoList();
-            List<Cajaefectivo> cajaefectivoListNew = venta.getCajaefectivoList();
             if (idComandaNew != null) {
                 idComandaNew = em.getReference(idComandaNew.getClass(), idComandaNew.getIdComanda());
                 venta.setIdComanda(idComandaNew);
             }
-            List<Cajaefectivo> attachedCajaefectivoListNew = new ArrayList<Cajaefectivo>();
-            for (Cajaefectivo cajaefectivoListNewCajaefectivoToAttach : cajaefectivoListNew) {
-                cajaefectivoListNewCajaefectivoToAttach = em.getReference(cajaefectivoListNewCajaefectivoToAttach.getClass(), cajaefectivoListNewCajaefectivoToAttach.getIdCorte());
-                attachedCajaefectivoListNew.add(cajaefectivoListNewCajaefectivoToAttach);
-            }
-            cajaefectivoListNew = attachedCajaefectivoListNew;
-            venta.setCajaefectivoList(cajaefectivoListNew);
             venta = em.merge(venta);
             if (idComandaOld != null && !idComandaOld.equals(idComandaNew)) {
                 idComandaOld.getVentaList().remove(venta);
@@ -109,23 +81,6 @@ public class VentaJpaController implements Serializable {
             if (idComandaNew != null && !idComandaNew.equals(idComandaOld)) {
                 idComandaNew.getVentaList().add(venta);
                 idComandaNew = em.merge(idComandaNew);
-            }
-            for (Cajaefectivo cajaefectivoListOldCajaefectivo : cajaefectivoListOld) {
-                if (!cajaefectivoListNew.contains(cajaefectivoListOldCajaefectivo)) {
-                    cajaefectivoListOldCajaefectivo.setIdVenta(null);
-                    cajaefectivoListOldCajaefectivo = em.merge(cajaefectivoListOldCajaefectivo);
-                }
-            }
-            for (Cajaefectivo cajaefectivoListNewCajaefectivo : cajaefectivoListNew) {
-                if (!cajaefectivoListOld.contains(cajaefectivoListNewCajaefectivo)) {
-                    Venta oldIdVentaOfCajaefectivoListNewCajaefectivo = cajaefectivoListNewCajaefectivo.getIdVenta();
-                    cajaefectivoListNewCajaefectivo.setIdVenta(venta);
-                    cajaefectivoListNewCajaefectivo = em.merge(cajaefectivoListNewCajaefectivo);
-                    if (oldIdVentaOfCajaefectivoListNewCajaefectivo != null && !oldIdVentaOfCajaefectivoListNewCajaefectivo.equals(venta)) {
-                        oldIdVentaOfCajaefectivoListNewCajaefectivo.getCajaefectivoList().remove(cajaefectivoListNewCajaefectivo);
-                        oldIdVentaOfCajaefectivoListNewCajaefectivo = em.merge(oldIdVentaOfCajaefectivoListNewCajaefectivo);
-                    }
-                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -160,11 +115,6 @@ public class VentaJpaController implements Serializable {
             if (idComanda != null) {
                 idComanda.getVentaList().remove(venta);
                 idComanda = em.merge(idComanda);
-            }
-            List<Cajaefectivo> cajaefectivoList = venta.getCajaefectivoList();
-            for (Cajaefectivo cajaefectivoListCajaefectivo : cajaefectivoList) {
-                cajaefectivoListCajaefectivo.setIdVenta(null);
-                cajaefectivoListCajaefectivo = em.merge(cajaefectivoListCajaefectivo);
             }
             em.remove(venta);
             em.getTransaction().commit();

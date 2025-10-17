@@ -53,9 +53,6 @@ public class Cajaefectivo implements Serializable {
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
     @ManyToOne
     private Usuario idUsuario;
-    @JoinColumn(name = "idVenta", referencedColumnName = "idVenta")
-    @ManyToOne
-    private Venta idVenta;
 
     public Cajaefectivo() {
     }
@@ -126,14 +123,6 @@ public class Cajaefectivo implements Serializable {
 
     public void setIdUsuario(Usuario idUsuario) {
         this.idUsuario = idUsuario;
-    }
-
-    public Venta getIdVenta() {
-        return idVenta;
-    }
-
-    public void setIdVenta(Venta idVenta) {
-        this.idVenta = idVenta;
     }
 
     @Override

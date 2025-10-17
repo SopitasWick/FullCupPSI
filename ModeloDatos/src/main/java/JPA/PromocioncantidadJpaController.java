@@ -9,13 +9,14 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entidades.Producto;
+import Entidades.Promocion;
 import Entidades.Promocioncantidad;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -23,10 +24,9 @@ import javax.persistence.EntityManagerFactory;
  */
 public class PromocioncantidadJpaController implements Serializable {
 
-    public PromocioncantidadJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public PromocioncantidadJpaController() {
     }
-    private EntityManagerFactory emf = null;
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -37,15 +37,15 @@ public class PromocioncantidadJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Producto idProducto = promocioncantidad.getIdProducto();
-            if (idProducto != null) {
-                idProducto = em.getReference(idProducto.getClass(), idProducto.getIdProducto());
-                promocioncantidad.setIdProducto(idProducto);
+            Promocion idPromocion = promocioncantidad.getIdPromocion();
+            if (idPromocion != null) {
+                idPromocion = em.getReference(idPromocion.getClass(), idPromocion.getIdPromocion());
+                promocioncantidad.setIdPromocion(idPromocion);
             }
             em.persist(promocioncantidad);
-            if (idProducto != null) {
-                idProducto.getPromocioncantidadList().add(promocioncantidad);
-                idProducto = em.merge(idProducto);
+            if (idPromocion != null) {
+                idPromocion.getPromocioncantidadList().add(promocioncantidad);
+                idPromocion = em.merge(idPromocion);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -66,20 +66,20 @@ public class PromocioncantidadJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Promocioncantidad persistentPromocioncantidad = em.find(Promocioncantidad.class, promocioncantidad.getIdPromocionCantidad());
-            Producto idProductoOld = persistentPromocioncantidad.getIdProducto();
-            Producto idProductoNew = promocioncantidad.getIdProducto();
-            if (idProductoNew != null) {
-                idProductoNew = em.getReference(idProductoNew.getClass(), idProductoNew.getIdProducto());
-                promocioncantidad.setIdProducto(idProductoNew);
+            Promocion idPromocionOld = persistentPromocioncantidad.getIdPromocion();
+            Promocion idPromocionNew = promocioncantidad.getIdPromocion();
+            if (idPromocionNew != null) {
+                idPromocionNew = em.getReference(idPromocionNew.getClass(), idPromocionNew.getIdPromocion());
+                promocioncantidad.setIdPromocion(idPromocionNew);
             }
             promocioncantidad = em.merge(promocioncantidad);
-            if (idProductoOld != null && !idProductoOld.equals(idProductoNew)) {
-                idProductoOld.getPromocioncantidadList().remove(promocioncantidad);
-                idProductoOld = em.merge(idProductoOld);
+            if (idPromocionOld != null && !idPromocionOld.equals(idPromocionNew)) {
+                idPromocionOld.getPromocioncantidadList().remove(promocioncantidad);
+                idPromocionOld = em.merge(idPromocionOld);
             }
-            if (idProductoNew != null && !idProductoNew.equals(idProductoOld)) {
-                idProductoNew.getPromocioncantidadList().add(promocioncantidad);
-                idProductoNew = em.merge(idProductoNew);
+            if (idPromocionNew != null && !idPromocionNew.equals(idPromocionOld)) {
+                idPromocionNew.getPromocioncantidadList().add(promocioncantidad);
+                idPromocionNew = em.merge(idPromocionNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -110,10 +110,10 @@ public class PromocioncantidadJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The promocioncantidad with id " + id + " no longer exists.", enfe);
             }
-            Producto idProducto = promocioncantidad.getIdProducto();
-            if (idProducto != null) {
-                idProducto.getPromocioncantidadList().remove(promocioncantidad);
-                idProducto = em.merge(idProducto);
+            Promocion idPromocion = promocioncantidad.getIdPromocion();
+            if (idPromocion != null) {
+                idPromocion.getPromocioncantidadList().remove(promocioncantidad);
+                idPromocion = em.merge(idPromocion);
             }
             em.remove(promocioncantidad);
             em.getTransaction().commit();

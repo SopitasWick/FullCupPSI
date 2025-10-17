@@ -25,8 +25,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
     @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario"),
     @NamedQuery(name = "Usuario.findByNombreUsuario", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario"),
-    @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password"),
-    @NamedQuery(name = "Usuario.findByRol", query = "SELECT u FROM Usuario u WHERE u.rol = :rol")})
+    @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,12 +37,12 @@ public class Usuario implements Serializable {
     private String nombreUsuario;
     @Column(name = "password")
     private String password;
-    @Column(name = "rol")
-    private String rol;
     @OneToMany(mappedBy = "idUsuario")
     private List<Cajaefectivo> cajaefectivoList;
     @OneToMany(mappedBy = "idUsuario")
     private List<Comanda> comandaList;
+    @OneToMany(mappedBy = "idUsuario")
+    private List<Rol> rolList;
 
     public Usuario() {
     }
@@ -76,14 +75,6 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
     public List<Cajaefectivo> getCajaefectivoList() {
         return cajaefectivoList;
     }
@@ -98,6 +89,14 @@ public class Usuario implements Serializable {
 
     public void setComandaList(List<Comanda> comandaList) {
         this.comandaList = comandaList;
+    }
+
+    public List<Rol> getRolList() {
+        return rolList;
+    }
+
+    public void setRolList(List<Rol> rolList) {
+        this.rolList = rolList;
     }
 
     @Override

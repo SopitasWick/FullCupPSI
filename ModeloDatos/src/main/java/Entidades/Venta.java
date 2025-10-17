@@ -6,7 +6,6 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -50,8 +48,6 @@ public class Venta implements Serializable {
     @JoinColumn(name = "idComanda", referencedColumnName = "idComanda")
     @ManyToOne
     private Comanda idComanda;
-    @OneToMany(mappedBy = "idVenta")
-    private List<Cajaefectivo> cajaefectivoList;
 
     public Venta() {
     }
@@ -98,14 +94,6 @@ public class Venta implements Serializable {
 
     public void setIdComanda(Comanda idComanda) {
         this.idComanda = idComanda;
-    }
-
-    public List<Cajaefectivo> getCajaefectivoList() {
-        return cajaefectivoList;
-    }
-
-    public void setCajaefectivoList(List<Cajaefectivo> cajaefectivoList) {
-        this.cajaefectivoList = cajaefectivoList;
     }
 
     @Override

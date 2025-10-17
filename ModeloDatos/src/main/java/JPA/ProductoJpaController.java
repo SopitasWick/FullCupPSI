@@ -10,12 +10,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Categoria;
-import Entidades.Promocioncantidad;
+import Entidades.Promocion;
 import java.util.ArrayList;
 import java.util.List;
 import Entidades.Detallecomanda;
 import Entidades.Producto;
-import Entidades.Promocionporcentaje;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
 import javax.persistence.EntityManager;
@@ -29,6 +28,7 @@ import javax.persistence.Persistence;
 public class ProductoJpaController implements Serializable {
 
     public ProductoJpaController() {
+        
     }
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
@@ -37,14 +37,11 @@ public class ProductoJpaController implements Serializable {
     }
 
     public void create(Producto producto) throws PreexistingEntityException, Exception {
-        if (producto.getPromocioncantidadList() == null) {
-            producto.setPromocioncantidadList(new ArrayList<Promocioncantidad>());
+        if (producto.getPromocionList() == null) {
+            producto.setPromocionList(new ArrayList<Promocion>());
         }
         if (producto.getDetallecomandaList() == null) {
             producto.setDetallecomandaList(new ArrayList<Detallecomanda>());
-        }
-        if (producto.getPromocionporcentajeList() == null) {
-            producto.setPromocionporcentajeList(new ArrayList<Promocionporcentaje>());
         }
         EntityManager em = null;
         try {
@@ -55,36 +52,30 @@ public class ProductoJpaController implements Serializable {
                 idCategoria = em.getReference(idCategoria.getClass(), idCategoria.getIdCategoria());
                 producto.setIdCategoria(idCategoria);
             }
-            List<Promocioncantidad> attachedPromocioncantidadList = new ArrayList<Promocioncantidad>();
-            for (Promocioncantidad promocioncantidadListPromocioncantidadToAttach : producto.getPromocioncantidadList()) {
-                promocioncantidadListPromocioncantidadToAttach = em.getReference(promocioncantidadListPromocioncantidadToAttach.getClass(), promocioncantidadListPromocioncantidadToAttach.getIdPromocionCantidad());
-                attachedPromocioncantidadList.add(promocioncantidadListPromocioncantidadToAttach);
+            List<Promocion> attachedPromocionList = new ArrayList<Promocion>();
+            for (Promocion promocionListPromocionToAttach : producto.getPromocionList()) {
+                promocionListPromocionToAttach = em.getReference(promocionListPromocionToAttach.getClass(), promocionListPromocionToAttach.getIdPromocion());
+                attachedPromocionList.add(promocionListPromocionToAttach);
             }
-            producto.setPromocioncantidadList(attachedPromocioncantidadList);
+            producto.setPromocionList(attachedPromocionList);
             List<Detallecomanda> attachedDetallecomandaList = new ArrayList<Detallecomanda>();
             for (Detallecomanda detallecomandaListDetallecomandaToAttach : producto.getDetallecomandaList()) {
                 detallecomandaListDetallecomandaToAttach = em.getReference(detallecomandaListDetallecomandaToAttach.getClass(), detallecomandaListDetallecomandaToAttach.getIdDetalleComanda());
                 attachedDetallecomandaList.add(detallecomandaListDetallecomandaToAttach);
             }
             producto.setDetallecomandaList(attachedDetallecomandaList);
-            List<Promocionporcentaje> attachedPromocionporcentajeList = new ArrayList<Promocionporcentaje>();
-            for (Promocionporcentaje promocionporcentajeListPromocionporcentajeToAttach : producto.getPromocionporcentajeList()) {
-                promocionporcentajeListPromocionporcentajeToAttach = em.getReference(promocionporcentajeListPromocionporcentajeToAttach.getClass(), promocionporcentajeListPromocionporcentajeToAttach.getIdPromocionPorcentaje());
-                attachedPromocionporcentajeList.add(promocionporcentajeListPromocionporcentajeToAttach);
-            }
-            producto.setPromocionporcentajeList(attachedPromocionporcentajeList);
             em.persist(producto);
             if (idCategoria != null) {
                 idCategoria.getProductoList().add(producto);
                 idCategoria = em.merge(idCategoria);
             }
-            for (Promocioncantidad promocioncantidadListPromocioncantidad : producto.getPromocioncantidadList()) {
-                Producto oldIdProductoOfPromocioncantidadListPromocioncantidad = promocioncantidadListPromocioncantidad.getIdProducto();
-                promocioncantidadListPromocioncantidad.setIdProducto(producto);
-                promocioncantidadListPromocioncantidad = em.merge(promocioncantidadListPromocioncantidad);
-                if (oldIdProductoOfPromocioncantidadListPromocioncantidad != null) {
-                    oldIdProductoOfPromocioncantidadListPromocioncantidad.getPromocioncantidadList().remove(promocioncantidadListPromocioncantidad);
-                    oldIdProductoOfPromocioncantidadListPromocioncantidad = em.merge(oldIdProductoOfPromocioncantidadListPromocioncantidad);
+            for (Promocion promocionListPromocion : producto.getPromocionList()) {
+                Producto oldIdProductoOfPromocionListPromocion = promocionListPromocion.getIdProducto();
+                promocionListPromocion.setIdProducto(producto);
+                promocionListPromocion = em.merge(promocionListPromocion);
+                if (oldIdProductoOfPromocionListPromocion != null) {
+                    oldIdProductoOfPromocionListPromocion.getPromocionList().remove(promocionListPromocion);
+                    oldIdProductoOfPromocionListPromocion = em.merge(oldIdProductoOfPromocionListPromocion);
                 }
             }
             for (Detallecomanda detallecomandaListDetallecomanda : producto.getDetallecomandaList()) {
@@ -94,15 +85,6 @@ public class ProductoJpaController implements Serializable {
                 if (oldIdProductoOfDetallecomandaListDetallecomanda != null) {
                     oldIdProductoOfDetallecomandaListDetallecomanda.getDetallecomandaList().remove(detallecomandaListDetallecomanda);
                     oldIdProductoOfDetallecomandaListDetallecomanda = em.merge(oldIdProductoOfDetallecomandaListDetallecomanda);
-                }
-            }
-            for (Promocionporcentaje promocionporcentajeListPromocionporcentaje : producto.getPromocionporcentajeList()) {
-                Producto oldIdProductoOfPromocionporcentajeListPromocionporcentaje = promocionporcentajeListPromocionporcentaje.getIdProducto();
-                promocionporcentajeListPromocionporcentaje.setIdProducto(producto);
-                promocionporcentajeListPromocionporcentaje = em.merge(promocionporcentajeListPromocionporcentaje);
-                if (oldIdProductoOfPromocionporcentajeListPromocionporcentaje != null) {
-                    oldIdProductoOfPromocionporcentajeListPromocionporcentaje.getPromocionporcentajeList().remove(promocionporcentajeListPromocionporcentaje);
-                    oldIdProductoOfPromocionporcentajeListPromocionporcentaje = em.merge(oldIdProductoOfPromocionporcentajeListPromocionporcentaje);
                 }
             }
             em.getTransaction().commit();
@@ -119,120 +101,36 @@ public class ProductoJpaController implements Serializable {
     }
 
     public void edit(Producto producto) throws NonexistentEntityException, Exception {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Producto persistentProducto = em.find(Producto.class, producto.getIdProducto());
-            Categoria idCategoriaOld = persistentProducto.getIdCategoria();
-            Categoria idCategoriaNew = producto.getIdCategoria();
-            List<Promocioncantidad> promocioncantidadListOld = persistentProducto.getPromocioncantidadList();
-            List<Promocioncantidad> promocioncantidadListNew = producto.getPromocioncantidadList();
-            List<Detallecomanda> detallecomandaListOld = persistentProducto.getDetallecomandaList();
-            List<Detallecomanda> detallecomandaListNew = producto.getDetallecomandaList();
-            List<Promocionporcentaje> promocionporcentajeListOld = persistentProducto.getPromocionporcentajeList();
-            List<Promocionporcentaje> promocionporcentajeListNew = producto.getPromocionporcentajeList();
-            if (idCategoriaNew != null) {
-                idCategoriaNew = em.getReference(idCategoriaNew.getClass(), idCategoriaNew.getIdCategoria());
-                producto.setIdCategoria(idCategoriaNew);
-            }
-            List<Promocioncantidad> attachedPromocioncantidadListNew = new ArrayList<Promocioncantidad>();
-            for (Promocioncantidad promocioncantidadListNewPromocioncantidadToAttach : promocioncantidadListNew) {
-                promocioncantidadListNewPromocioncantidadToAttach = em.getReference(promocioncantidadListNewPromocioncantidadToAttach.getClass(), promocioncantidadListNewPromocioncantidadToAttach.getIdPromocionCantidad());
-                attachedPromocioncantidadListNew.add(promocioncantidadListNewPromocioncantidadToAttach);
-            }
-            promocioncantidadListNew = attachedPromocioncantidadListNew;
-            producto.setPromocioncantidadList(promocioncantidadListNew);
-            List<Detallecomanda> attachedDetallecomandaListNew = new ArrayList<Detallecomanda>();
-            for (Detallecomanda detallecomandaListNewDetallecomandaToAttach : detallecomandaListNew) {
-                detallecomandaListNewDetallecomandaToAttach = em.getReference(detallecomandaListNewDetallecomandaToAttach.getClass(), detallecomandaListNewDetallecomandaToAttach.getIdDetalleComanda());
-                attachedDetallecomandaListNew.add(detallecomandaListNewDetallecomandaToAttach);
-            }
-            detallecomandaListNew = attachedDetallecomandaListNew;
-            producto.setDetallecomandaList(detallecomandaListNew);
-            List<Promocionporcentaje> attachedPromocionporcentajeListNew = new ArrayList<Promocionporcentaje>();
-            for (Promocionporcentaje promocionporcentajeListNewPromocionporcentajeToAttach : promocionporcentajeListNew) {
-                promocionporcentajeListNewPromocionporcentajeToAttach = em.getReference(promocionporcentajeListNewPromocionporcentajeToAttach.getClass(), promocionporcentajeListNewPromocionporcentajeToAttach.getIdPromocionPorcentaje());
-                attachedPromocionporcentajeListNew.add(promocionporcentajeListNewPromocionporcentajeToAttach);
-            }
-            promocionporcentajeListNew = attachedPromocionporcentajeListNew;
-            producto.setPromocionporcentajeList(promocionporcentajeListNew);
-            producto = em.merge(producto);
-            if (idCategoriaOld != null && !idCategoriaOld.equals(idCategoriaNew)) {
-                idCategoriaOld.getProductoList().remove(producto);
-                idCategoriaOld = em.merge(idCategoriaOld);
-            }
-            if (idCategoriaNew != null && !idCategoriaNew.equals(idCategoriaOld)) {
-                idCategoriaNew.getProductoList().add(producto);
-                idCategoriaNew = em.merge(idCategoriaNew);
-            }
-            for (Promocioncantidad promocioncantidadListOldPromocioncantidad : promocioncantidadListOld) {
-                if (!promocioncantidadListNew.contains(promocioncantidadListOldPromocioncantidad)) {
-                    promocioncantidadListOldPromocioncantidad.setIdProducto(null);
-                    promocioncantidadListOldPromocioncantidad = em.merge(promocioncantidadListOldPromocioncantidad);
-                }
-            }
-            for (Promocioncantidad promocioncantidadListNewPromocioncantidad : promocioncantidadListNew) {
-                if (!promocioncantidadListOld.contains(promocioncantidadListNewPromocioncantidad)) {
-                    Producto oldIdProductoOfPromocioncantidadListNewPromocioncantidad = promocioncantidadListNewPromocioncantidad.getIdProducto();
-                    promocioncantidadListNewPromocioncantidad.setIdProducto(producto);
-                    promocioncantidadListNewPromocioncantidad = em.merge(promocioncantidadListNewPromocioncantidad);
-                    if (oldIdProductoOfPromocioncantidadListNewPromocioncantidad != null && !oldIdProductoOfPromocioncantidadListNewPromocioncantidad.equals(producto)) {
-                        oldIdProductoOfPromocioncantidadListNewPromocioncantidad.getPromocioncantidadList().remove(promocioncantidadListNewPromocioncantidad);
-                        oldIdProductoOfPromocioncantidadListNewPromocioncantidad = em.merge(oldIdProductoOfPromocioncantidadListNewPromocioncantidad);
-                    }
-                }
-            }
-            for (Detallecomanda detallecomandaListOldDetallecomanda : detallecomandaListOld) {
-                if (!detallecomandaListNew.contains(detallecomandaListOldDetallecomanda)) {
-                    detallecomandaListOldDetallecomanda.setIdProducto(null);
-                    detallecomandaListOldDetallecomanda = em.merge(detallecomandaListOldDetallecomanda);
-                }
-            }
-            for (Detallecomanda detallecomandaListNewDetallecomanda : detallecomandaListNew) {
-                if (!detallecomandaListOld.contains(detallecomandaListNewDetallecomanda)) {
-                    Producto oldIdProductoOfDetallecomandaListNewDetallecomanda = detallecomandaListNewDetallecomanda.getIdProducto();
-                    detallecomandaListNewDetallecomanda.setIdProducto(producto);
-                    detallecomandaListNewDetallecomanda = em.merge(detallecomandaListNewDetallecomanda);
-                    if (oldIdProductoOfDetallecomandaListNewDetallecomanda != null && !oldIdProductoOfDetallecomandaListNewDetallecomanda.equals(producto)) {
-                        oldIdProductoOfDetallecomandaListNewDetallecomanda.getDetallecomandaList().remove(detallecomandaListNewDetallecomanda);
-                        oldIdProductoOfDetallecomandaListNewDetallecomanda = em.merge(oldIdProductoOfDetallecomandaListNewDetallecomanda);
-                    }
-                }
-            }
-            for (Promocionporcentaje promocionporcentajeListOldPromocionporcentaje : promocionporcentajeListOld) {
-                if (!promocionporcentajeListNew.contains(promocionporcentajeListOldPromocionporcentaje)) {
-                    promocionporcentajeListOldPromocionporcentaje.setIdProducto(null);
-                    promocionporcentajeListOldPromocionporcentaje = em.merge(promocionporcentajeListOldPromocionporcentaje);
-                }
-            }
-            for (Promocionporcentaje promocionporcentajeListNewPromocionporcentaje : promocionporcentajeListNew) {
-                if (!promocionporcentajeListOld.contains(promocionporcentajeListNewPromocionporcentaje)) {
-                    Producto oldIdProductoOfPromocionporcentajeListNewPromocionporcentaje = promocionporcentajeListNewPromocionporcentaje.getIdProducto();
-                    promocionporcentajeListNewPromocionporcentaje.setIdProducto(producto);
-                    promocionporcentajeListNewPromocionporcentaje = em.merge(promocionporcentajeListNewPromocionporcentaje);
-                    if (oldIdProductoOfPromocionporcentajeListNewPromocionporcentaje != null && !oldIdProductoOfPromocionporcentajeListNewPromocionporcentaje.equals(producto)) {
-                        oldIdProductoOfPromocionporcentajeListNewPromocionporcentaje.getPromocionporcentajeList().remove(promocionporcentajeListNewPromocionporcentaje);
-                        oldIdProductoOfPromocionporcentajeListNewPromocionporcentaje = em.merge(oldIdProductoOfPromocionporcentajeListNewPromocionporcentaje);
-                    }
-                }
-            }
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                Integer id = producto.getIdProducto();
-                if (findProducto(id) == null) {
-                    throw new NonexistentEntityException("The producto with id " + id + " no longer exists.");
-                }
-            }
-            throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+    EntityManager em = getEntityManager();
+    try {
+        em.getTransaction().begin();
+
+        // 1. Verificar si el objeto existe antes de intentar actualizarlo (opcional pero recomendado)
+        // Usamos findProducto() que asumo está definido en tu JpaController.
+        if (findProducto(producto.getIdProducto()) == null) {
+            Integer id = producto.getIdProducto();
+            throw new NonexistentEntityException("El producto con el id;  " + id + " no existe");
+        }
+        
+        // 2. Usar em.merge() para actualizar el objeto
+        // Esta línea busca la entidad por el ID del objeto 'producto' y aplica los nuevos valores.
+        em.merge(producto);
+        
+        em.getTransaction().commit();
+
+    } catch (Exception ex) {
+        if (em.getTransaction().isActive()) {
+            em.getTransaction().rollback();
+        }
+        // La excepción NonexistentEntityException ya la manejamos arriba
+        // para lanzar el error específico si el objeto no se encuentra.
+        throw ex;
+    } finally {
+        if (em != null) {
+            em.close();
         }
     }
+}
 
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
@@ -251,20 +149,15 @@ public class ProductoJpaController implements Serializable {
                 idCategoria.getProductoList().remove(producto);
                 idCategoria = em.merge(idCategoria);
             }
-            List<Promocioncantidad> promocioncantidadList = producto.getPromocioncantidadList();
-            for (Promocioncantidad promocioncantidadListPromocioncantidad : promocioncantidadList) {
-                promocioncantidadListPromocioncantidad.setIdProducto(null);
-                promocioncantidadListPromocioncantidad = em.merge(promocioncantidadListPromocioncantidad);
+            List<Promocion> promocionList = producto.getPromocionList();
+            for (Promocion promocionListPromocion : promocionList) {
+                promocionListPromocion.setIdProducto(null);
+                promocionListPromocion = em.merge(promocionListPromocion);
             }
             List<Detallecomanda> detallecomandaList = producto.getDetallecomandaList();
             for (Detallecomanda detallecomandaListDetallecomanda : detallecomandaList) {
                 detallecomandaListDetallecomanda.setIdProducto(null);
                 detallecomandaListDetallecomanda = em.merge(detallecomandaListDetallecomanda);
-            }
-            List<Promocionporcentaje> promocionporcentajeList = producto.getPromocionporcentajeList();
-            for (Promocionporcentaje promocionporcentajeListPromocionporcentaje : promocionporcentajeList) {
-                promocionporcentajeListPromocionporcentaje.setIdProducto(null);
-                promocionporcentajeListPromocionporcentaje = em.merge(promocionporcentajeListPromocionporcentaje);
             }
             em.remove(producto);
             em.getTransaction().commit();

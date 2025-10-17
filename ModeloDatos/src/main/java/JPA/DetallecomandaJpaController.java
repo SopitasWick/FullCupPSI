@@ -17,6 +17,7 @@ import JPA.exceptions.PreexistingEntityException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -24,10 +25,9 @@ import javax.persistence.EntityManagerFactory;
  */
 public class DetallecomandaJpaController implements Serializable {
 
-    public DetallecomandaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public DetallecomandaJpaController() {
     }
-    private EntityManagerFactory emf = null;
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -24,10 +25,10 @@ import javax.persistence.EntityManagerFactory;
  */
 public class CategoriaJpaController implements Serializable {
 
-    public CategoriaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public CategoriaJpaController() {
+        
     }
-    private EntityManagerFactory emf = null;
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
