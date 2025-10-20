@@ -1,1 +1,7 @@
 /ModeloDatos/target/
+# Sistema operativo - macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+/Vista/target/
