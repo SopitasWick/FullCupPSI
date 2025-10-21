@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
  */
 public class ModeloDatos {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         //CONTROLADORES NECESARIOS**********************************************
         //ProductoJpaController jpaProducto = new ProductoJpaController();
         ComandaJpaController jpaComanda = new ComandaJpaController();
@@ -50,6 +50,7 @@ public class ModeloDatos {
             System.out.println("=================================");
             System.out.println("1. Agregar Comanda nueva");
             System.out.println("2. Eliminar Comanda");
+            System.out.println("3. Editar Comanda");
             System.out.println("0. Salir");
             System.out.print("Selecciona una opción: ");
             opcion = entrada.nextInt();
@@ -257,9 +258,163 @@ public class ModeloDatos {
                     break;
                 default:
                     System.out.println("⚠️ Opción no válida, intenta de nuevo.");
+
+                    break;
+
+                case 3: // EDITAR COMANDA
+                    ComandaJpaController comJpaEditar = new ComandaJpaController();
+                    DetallecomandaJpaController detJpaEditar = new DetallecomandaJpaController();
+                    ProductoJpaController prodJpaEditar = new ProductoJpaController();
+
+                    // Mostrar comandas activas
+                    List<Comanda> comandasEditar = comJpaEditar.findComandaEntities()
+                            .stream()
+                            .filter(c -> !"Eliminado".equalsIgnoreCase(c.getEstadoComanda()))
+                            .toList();
+
+                    if (comandasEditar.isEmpty()) {
+                        System.out.println("\nNo hay comandas disponibles para editar.");
+                        break;
+                    }
+
+                    System.out.println("\n--- COMANDAS DISPONIBLES PARA EDITAR ---");
+                    for (Comanda c : comandasEditar) {
+                        System.out.println("ID: " + c.getIdComanda()
+                                + " | Fecha: " + c.getFechaHoracomanda()
+                                + " | Estado: " + c.getEstadoComanda()
+                                + " | Total: " + c.getTotalComanda());
+                    }
+
+                    System.out.print("\nIngrese el ID de la comanda que desea editar: ");
+                    int idEditar = entrada.nextInt();
+
+                    Comanda comandaEditar = comJpaEditar.findComanda(idEditar);
+
+                    if (comandaEditar == null) {
+                        System.out.println("No existe una comanda con ese ID.");
+                        break;
+                    }
+
+                    // Mostrar detalles actuales
+                    List<Detallecomanda> detallesActuales = detJpaEditar.findDetallecomandaEntities()
+                            .stream()
+                            .filter(d -> d.getIdComanda().getIdComanda() == idEditar)
+                            .toList();
+
+                    System.out.println("\n--- DETALLES ACTUALES DE LA COMANDA ---");
+                    for (Detallecomanda d : detallesActuales) {
+                        Producto p = d.getIdProducto();
+                        System.out.println("ID Detalle: " + d.getIdDetalleComanda()
+                                + " | Producto: " + p.getNombreProducto()
+                                + " | Subtotal: " + d.getSubTotaldetalleComanda()
+                                + " | Cantidad: " + d.getCaintidaddetalleComanda());
+                    }
+
+                    System.out.println("\n¿Qué desea hacer?");
+                    System.out.println("1. Agregar producto nuevo");
+                    System.out.println("2. Eliminar producto de la comanda");
+                    System.out.println("3. Cambiar estado (Abierta / Cerrada)");
+                    System.out.println("0. Cancelar edición");
+                    System.out.print("Seleccione una opción: ");
+                    int opEditar = entrada.nextInt();
+
+                    switch (opEditar) {
+                        case 1:
+                            // Agregar nuevo producto
+                            System.out.println("\n--- PRODUCTOS DISPONIBLES ---");
+                            System.out.println("1. Coca cola 600");
+                            System.out.println("2. Café americano 12oz");
+                            System.out.println("3. Muffin");
+                            System.out.print("Seleccione un producto: ");
+                            int prodSel = entrada.nextInt();
+
+                            Producto nuevoProd = new Producto();
+                            float precio = 0;
+                            switch (prodSel) {
+                                case 1:
+                                    nuevoProd = prodJpaEditar.findProducto(1);
+                                    precio = 50;
+                                    break;
+                                case 2:
+                                    nuevoProd = prodJpaEditar.findProducto(2);
+                                    precio = 50;
+                                    break;
+                                case 3:
+                                    nuevoProd = prodJpaEditar.findProducto(3);
+                                    precio = 25;
+                                    break;
+                                default:
+                                    System.out.println("Opción no válida.");
+                                    break;
+                            }
+
+                            if (nuevoProd != null) {
+                                Detallecomanda nuevoDetalle = new Detallecomanda();
+                                nuevoDetalle.setIdDetalleComanda(detJpaEditar.getDetallecomandaCount() + 1);
+                                nuevoDetalle.setIdComanda(comandaEditar);
+                                nuevoDetalle.setIdProducto(nuevoProd);
+                                nuevoDetalle.setSubTotaldetalleComanda(precio);
+                                nuevoDetalle.setCaintidaddetalleComanda(1);
+                                detJpaEditar.create(nuevoDetalle);
+
+                                // Actualizar total
+                                comandaEditar.setTotalComanda(comandaEditar.getTotalComanda() + precio);
+                                comJpaEditar.edit(comandaEditar);
+
+                                System.out.println("Producto agregado correctamente.");
+                            }
+                            break;
+
+                        case 2:
+                            // Eliminar producto específico
+                            System.out.print("Ingrese el ID del detalle a eliminar: ");
+                            int idDetalleEliminar = entrada.nextInt();
+
+                            Detallecomanda detalleEliminar = detJpaEditar.findDetallecomanda(idDetalleEliminar);
+                            if (detalleEliminar == null) {
+                                System.out.println("No existe un detalle con ese ID.");
+                                break;
+                            }
+
+                            float subtotalEliminado = detalleEliminar.getSubTotaldetalleComanda();
+                            try {
+                                detJpaEditar.destroy(idDetalleEliminar);
+                                comandaEditar.setTotalComanda(comandaEditar.getTotalComanda() - subtotalEliminado);
+                                comJpaEditar.edit(comandaEditar);
+                                System.out.println("Producto eliminado correctamente.");
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ModeloDatos.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ModeloDatos.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+
+                        case 3:
+                            System.out.println("Estado actual: " + comandaEditar.getEstadoComanda());
+                            System.out.print("Nuevo estado (Abierta/Cerrada): ");
+                            String nuevoEstado = entrada.next();
+                            comandaEditar.setEstadoComanda(nuevoEstado);
+                            try {
+                                comJpaEditar.edit(comandaEditar);
+                                System.out.println("Estado actualizado correctamente.");
+                            } catch (Exception ex) {
+                                Logger.getLogger(ModeloDatos.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+
+                        case 0:
+                            System.out.println("Cancelando edición...");
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                    }
+                    break;
+
             }
 
             System.out.println(); // Salto de línea
+            break;
+
         } while (opcion != 0);
 
     }
