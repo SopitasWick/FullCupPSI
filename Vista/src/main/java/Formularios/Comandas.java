@@ -273,8 +273,8 @@ public class Comandas extends javax.swing.JFrame {
 
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
-        DetallesProducto detalles = new DetallesProducto();
-        detalles.setVisible(true);
+        ListaProductos listaProductos = new ListaProductos();
+        listaProductos.setVisible(true);
     }//GEN-LAST:event_btnNuevaComandaActionPerformed
 
     /**
