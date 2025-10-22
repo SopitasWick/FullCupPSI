@@ -44,7 +44,6 @@ public class Comandas extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(242, 243, 245));
         jPanel1.setMaximumSize(new java.awt.Dimension(1440, 1024));
         jPanel1.setPreferredSize(new java.awt.Dimension(1440, 1024));
-        jPanel1.setSize(new java.awt.Dimension(1440, 1024));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setAutoscrolls(true);
@@ -96,7 +95,7 @@ public class Comandas extends javax.swing.JFrame {
                         .addGap(144, 144, 144)
                         .addComponent(btnNuevaComanda))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,7 +219,7 @@ public class Comandas extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
