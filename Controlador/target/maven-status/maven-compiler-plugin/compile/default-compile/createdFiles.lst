@@ -1,3 +1,5 @@
-Interfaces\IComandaControlador.class
+Interfaces\IProductoControlador.class
+Controlador\ProductoControlador.class
 Controlador\ComandaControlador.class
+Interfaces\IComandaControlador.class
 pruebas\Pruebas.class

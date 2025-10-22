@@ -1,12 +1,54 @@
 package Formularios;
 
+import Controlador.ComandaControlador;
+import Entidades.Comanda;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 public class Comandas extends javax.swing.JFrame {
 
+    
+    List<Comanda> comandas = new ArrayList<>();
+    
     /**
      * Creates new form frmComandas
      */
     public Comandas() {
         initComponents();
+        
+        
+        cargarComandas();
+    }
+    
+    
+    
+    private void cargarComandas(){
+        
+        ComandaControlador comandaJPA = new ComandaControlador();
+        
+        comandas = comandaJPA.obtenerTodasLasComandas();
+        
+        
+        
+        DefaultTableModel modelo = (DefaultTableModel) tblComandasActivas.getModel();
+
+        modelo.setRowCount(0);
+    
+        
+        for(int i = 0; i < comandas.size(); i++){
+                    
+            Object[] fila = {
+                comandas.get(i).getIdComanda(),
+                comandas.get(i).getDetallecomandaList().size(),
+                comandas.get(i).getFechaHoracomanda(),
+                comandas.get(i).getTotalComanda()
+            };
+            modelo.addRow(fila);        
+                    
+        }
+        
+    
     }
 
     /**
@@ -63,7 +105,6 @@ public class Comandas extends javax.swing.JFrame {
             }
         });
 
-        tblComandasActivas.setBackground(new java.awt.Color(255, 255, 255));
         tblComandasActivas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -95,7 +136,7 @@ public class Comandas extends javax.swing.JFrame {
                         .addGap(144, 144, 144)
                         .addComponent(btnNuevaComanda))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,13 +174,10 @@ public class Comandas extends javax.swing.JFrame {
         jLabel1.setAlignmentX(16.0F);
         jLabel1.setAlignmentY(0.0F);
 
-        txtNombreCajero.setForeground(new java.awt.Color(0, 0, 0));
         txtNombreCajero.setText("Nombre");
 
-        txtCaja.setForeground(new java.awt.Color(0, 0, 0));
         txtCaja.setText("Caja");
 
-        txtTurno.setForeground(new java.awt.Color(0, 0, 0));
         txtTurno.setText("Turno");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -181,7 +219,6 @@ public class Comandas extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(55, 65, 81));
         jLabel3.setText("Comandas completadas");
 
-        tblComandasCompletadas.setBackground(new java.awt.Color(255, 255, 255));
         tblComandasCompletadas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -238,11 +275,11 @@ public class Comandas extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(105, 105, 105)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(390, Short.MAX_VALUE))
+                .addContainerGap(312, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

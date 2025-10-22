@@ -1,14 +1,151 @@
 package Formularios;
 
+import Controlador.ProductoControlador;
+import Entidades.Comanda;
+import Entidades.Detallecomanda;
+import Entidades.Producto;
+import Interfaces.IProductoControlador;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 public class ListaProductos extends javax.swing.JFrame {
+    
+    
+    List<Producto> todosLosProductos;
+    
+    
+    public static Comanda comanda = new Comanda();
+    public static List<Detallecomanda> detalleComanda = new ArrayList<>();
+    
+    DetallesProducto detalle;
+    
 
     /**
      * Creates new form frmListaProductos
      */
     public ListaProductos() {
         initComponents();
+        
+        
+        buscarProductos();
     }
 
+    
+    
+    public void buscarProductos(){
+    
+        IProductoControlador ProductoControl = new ProductoControlador();
+        
+        todosLosProductos = ProductoControl.obtenerTodosLosProductos();
+        
+        System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
+        
+        llenarTablaProductos();
+        
+    
+    }
+    
+    
+    
+    public void llenarTablaProductos(){
+        
+        DefaultTableModel modelo = (DefaultTableModel) tblProductos.getModel();
+
+        modelo.setRowCount(0);
+    
+        
+        for (Producto p : todosLosProductos) {
+            Object[] fila = {
+                p.getNombreProducto(),          // o p.getNombreProducto()
+                "nada",     // o p.getDescripcionProducto()
+                p.getPrecioProducto()// o p.getPrecioProducto()
+            };
+            modelo.addRow(fila);
+        }
+        
+        
+        
+        tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 1) {
+                    JTable target = (JTable) evt.getSource();
+                    int filaSeleccionada = target.getSelectedRow();
+
+                    if (filaSeleccionada != -1) {
+                        String nombre = target.getValueAt(filaSeleccionada, 0).toString();
+                        String descripcion = target.getValueAt(filaSeleccionada, 1).toString();
+                        float precio = Float.parseFloat(target.getValueAt(filaSeleccionada, 2).toString());
+
+                        Producto producto = new Producto();
+                        
+                        for (Producto p : todosLosProductos){
+                            if (p.getNombreProducto().equals(nombre) && p.getPrecioProducto() == precio){
+                                producto = p;
+                            }
+                        }
+                        
+                        detalle = new DetallesProducto(ListaProductos.this, producto);
+                        detalle.setVisible(true);
+                        
+                        ListaProductos.this.setVisible(false);
+
+                    }
+                }
+            }
+        });
+        
+    }
+    
+    
+    
+    public void llenarItemsComanda(){
+        
+        DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
+
+        modelo.setRowCount(0);
+    
+        
+        for(int i = 0; i < detalleComanda.size(); i++){
+                    
+            Object[] fila = {
+                detalleComanda.get(i).getIdProducto().getNombreProducto(),
+                "nada",     // o p.getDescripcionProducto()
+                detalleComanda.get(i).getCaintidaddetalleComanda(),
+                detalleComanda.get(i).getIdProducto().getPrecioProducto()
+            };
+            modelo.addRow(fila);        
+                    
+        }
+        
+        calcularTotal();
+ 
+    }
+    
+    
+    private void calcularTotal(){
+        
+        float total = 0;
+        
+        DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            int cantidad = (int) modelo.getValueAt(i, 2);
+            float precio = (float) modelo.getValueAt(i, 3);
+
+            total = total + (cantidad * precio);
+        }
+        
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+        
+    }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -94,7 +231,7 @@ public class ListaProductos extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(1216, Short.MAX_VALUE))
+                .addContainerGap(1213, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,8 +245,6 @@ public class ListaProductos extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        txtBuscarProductos.setBackground(new java.awt.Color(255, 255, 255));
-        txtBuscarProductos.setForeground(new java.awt.Color(0, 0, 0));
         txtBuscarProductos.setText("Buscar productos...");
         txtBuscarProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,7 +269,6 @@ public class ListaProductos extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(242, 243, 245));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
         jPanel4.setPreferredSize(new java.awt.Dimension(500, 200));
-        jPanel4.setSize(new java.awt.Dimension(501, 500));
 
         jLabel4.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(17, 24, 39));
@@ -142,7 +276,6 @@ public class ListaProductos extends javax.swing.JFrame {
         jLabel4.setAlignmentX(16.0F);
         jLabel4.setAlignmentY(0.0F);
 
-        tblitems.setBackground(new java.awt.Color(255, 255, 255));
         tblitems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -202,7 +335,7 @@ public class ListaProductos extends javax.swing.JFrame {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(111, 111, 111)
                                 .addComponent(btnModificar)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,7 +350,7 @@ public class ListaProductos extends javax.swing.JFrame {
                     .addComponent(btnSumar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnModificar)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
@@ -229,7 +362,6 @@ public class ListaProductos extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(107, 114, 128));
         jLabel3.setText("Cliente");
 
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
         jTextField1.setText("Nombre del cliente");
 
         btnParaLlevar.setBackground(new java.awt.Color(31, 41, 55));
@@ -250,21 +382,17 @@ public class ListaProductos extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(75, 85, 99));
         jLabel6.setText("Impuestos:");
 
-        txtSubtotal.setForeground(new java.awt.Color(0, 0, 0));
         txtSubtotal.setText("$7.75");
 
-        txtimpuestos.setForeground(new java.awt.Color(0, 0, 0));
-        txtimpuestos.setText("$0.78");
+        txtimpuestos.setText("$0.00");
 
         jLabel7.setForeground(new java.awt.Color(229, 231, 225));
         jLabel7.setText("________________________________________________________________");
 
         jLabel8.setFont(new java.awt.Font("Helvetica Neue", 1, 17)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Total:");
 
         txtTotal.setFont(new java.awt.Font("Helvetica Neue", 1, 15)); // NOI18N
-        txtTotal.setForeground(new java.awt.Color(0, 0, 0));
         txtTotal.setText("$8.53");
 
         btnRegistrarVenta.setBackground(new java.awt.Color(31, 41, 55));
@@ -348,32 +476,26 @@ public class ListaProductos extends javax.swing.JFrame {
 
         toggleTodos.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(toggleTodos);
-        toggleTodos.setForeground(new java.awt.Color(0, 0, 0));
         toggleTodos.setText("Todos");
 
         toggleCafe.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(toggleCafe);
-        toggleCafe.setForeground(new java.awt.Color(0, 0, 0));
         toggleCafe.setText("Café");
 
         toggleTe.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(toggleTe);
-        toggleTe.setForeground(new java.awt.Color(0, 0, 0));
         toggleTe.setText("Té");
 
         toggleBebidasFrias.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(toggleBebidasFrias);
-        toggleBebidasFrias.setForeground(new java.awt.Color(0, 0, 0));
         toggleBebidasFrias.setText("Bebidas Frías");
 
         togglePostres.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(togglePostres);
-        togglePostres.setForeground(new java.awt.Color(0, 0, 0));
         togglePostres.setText("Postres");
 
         toggleSnacks.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(toggleSnacks);
-        toggleSnacks.setForeground(new java.awt.Color(0, 0, 0));
         toggleSnacks.setText("Snacks");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -444,7 +566,7 @@ public class ListaProductos extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnParaLlevar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnMesa, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -478,8 +600,8 @@ public class ListaProductos extends javax.swing.JFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-        DetallesProducto detalles = new DetallesProducto();
-        detalles.setVisible(true);
+//        DetallesProducto detalles = new DetallesProducto();
+//        detalles.setVisible(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
     /**
