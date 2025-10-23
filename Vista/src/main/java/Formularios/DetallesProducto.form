@@ -63,14 +63,14 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="425" max="32767" attributes="0"/>
+                  <EmptySpace pref="456" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="jPanel5" min="-2" pref="472" max="-2" attributes="0"/>
                       <Component id="jPanel4" min="-2" pref="472" max="-2" attributes="0"/>
                       <Component id="jPanel6" min="-2" pref="472" max="-2" attributes="0"/>
                       <Component id="jPanel7" min="-2" pref="472" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                       <Component id="jPanel13" max="32767" attributes="0"/>
@@ -553,6 +553,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Leche Entera"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleEnteraActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="toggleAlmendras">
               <Properties>
@@ -587,6 +590,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Deslactosada"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleDeslactosadaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="toggleAvena">
               <Properties>
@@ -604,6 +610,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Leche de Avena"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleAvenaActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -25,6 +25,8 @@ public class DetallesProducto extends javax.swing.JFrame {
     float total;
     int cantidad;
     String nota;
+    String tipoLeche;
+    
     
     
     
@@ -53,6 +55,8 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtPrecioLeche.setText(String.valueOf(0));
         txtPrecioExtra.setText(String.valueOf(0));
         txtPrecioProductoResumen.setText(producto.getPrecioProducto().toString());
+        
+        txtProductoResumen.setText(producto.getNombreProducto());
         
         
         spinnerCantidadProducto.setValue(1);
@@ -350,6 +354,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         toggleEntera.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleEntera.setForeground(new java.awt.Color(17, 24, 39));
         toggleEntera.setText("Leche Entera");
+        toggleEntera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleEnteraActionPerformed(evt);
+            }
+        });
 
         toggleAlmendras.setBackground(new java.awt.Color(242, 243, 245));
         btnTipoLeche.add(toggleAlmendras);
@@ -362,12 +371,22 @@ public class DetallesProducto extends javax.swing.JFrame {
         toggleDeslactosada.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleDeslactosada.setForeground(new java.awt.Color(17, 24, 39));
         toggleDeslactosada.setText("Deslactosada");
+        toggleDeslactosada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleDeslactosadaActionPerformed(evt);
+            }
+        });
 
         toggleAvena.setBackground(new java.awt.Color(242, 243, 245));
         btnTipoLeche.add(toggleAvena);
         toggleAvena.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleAvena.setForeground(new java.awt.Color(17, 24, 39));
         toggleAvena.setText("Leche de Avena");
+        toggleAvena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleAvenaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -760,13 +779,13 @@ public class DetallesProducto extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(425, Short.MAX_VALUE)
+                .addContainerGap(456, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -873,16 +892,23 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         else{
         
+            
+            detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
+                
+            
+            
             detalleCo.setIdComanda(ListaProductos.comanda);
             listaDetalleComandas = ListaProductos.comanda.getDetallecomandaList();
             listaDetalleComandas.add(detalleCo);
             
             ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
             
-            
+            System.out.println(ListaProductos.comanda.toString());
             
             try {
+                jpaDetalleComanda.create(detalleCo);
                 jpaComanda.edit(ListaProductos.comanda);
+             //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
                 
                 
             } catch (Exception ex) {
@@ -945,6 +971,27 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtTotal.setText(String.valueOf(total));
         
     }//GEN-LAST:event_spinnerCantidadProductoStateChanged
+
+    private void toggleEnteraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEnteraActionPerformed
+        // TODO add your handling code here:
+        
+        tipoLeche = "Leche entera";
+        txtLeche.setText(tipoLeche);
+    }//GEN-LAST:event_toggleEnteraActionPerformed
+
+    private void toggleDeslactosadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleDeslactosadaActionPerformed
+        // TODO add your handling code here:
+        
+        tipoLeche = "Deslactosada";
+        txtLeche.setText(tipoLeche);
+    }//GEN-LAST:event_toggleDeslactosadaActionPerformed
+
+    private void toggleAvenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleAvenaActionPerformed
+        // TODO add your handling code here:
+        
+        tipoLeche = "Leche entera";
+        txtLeche.setText(tipoLeche);
+    }//GEN-LAST:event_toggleAvenaActionPerformed
 
     /**
      * @param args the command line arguments

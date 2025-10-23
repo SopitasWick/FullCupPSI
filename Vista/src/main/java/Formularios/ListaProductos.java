@@ -21,13 +21,17 @@ public class ListaProductos extends javax.swing.JFrame {
     
     DetallesProducto detalle;
     
+    Comandas comand;
+    
 
     /**
      * Creates new form frmListaProductos
      */
-    public ListaProductos() {
+    public ListaProductos(Comandas comand) {
         initComponents();
         
+        
+        this.comand = comand;
         
         buscarProductos();
     }
@@ -113,7 +117,7 @@ public class ListaProductos extends javax.swing.JFrame {
                     
             Object[] fila = {
                 detalleComanda.get(i).getIdProducto().getNombreProducto(),
-                "nada",     // o p.getDescripcionProducto()
+                detalleComanda.get(i).getNotadetalleComanda(),     // o p.getDescripcionProducto()
                 detalleComanda.get(i).getCaintidaddetalleComanda(),
                 detalleComanda.get(i).getIdProducto().getPrecioProducto()
             };
