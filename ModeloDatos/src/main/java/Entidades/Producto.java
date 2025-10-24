@@ -53,6 +53,17 @@ public class Producto implements Serializable {
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
     @ManyToOne
     private Categoria idCategoria;
+    
+    @OneToMany(mappedBy = "idProducto")
+    private List<ExtrasProductos> extrasProductosList;
+
+    public List<ExtrasProductos> getExtrasProductosList() {
+        return extrasProductosList;
+    }
+
+    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
+        this.extrasProductosList = extrasProductosList;
+    }
 
     public Producto() {
     }
@@ -61,10 +72,10 @@ public class Producto implements Serializable {
         this.idProducto = idProducto;
     }
 
-    public Producto(Integer idProducto,String nombre,float precio) {
+    public Producto(Integer idProducto, String nombre, float precio) {
         this.idProducto = idProducto;
-        this.nombreProducto=nombre;
-        this.precioProducto=precio;
+        this.nombreProducto = nombre;
+        this.precioProducto = precio;
     }
 
     public Producto(Integer idProducto, String nombreProducto, Float precioProducto, Integer cantidadDisponibleproducto, String unidadMedidaproducto) {
@@ -74,7 +85,6 @@ public class Producto implements Serializable {
         this.cantidadDisponibleproducto = cantidadDisponibleproducto;
         this.unidadMedidaproducto = unidadMedidaproducto;
     }
-    
 
     public Integer getIdProducto() {
         return idProducto;
@@ -164,5 +174,5 @@ public class Producto implements Serializable {
     public String toString() {
         return "Entidades.Producto[ idProducto=" + idProducto + " ]";
     }
-    
+
 }

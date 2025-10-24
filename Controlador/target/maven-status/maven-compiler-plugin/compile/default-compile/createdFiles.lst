@@ -2,6 +2,9 @@ Controlador\ProductoControlador.class
 Controlador\ComandaControlador.class
 Interfaces\IComandaControlador.class
 Interfaces\IDetalleComanda.class
+Interfaces\IExtraProductosControlador.class
 Interfaces\IProductoControlador.class
+pruebas\PruebaExtras.class
 Controlador\DetalleComandaControlador.class
+Controlador\ExtraProductosControlador.class
 pruebas\Pruebas.class

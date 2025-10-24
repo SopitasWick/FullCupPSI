@@ -26,13 +26,13 @@ public class Pruebas {
 //        
 //        try {
 //            negocio.guardarComanda(comanda);
-//            System.out.println("✓ Comanda guardada exitosamente!");
+//            System.out.println(" Comanda guardada exitosamente!");
 //            System.out.println("  ID: " + comanda.getIdComanda());
 //            System.out.println("  Estado: " + comanda.getEstadoComanda());
 //            System.out.println("  Total: $" + comanda.getTotalComanda());
 //            System.out.println("  Fecha: " + comanda.getFechaHoracomanda());
 //        } catch (Exception e) {
-//            System.err.println("✗ Error al guardar: " + e.getMessage());
+//            System.err.println(" Error al guardar: " + e.getMessage());
 //            e.printStackTrace();
 //            return;
 //        }
@@ -82,7 +82,6 @@ public class Pruebas {
  System.out.println("=== ELIMINAR COMANDA ID 4 ===");
         
         try {
-            // Paso 1: Verificar que existe antes de eliminar
             Comanda comanda3 = negocio.obtenerComanda(5);
             
             if (comanda3 != null) {
@@ -92,28 +91,25 @@ public class Pruebas {
                 System.out.println("  Total: $" + comanda3.getTotalComanda());
                 System.out.println("  Fecha: " + comanda3.getFechaHoracomanda());
                 
-                // Paso 2: Eliminar la comanda
                 negocio.eliminarComanda(5);
-                System.out.println("\n✓ Comanda ID 3 eliminada exitosamente!");
+                System.out.println("\n Comanda ID 3 eliminada exitosamente!");
                 
-                // Paso 3: Verificar que ya no existe
                 Comanda comandaEliminada = negocio.obtenerComanda(3);
                 if (comandaEliminada == null) {
-                    System.out.println("✓ Confirmado: La comanda ID 3 ya no existe");
+                    System.out.println(" Confirmado: La comanda ID 3 ya no existe");
                 } else {
-                    System.out.println("⚠ La comanda aún existe (esto no debería pasar)");
+                    System.out.println(" La comanda aún existe (esto no debería pasar)");
                 }
                 
             } else {
-                System.err.println("✗ No se encontró la comanda con ID 3");
+                System.err.println(" No se encontró la comanda con ID 3");
             }
             
         } catch (Exception e) {
-            System.err.println("✗ Error al eliminar: " + e.getMessage());
+            System.err.println(" Error al eliminar: " + e.getMessage());
             e.printStackTrace();
         }
         
-        // Mostrar todas las comandas restantes
         System.out.println("\n=== TODAS LAS COMANDAS (después de eliminar) ===");
         List<Comanda> comandas = negocio.obtenerTodasLasComandas();
         System.out.println("Total de comandas: " + comandas.size());
@@ -123,29 +119,25 @@ public class Pruebas {
                              " | Total: $" + c.getTotalComanda());
         });
         
-        // Probar casos de error
         System.out.println("\n=== PRUEBAS DE VALIDACIÓN ===");
         
-        // Intentar eliminar un ID que no existe
         try {
             negocio.eliminarComanda(999);
-            System.out.println("⚠ No lanzó error al eliminar ID inexistente");
+            System.out.println("No lanzó error al eliminar ID inexistente");
         } catch (Exception e) {
-            System.out.println("✓ Validación correcta: " + e.getMessage());
+            System.out.println(" Validación correcta: " + e.getMessage());
         }
         
-        // Intentar eliminar con ID nulo
         try {
             negocio.eliminarComanda(null);
         } catch (Exception e) {
-            System.out.println("✓ Validación correcta: " + e.getMessage());
+            System.out.println(" Validación correcta: " + e.getMessage());
         }
         
-        // Intentar eliminar con ID inválido
         try {
             negocio.eliminarComanda(0);
         } catch (Exception e) {
-            System.out.println("✓ Validación correcta: " + e.getMessage());
+            System.out.println(" Validación correcta: " + e.getMessage());
         }
     
 

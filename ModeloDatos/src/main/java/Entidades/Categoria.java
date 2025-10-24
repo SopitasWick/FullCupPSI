@@ -36,7 +36,16 @@ public class Categoria implements Serializable {
     private String nombre;
     @OneToMany(mappedBy = "idCategoria")
     private List<Producto> productoList;
+@OneToMany(mappedBy = "idCategoria")
+private List<ExtrasProductos> extrasProductosList;
 
+public List<ExtrasProductos> getExtrasProductosList() {
+    return extrasProductosList;
+}
+
+public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
+    this.extrasProductosList = extrasProductosList;
+}
     public Categoria() {
     }
 
