@@ -4,6 +4,8 @@
 
 package itson.edu.mx.fullcup;
 
+import Formularios.Comandas;
+
 /**
  *
  * @author usuario
@@ -12,5 +14,13 @@ public class FullCup {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
+        
+        
+        Comandas comanda = new Comandas();
+        
+        comanda.setVisible(true);
+        
+        
+        
     }
 }

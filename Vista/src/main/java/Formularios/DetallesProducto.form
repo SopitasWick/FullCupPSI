@@ -63,14 +63,14 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="425" max="32767" attributes="0"/>
+                  <EmptySpace pref="456" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="jPanel5" min="-2" pref="472" max="-2" attributes="0"/>
                       <Component id="jPanel4" min="-2" pref="472" max="-2" attributes="0"/>
                       <Component id="jPanel6" min="-2" pref="472" max="-2" attributes="0"/>
                       <Component id="jPanel7" min="-2" pref="472" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                       <Component id="jPanel13" max="32767" attributes="0"/>
@@ -250,7 +250,7 @@
                           <Component id="txtNombreProducto" min="-2" max="-2" attributes="0"/>
                           <Component id="txtPrecioBase" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="144" max="32767" attributes="0"/>
+                      <EmptySpace pref="143" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -421,6 +421,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Mediano (16 oz)"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioMediano2ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="radioMediano3">
               <Properties>
@@ -435,6 +438,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Grande (24 oz)"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioMediano3ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
@@ -547,6 +553,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Leche Entera"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleEnteraActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="toggleAlmendras">
               <Properties>
@@ -581,6 +590,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Deslactosada"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleDeslactosadaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="toggleAvena">
               <Properties>
@@ -598,6 +610,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Leche de Avena"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleAvenaActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -1239,6 +1254,9 @@
                   <SpinnerModel initial="0" maximum="10" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spinnerCantidadProductoStateChanged"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

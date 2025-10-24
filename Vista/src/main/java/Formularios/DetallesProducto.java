@@ -1,13 +1,72 @@
 package Formularios;
 
+import Entidades.Detallecomanda;
+import Entidades.Producto;
+import JPA.ComandaJpaController;
+import JPA.DetallecomandaJpaController;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class DetallesProducto extends javax.swing.JFrame {
 
+    
+    Producto producto;
+    ListaProductos listaProductos;
+    public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
+    
+    
+    float precioTamano;
+    float precioExtra;
+    float precioLeche;
+    float subTotal;
+    float total;
+    int cantidad;
+    String nota;
+    String tipoLeche;
+    
+    
+    
+    
     /**
      * Creates new form DetallesProducto
      */
-    public DetallesProducto() {
+    public DetallesProducto(ListaProductos listaProducto, Producto producto) {
         initComponents();
+        
+        
+        this.producto = producto;
+        this.listaProductos = listaProducto;
+        
+        cargarDatos();
     }
+    
+    
+    
+    private void cargarDatos(){
+    
+    
+        txtNombreProducto.setText(producto.getNombreProducto());
+        txtPrecioBase.setText(producto.getPrecioProducto().toString());
+        
+        
+        txtPrecioLeche.setText(String.valueOf(0));
+        txtPrecioExtra.setText(String.valueOf(0));
+        txtPrecioProductoResumen.setText(producto.getPrecioProducto().toString());
+        
+        txtProductoResumen.setText(producto.getNombreProducto());
+        
+        
+        spinnerCantidadProducto.setValue(1);
+        
+        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
+        
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -195,7 +254,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,11 +288,21 @@ public class DetallesProducto extends javax.swing.JFrame {
         radioMediano2.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
         radioMediano2.setForeground(new java.awt.Color(17, 24, 39));
         radioMediano2.setText("Mediano (16 oz)");
+        radioMediano2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioMediano2ActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(radioMediano3);
         radioMediano3.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
         radioMediano3.setForeground(new java.awt.Color(17, 24, 39));
         radioMediano3.setText("Grande (24 oz)");
+        radioMediano3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioMediano3ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(17, 24, 39));
@@ -285,6 +354,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         toggleEntera.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleEntera.setForeground(new java.awt.Color(17, 24, 39));
         toggleEntera.setText("Leche Entera");
+        toggleEntera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleEnteraActionPerformed(evt);
+            }
+        });
 
         toggleAlmendras.setBackground(new java.awt.Color(242, 243, 245));
         btnTipoLeche.add(toggleAlmendras);
@@ -297,12 +371,22 @@ public class DetallesProducto extends javax.swing.JFrame {
         toggleDeslactosada.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleDeslactosada.setForeground(new java.awt.Color(17, 24, 39));
         toggleDeslactosada.setText("Deslactosada");
+        toggleDeslactosada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleDeslactosadaActionPerformed(evt);
+            }
+        });
 
         toggleAvena.setBackground(new java.awt.Color(242, 243, 245));
         btnTipoLeche.add(toggleAvena);
         toggleAvena.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleAvena.setForeground(new java.awt.Color(17, 24, 39));
         toggleAvena.setText("Leche de Avena");
+        toggleAvena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleAvenaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -659,6 +743,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel8.setAlignmentY(0.0F);
 
         spinnerCantidadProducto.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
+        spinnerCantidadProducto.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerCantidadProductoStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -690,13 +779,13 @@ public class DetallesProducto extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(425, Short.MAX_VALUE)
+                .addContainerGap(456, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -746,12 +835,93 @@ public class DetallesProducto extends javax.swing.JFrame {
 
     private void radioChico1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioChico1ActionPerformed
         // TODO add your handling code here:
+        
+        precioTamano = 0;        
+        
+        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
+    
+        
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+        
+        
     }//GEN-LAST:event_radioChico1ActionPerformed
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         // TODO add your handling code here:
-        ListaProductos lista = new ListaProductos();
-        lista.setVisible(true);
+        
+        ComandaJpaController jpaComanda = new ComandaJpaController();
+        DetallecomandaJpaController jpaDetalleComanda = new DetallecomandaJpaController();
+
+        Detallecomanda detalleCo = new Detallecomanda();
+        detalleCo.setCaintidaddetalleComanda(cantidad); 
+        
+        detalleCo.setIdProducto(producto);
+        detalleCo.setNotadetalleComanda(nota);
+        detalleCo.setSubTotaldetalleComanda(total);
+        
+                
+                
+        if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
+            ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
+            
+            ListaProductos.comanda.setEstadoComanda("Abierta");
+            ListaProductos.comanda.setFechaHoracomanda(new Date());
+            ListaProductos.comanda.setTotalComanda(total);
+            try {
+                jpaComanda.create(ListaProductos.comanda);
+                
+                detalleCo.setIdComanda(ListaProductos.comanda);
+                
+                listaDetalleComandas.add(detalleCo);
+                
+                ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
+                
+                detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
+                
+                jpaDetalleComanda.create(detalleCo);
+                
+                
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+        }
+
+
+        else{
+        
+            
+            detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
+                
+            
+            
+            detalleCo.setIdComanda(ListaProductos.comanda);
+            listaDetalleComandas = ListaProductos.comanda.getDetallecomandaList();
+            listaDetalleComandas.add(detalleCo);
+            
+            ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
+            
+            System.out.println(ListaProductos.comanda.toString());
+            
+            try {
+                jpaDetalleComanda.create(detalleCo);
+                jpaComanda.edit(ListaProductos.comanda);
+             //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
+                
+                
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+        
+        listaProductos.setVisible(true);
+        listaProductos.detalleComanda = listaDetalleComandas;
+        listaProductos.llenarItemsComanda();
+        this.dispose();
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -759,6 +929,69 @@ public class DetallesProducto extends javax.swing.JFrame {
         Comandas comandas = new Comandas();
         comandas.setVisible(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void radioMediano2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano2ActionPerformed
+        // TODO add your handling code here:
+        
+        precioTamano = 10;
+        
+        
+        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
+
+        
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+        
+    }//GEN-LAST:event_radioMediano2ActionPerformed
+
+    private void radioMediano3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano3ActionPerformed
+        // TODO add your handling code here:
+        precioTamano = 20;
+        
+        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
+
+        
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+    }//GEN-LAST:event_radioMediano3ActionPerformed
+
+    private void spinnerCantidadProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCantidadProductoStateChanged
+        // TODO add your handling code here:
+        
+        if(((int)spinnerCantidadProducto.getValue()) < 1){
+            spinnerCantidadProducto.setValue(1);
+        }
+        
+        cantidad = (int) spinnerCantidadProducto.getValue();
+        
+        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
+
+        
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+        
+    }//GEN-LAST:event_spinnerCantidadProductoStateChanged
+
+    private void toggleEnteraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEnteraActionPerformed
+        // TODO add your handling code here:
+        
+        tipoLeche = "Leche entera";
+        txtLeche.setText(tipoLeche);
+    }//GEN-LAST:event_toggleEnteraActionPerformed
+
+    private void toggleDeslactosadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleDeslactosadaActionPerformed
+        // TODO add your handling code here:
+        
+        tipoLeche = "Deslactosada";
+        txtLeche.setText(tipoLeche);
+    }//GEN-LAST:event_toggleDeslactosadaActionPerformed
+
+    private void toggleAvenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleAvenaActionPerformed
+        // TODO add your handling code here:
+        
+        tipoLeche = "Leche entera";
+        txtLeche.setText(tipoLeche);
+    }//GEN-LAST:event_toggleAvenaActionPerformed
 
     /**
      * @param args the command line arguments
