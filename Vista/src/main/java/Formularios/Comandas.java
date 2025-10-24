@@ -1,12 +1,159 @@
 package Formularios;
 
+import Controlador.ComandaControlador;
+import Entidades.Comanda;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.table.DefaultTableModel;
+
 public class Comandas extends javax.swing.JFrame {
+
+    private final ComandaControlador comandaController = new ComandaControlador();
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     /**
      * Creates new form frmComandas
      */
     public Comandas() {
         initComponents();
+        initCustom();
+    }
+// Método de inicialización personalizado
+
+    private void initCustom() {
+        cargarTablas();
+        configurarPopupTablaActivas();
+    }
+
+// Carga los datos en ambas tablas
+    private void cargarTablas() {
+        cargarComandasActivas();
+        cargarComandasCompletadas();
+    }
+
+    private void cargarComandasActivas() {
+        DefaultTableModel modelo = new DefaultTableModel(new String[]{"ID", "Productos", "Fecha", "Total"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        try {
+            List<Comanda> activas = comandaController.obtenerComandasActivas();
+            for (Comanda c : activas) {
+                String fecha = c.getFechaHoracomanda() != null ? sdf.format(c.getFechaHoracomanda()) : "";
+           
+                String productos = c.getDetallecomandaList() != null ? String.valueOf(c.getDetallecomandaList().size()) + " Productos" : "0 Productos";
+                modelo.addRow(new Object[]{c.getIdComanda(), productos, fecha, c.getTotalComanda()});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error cargando comandas activas: " + ex.getMessage());
+        }
+        tblComandasActivas.setModel(modelo);
+      
+        tblComandasActivas.getColumnModel().getColumn(0).setMaxWidth(80);
+    }
+
+    private void cargarComandasCompletadas() {
+        DefaultTableModel modelo = new DefaultTableModel(new String[]{"ID", "Productos", "Fecha", "Total"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        try {
+            List<Comanda> completadas = comandaController.obtenerComandasCompletadas();
+            for (Comanda c : completadas) {
+                String fecha = c.getFechaHoracomanda() != null ? sdf.format(c.getFechaHoracomanda()) : "";
+                String productos = c.getDetallecomandaList() != null ? String.valueOf(c.getDetallecomandaList().size()) + " Productos" : "0 Productos";
+                modelo.addRow(new Object[]{c.getIdComanda(), productos, fecha, c.getTotalComanda()});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error cargando comandas completadas: " + ex.getMessage());
+        }
+        tblComandasCompletadas.setModel(modelo);
+        tblComandasCompletadas.getColumnModel().getColumn(0).setMaxWidth(80);
+    }
+
+    private void configurarPopupTablaActivas() {
+        JPopupMenu popup = new JPopupMenu();
+
+        JMenuItem itemCompletar = new JMenuItem("Marcar como completada");
+        JMenuItem itemEliminar = new JMenuItem("Eliminar comanda");
+
+        popup.add(itemCompletar);
+        popup.add(itemEliminar);
+
+        // Listener para completar
+        itemCompletar.addActionListener(e -> {
+            Integer id = obtenerIdSeleccionado(tblComandasActivas);
+            if (id != null) {
+                try {
+                    comandaController.marcarComoCompletada(id);
+                    cargarTablas();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
+                }
+            }
+        });
+
+        // Listener para eliminar
+        itemEliminar.addActionListener(e -> {
+            Integer id = obtenerIdSeleccionado(tblComandasActivas);
+            if (id != null) {
+                int confirm = JOptionPane.showConfirmDialog(this,
+                        "¿Seguro que deseas eliminar esta comanda?",
+                        "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try {
+                        comandaController.marcarComoEliminado(id);
+                        cargarTablas();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+
+        // Mostrar popup al hacer clic derecho
+        tblComandasActivas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mostrarPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                mostrarPopup(e);
+            }
+
+            private void mostrarPopup(MouseEvent e) {
+                if (e.isPopupTrigger() && tblComandasActivas.getSelectedRow() >= 0) {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+    }
+
+    /**
+     * Obtiene el ID (columna 0) de la fila seleccionada en una tabla
+     */
+    private Integer obtenerIdSeleccionado(javax.swing.JTable tabla) {
+        int fila = tabla.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila primero.");
+            return null;
+        }
+        Object valor = tabla.getModel().getValueAt(fila, 0);
+        if (valor instanceof Integer) {
+            return (Integer) valor;
+        }
+        return Integer.valueOf(valor.toString());
     }
 
     /**
@@ -63,7 +210,6 @@ public class Comandas extends javax.swing.JFrame {
             }
         });
 
-        tblComandasActivas.setBackground(new java.awt.Color(255, 255, 255));
         tblComandasActivas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -133,13 +279,10 @@ public class Comandas extends javax.swing.JFrame {
         jLabel1.setAlignmentX(16.0F);
         jLabel1.setAlignmentY(0.0F);
 
-        txtNombreCajero.setForeground(new java.awt.Color(0, 0, 0));
         txtNombreCajero.setText("Nombre");
 
-        txtCaja.setForeground(new java.awt.Color(0, 0, 0));
         txtCaja.setText("Caja");
 
-        txtTurno.setForeground(new java.awt.Color(0, 0, 0));
         txtTurno.setText("Turno");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -181,7 +324,6 @@ public class Comandas extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(55, 65, 81));
         jLabel3.setText("Comandas completadas");
 
-        tblComandasCompletadas.setBackground(new java.awt.Color(255, 255, 255));
         tblComandasCompletadas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},

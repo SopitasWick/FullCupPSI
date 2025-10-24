@@ -14,13 +14,14 @@ import java.util.stream.Collectors;
  *
  * @author Orlando Leyva
  */
-public class ComandaControlador implements IComandaControlador{
-         private final ComandaJpaController comandaController;
-    
+public class ComandaControlador implements IComandaControlador {
+
+    private final ComandaJpaController comandaController;
+
     public ComandaControlador() {
         this.comandaController = new ComandaJpaController();
     }
-    
+
 //    @Override
 //    public void guardarComanda(Comanda comanda) throws Exception {
 //        if (comanda == null) {
@@ -52,7 +53,7 @@ public class ComandaControlador implements IComandaControlador{
         }
         comandaController.create(comanda);
     }
-    
+
     @Override
     public void actualizarComanda(Comanda comanda) throws Exception {
         if (comanda == null) {
@@ -63,7 +64,7 @@ public class ComandaControlador implements IComandaControlador{
         }
         comandaController.edit(comanda);
     }
-    
+
     @Override
     public void eliminarComanda(Integer id) throws Exception {
         if (id == null || id <= 0) {
@@ -71,7 +72,7 @@ public class ComandaControlador implements IComandaControlador{
         }
         comandaController.destroy(id);
     }
-    
+
     @Override
     public Comanda obtenerComanda(Integer id) {
         if (id == null || id <= 0) {
@@ -79,12 +80,12 @@ public class ComandaControlador implements IComandaControlador{
         }
         return comandaController.findComanda(id);
     }
-    
+
     @Override
     public List<Comanda> obtenerTodasLasComandas() {
         return comandaController.findComandaEntities();
     }
-    
+
     @Override
     public List<Comanda> obtenerComandasPaginadas(int maxResults, int firstResult) {
         if (maxResults <= 0) {
@@ -95,12 +96,60 @@ public class ComandaControlador implements IComandaControlador{
         }
         return comandaController.findComandaEntities(maxResults, firstResult);
     }
-    
+
     @Override
     public int contarComandas() {
         return comandaController.getComandaCount();
     }
-    
+
+    /**
+     * Marca la comanda como Eliminado (no la borra físicamente).
+     */
+    public void marcarComoEliminado(Integer id) throws Exception {
+        if (id == null || id <= 0) {
+            throw new Exception("ID de comanda inválido");
+        }
+        Comanda c = comandaController.findComanda(id);
+        if (c == null) {
+            throw new Exception("Comanda no encontrada");
+        }
+        c.setEstadoComanda("Eliminado");
+        comandaController.edit(c);
+    }
+
+    /**
+     * Marca la comanda como Completada (Cerrada).
+     */
+    public void marcarComoCompletada(Integer id) throws Exception {
+        if (id == null || id <= 0) {
+            throw new Exception("ID de comanda inválido");
+        }
+        Comanda c = comandaController.findComanda(id);
+        if (c == null) {
+            throw new Exception("Comanda no encontrada");
+        }
+        c.setEstadoComanda("Cerrada");
+        comandaController.edit(c);
+    }
+
+    /**
+     * Devuelve solo comandas activas (por ejemplo: estado = "Abierta").
+     */
+    public List<Comanda> obtenerComandasActivas() {
+        return comandaController.findComandaEntities().stream()
+                .filter(c -> c.getEstadoComanda() != null && c.getEstadoComanda().equalsIgnoreCase("Abierta"))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Devuelve comandas completadas (por ejemplo: estado = "Cerrada").
+     */
+    public List<Comanda> obtenerComandasCompletadas() {
+        return comandaController.findComandaEntities().stream()
+                .filter(c -> c.getEstadoComanda() != null && c.getEstadoComanda().equalsIgnoreCase("Cerrada"))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public List<Comanda> obtenerComandasPorUsuario(Integer idUsuario) {
         if (idUsuario == null) {
@@ -108,10 +157,9 @@ public class ComandaControlador implements IComandaControlador{
         }
         return comandaController.findComandaEntities()
                 .stream()
-                .filter(c -> c.getIdUsuario() != null && 
-                             c.getIdUsuario().getIdUsuario().equals(idUsuario))
+                .filter(c -> c.getIdUsuario() != null
+                && c.getIdUsuario().getIdUsuario().equals(idUsuario))
                 .collect(Collectors.toList());
     }
-    
 
 }

@@ -88,13 +88,10 @@ public class DetallesProducto extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(1440, 57));
 
-        jLabel.setForeground(new java.awt.Color(0, 0, 0));
         jLabel.setText("Mesa:");
 
-        txtNumMesa.setForeground(new java.awt.Color(0, 0, 0));
         txtNumMesa.setText("Numero");
 
-        txtNombreCajero.setForeground(new java.awt.Color(0, 0, 0));
         txtNombreCajero.setText("Comanda:");
 
         jPanel3.setBackground(new java.awt.Color(31, 41, 55));
@@ -118,7 +115,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel1.setAlignmentX(16.0F);
         jLabel1.setAlignmentY(0.0F);
 
-        txtNumComanda.setForeground(new java.awt.Color(0, 0, 0));
         txtNumComanda.setText("Numero");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -167,7 +163,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel4.setAlignmentX(16.0F);
         jLabel4.setAlignmentY(0.0F);
 
-        txtNombreProducto.setBackground(new java.awt.Color(255, 255, 255));
         txtNombreProducto.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         txtNombreProducto.setForeground(new java.awt.Color(17, 24, 39));
         txtNombreProducto.setText("Capuchino");
@@ -178,7 +173,6 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         });
 
-        txtDescripcion.setBackground(new java.awt.Color(255, 255, 255));
         txtDescripcion.setColumns(20);
         txtDescripcion.setForeground(new java.awt.Color(75, 85, 99));
         txtDescripcion.setRows(2);
@@ -518,27 +512,21 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel9.setAlignmentY(0.0F);
 
         txtProductoResumen.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        txtProductoResumen.setForeground(new java.awt.Color(0, 0, 0));
         txtProductoResumen.setText("Producto");
 
         txtLeche.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        txtLeche.setForeground(new java.awt.Color(0, 0, 0));
         txtLeche.setText("Leche");
 
         txtExtra.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        txtExtra.setForeground(new java.awt.Color(0, 0, 0));
         txtExtra.setText("Extra");
 
         txtPrecioProductoResumen.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtPrecioProductoResumen.setForeground(new java.awt.Color(0, 0, 0));
         txtPrecioProductoResumen.setText("Precio");
 
         txtPrecioLeche.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtPrecioLeche.setForeground(new java.awt.Color(0, 0, 0));
         txtPrecioLeche.setText("Precio");
 
         txtPrecioExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtPrecioExtra.setForeground(new java.awt.Color(0, 0, 0));
         txtPrecioExtra.setText("Precio");
 
         jLabel2.setText("_______________________________");
@@ -579,7 +567,6 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         });
 
-        btnCancelar.setBackground(new java.awt.Color(255, 255, 255));
         btnCancelar.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(31, 41, 55));
         btnCancelar.setText("Cancelar");
