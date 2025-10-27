@@ -8,6 +8,11 @@
     <dependencies>
         <dependency>
             <groupId>itson.edu.mx</groupId>
+            <artifactId>Dominio</artifactId>
+            <version>1.0-FullCupSystem</version>
+        </dependency>
+         <dependency>
+            <groupId>itson.edu.mx</groupId>
             <artifactId>ModeloDatos</artifactId>
             <version>1.0-FullCupSystem</version>
         </dependency>

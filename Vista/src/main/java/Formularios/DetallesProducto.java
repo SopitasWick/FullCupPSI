@@ -2,6 +2,8 @@ package Formularios;
 
 import Entidades.Detallecomanda;
 import Entidades.Producto;
+import Facades.IFachadaComandasControlador;
+import Implementaciones.GestionarComandaControlador;
 import JPA.ComandaJpaController;
 import JPA.DetallecomandaJpaController;
 import java.util.ArrayList;
@@ -9,10 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JRadioButton;
 
 public class DetallesProducto extends javax.swing.JFrame {
-
-    
+    private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     Producto producto;
     ListaProductos listaProductos;
     public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
@@ -40,7 +42,8 @@ public class DetallesProducto extends javax.swing.JFrame {
         this.producto = producto;
         this.listaProductos = listaProducto;
         
-        cargarDatos();
+        this.cargarDatos();
+        this.cargarDatosDetalles();
     }
     
     
@@ -67,6 +70,37 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtTotal.setText(String.valueOf(total));
     }
     
+    private void cargarDatosDetalles(){
+   if(this.producto.getIdProducto()<=5 && this.producto.getIdProducto()>=1){
+       //TAMAÑO
+       this.radioMediano2.setEnabled(true);
+       this.radioMediano3.setEnabled(true);
+       //TIPO LECHE
+       this.toggleAlmendras.setEnabled(true);
+       this.toggleAvena.setEnabled(true);
+       this.toggleDeslactosada.setEnabled(true);
+       this.toggleEntera.setEnabled(true);
+       //EXTRAS
+       this.spinnerBoba.setEnabled(true);
+       this.spinnerLecheAlmendras.setEnabled(true);
+       this.spinnerLecheDeCoco.setEnabled(true);
+       this.spinnerBoba.setEnabled(true);
+   }else{
+        //TAMAÑO
+       this.radioMediano2.setEnabled(false);
+       this.radioMediano3.setEnabled(false);
+       //TIPO LECHE
+       this.toggleAlmendras.setEnabled(false);
+       this.toggleAvena.setEnabled(false);
+       this.toggleDeslactosada.setEnabled(false);
+       this.toggleEntera.setEnabled(false);
+       //EXTRAS
+       this.spinnerBoba.setEnabled(false);
+       this.spinnerLecheAlmendras.setEnabled(false);
+       this.spinnerLecheDeCoco.setEnabled(false);
+       this.spinnerBoba.setEnabled(false);
+   }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -94,7 +128,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtDescripcion = new javax.swing.JTextArea();
         txtPrecioBase = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
-        radioChico1 = new javax.swing.JRadioButton();
         radioMediano2 = new javax.swing.JRadioButton();
         radioMediano3 = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
@@ -108,16 +141,16 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         txtExtraShot = new javax.swing.JLabel();
-        spinnerShotExtra = new javax.swing.JSpinner();
+        spinnerLecheDeCoco = new javax.swing.JSpinner();
         jPanel9 = new javax.swing.JPanel();
         txtCremaExtra = new javax.swing.JLabel();
-        spinnerCremaExtra = new javax.swing.JSpinner();
+        spinnerLecheAlmendras = new javax.swing.JSpinner();
         jPanel10 = new javax.swing.JPanel();
         txtVainillaExtra = new javax.swing.JLabel();
-        spinnerVainilla = new javax.swing.JSpinner();
+        spinnerShotExpreso = new javax.swing.JSpinner();
         jPanel11 = new javax.swing.JPanel();
         txtCarameloExtra = new javax.swing.JLabel();
-        spinnerCaramelo = new javax.swing.JSpinner();
+        spinnerBoba = new javax.swing.JSpinner();
         jPanel12 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         txtProductoResumen = new javax.swing.JLabel();
@@ -254,7 +287,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,16 +306,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
         jPanel5.setPreferredSize(new java.awt.Dimension(500, 200));
-
-        buttonGroup1.add(radioChico1);
-        radioChico1.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
-        radioChico1.setForeground(new java.awt.Color(17, 24, 39));
-        radioChico1.setText("Chico (8 oz)");
-        radioChico1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioChico1ActionPerformed(evt);
-            }
-        });
 
         buttonGroup1.add(radioMediano2);
         radioMediano2.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -319,12 +342,11 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(radioChico1)
-                        .addGap(18, 18, 18)
+                        .addGap(57, 57, 57)
                         .addComponent(radioMediano2)
-                        .addGap(18, 18, 18)
+                        .addGap(36, 36, 36)
                         .addComponent(radioMediano3)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,7 +355,6 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(radioChico1)
                     .addComponent(radioMediano2)
                     .addComponent(radioMediano3))
                 .addContainerGap(37, Short.MAX_VALUE))
@@ -441,9 +462,9 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtExtraShot.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         txtExtraShot.setForeground(new java.awt.Color(17, 24, 39));
-        txtExtraShot.setText("Shot Extra de Café");
+        txtExtraShot.setText("Leche de coco");
 
-        spinnerShotExtra.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerLecheDeCoco.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -453,7 +474,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txtExtraShot)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(spinnerShotExtra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spinnerLecheDeCoco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         jPanel8Layout.setVerticalGroup(
@@ -462,7 +483,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtExtraShot)
-                    .addComponent(spinnerShotExtra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerLecheDeCoco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -471,9 +492,9 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtCremaExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         txtCremaExtra.setForeground(new java.awt.Color(17, 24, 39));
-        txtCremaExtra.setText("Crema Batida");
+        txtCremaExtra.setText("Leche de almendras");
 
-        spinnerCremaExtra.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerLecheAlmendras.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -483,7 +504,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txtCremaExtra)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(spinnerCremaExtra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spinnerLecheAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         jPanel9Layout.setVerticalGroup(
@@ -492,7 +513,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCremaExtra)
-                    .addComponent(spinnerCremaExtra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerLecheAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -501,9 +522,9 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtVainillaExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         txtVainillaExtra.setForeground(new java.awt.Color(17, 24, 39));
-        txtVainillaExtra.setText("Jarabe de Vainilla");
+        txtVainillaExtra.setText("Shot expreso");
 
-        spinnerVainilla.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerShotExpreso.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -513,7 +534,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txtVainillaExtra)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(spinnerVainilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spinnerShotExpreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         jPanel10Layout.setVerticalGroup(
@@ -522,7 +543,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtVainillaExtra)
-                    .addComponent(spinnerVainilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerShotExpreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -531,9 +552,9 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtCarameloExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         txtCarameloExtra.setForeground(new java.awt.Color(17, 24, 39));
-        txtCarameloExtra.setText("Jarabe de Caramelo");
+        txtCarameloExtra.setText("Boba");
 
-        spinnerCaramelo.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerBoba.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -543,7 +564,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txtCarameloExtra)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
-                .addComponent(spinnerCaramelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         jPanel11Layout.setVerticalGroup(
@@ -552,7 +573,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCarameloExtra)
-                    .addComponent(spinnerCaramelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -568,7 +589,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -815,15 +836,17 @@ public class DetallesProducto extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 979, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -833,25 +856,8 @@ public class DetallesProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreProductoActionPerformed
 
-    private void radioChico1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioChico1ActionPerformed
-        // TODO add your handling code here:
-        
-        precioTamano = 0;        
-        
-        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
-    
-        
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
-        
-        
-    }//GEN-LAST:event_radioChico1ActionPerformed
-
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         // TODO add your handling code here:
-        
-        ComandaJpaController jpaComanda = new ComandaJpaController();
-        DetallecomandaJpaController jpaDetalleComanda = new DetallecomandaJpaController();
 
         Detallecomanda detalleCo = new Detallecomanda();
         detalleCo.setCaintidaddetalleComanda(cantidad); 
@@ -863,13 +869,17 @@ public class DetallesProducto extends javax.swing.JFrame {
                 
                 
         if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
-            ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
+            try {
+                ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             ListaProductos.comanda.setEstadoComanda("Abierta");
             ListaProductos.comanda.setFechaHoracomanda(new Date());
             ListaProductos.comanda.setTotalComanda(total);
             try {
-                jpaComanda.create(ListaProductos.comanda);
+                FComandas.GuardarComanda(ListaProductos.comanda);
                 
                 detalleCo.setIdComanda(ListaProductos.comanda);
                 
@@ -877,9 +887,9 @@ public class DetallesProducto extends javax.swing.JFrame {
                 
                 ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
                 
-                detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
+                detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);//**********
                 
-                jpaDetalleComanda.create(detalleCo);
+                FComandas.GuardarDetalleComanda(detalleCo);//**********
                 
                 
             } catch (Exception ex) {
@@ -893,7 +903,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         else{
         
             
-            detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
+            try {
+                detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);//******
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 
             
             
@@ -906,8 +920,8 @@ public class DetallesProducto extends javax.swing.JFrame {
             System.out.println(ListaProductos.comanda.toString());
             
             try {
-                jpaDetalleComanda.create(detalleCo);
-                jpaComanda.edit(ListaProductos.comanda);
+                FComandas.GuardarDetalleComanda(detalleCo);//********
+                FComandas.EditarComanda(ListaProductos.comanda);//*******
              //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
                 
                 
@@ -1029,14 +1043,13 @@ public class DetallesProducto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JRadioButton radioChico1;
     private javax.swing.JRadioButton radioMediano2;
     private javax.swing.JRadioButton radioMediano3;
+    private javax.swing.JSpinner spinnerBoba;
     private javax.swing.JSpinner spinnerCantidadProducto;
-    private javax.swing.JSpinner spinnerCaramelo;
-    private javax.swing.JSpinner spinnerCremaExtra;
-    private javax.swing.JSpinner spinnerShotExtra;
-    private javax.swing.JSpinner spinnerVainilla;
+    private javax.swing.JSpinner spinnerLecheAlmendras;
+    private javax.swing.JSpinner spinnerLecheDeCoco;
+    private javax.swing.JSpinner spinnerShotExpreso;
     private javax.swing.JToggleButton toggleAlmendras;
     private javax.swing.JToggleButton toggleAvena;
     private javax.swing.JToggleButton toggleDeslactosada;

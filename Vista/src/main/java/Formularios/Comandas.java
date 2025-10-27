@@ -2,10 +2,14 @@ package Formularios;
 
 import Controlador.ComandaControlador;
 import Entidades.Comanda;
+import Facades.IFachadaComandasControlador;
+import Implementaciones.GestionarComandaControlador;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -13,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Comandas extends javax.swing.JFrame {
 
-    private final ComandaControlador comandaController = new ComandaControlador();
+    private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     /**
@@ -44,7 +48,7 @@ public class Comandas extends javax.swing.JFrame {
             }
         };
         try {
-            List<Comanda> activas = comandaController.obtenerComandasActivas();
+            List<Comanda> activas = FComandas.obtenerComandasActivas();//Cambiar aqui a patron facade
             for (Comanda c : activas) {
                 String fecha = c.getFechaHoracomanda() != null ? sdf.format(c.getFechaHoracomanda()) : "";
            
@@ -67,7 +71,7 @@ public class Comandas extends javax.swing.JFrame {
             }
         };
         try {
-            List<Comanda> completadas = comandaController.obtenerComandasCompletadas();
+            List<Comanda> completadas = FComandas.obtenerComandasCompletadas();
             for (Comanda c : completadas) {
                 String fecha = c.getFechaHoracomanda() != null ? sdf.format(c.getFechaHoracomanda()) : "";
                 String productos = c.getDetallecomandaList() != null ? String.valueOf(c.getDetallecomandaList().size()) + " Productos" : "0 Productos";
@@ -94,7 +98,7 @@ public class Comandas extends javax.swing.JFrame {
             Integer id = obtenerIdSeleccionado(tblComandasActivas);
             if (id != null) {
                 try {
-                    comandaController.marcarComoCompletada(id);
+                   FComandas.comandaCompletada(id);
                     cargarTablas();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
@@ -111,7 +115,7 @@ public class Comandas extends javax.swing.JFrame {
                         "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     try {
-                        comandaController.marcarComoEliminado(id);
+                        FComandas.comandaEliminada(id);
                         cargarTablas();
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
@@ -414,8 +418,14 @@ public class Comandas extends javax.swing.JFrame {
 
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
-        ListaProductos listaProductos = new ListaProductos(this);
-        listaProductos.setVisible(true);
+        ListaProductos listaProductos;
+        try {
+            listaProductos = new ListaProductos(this);
+            listaProductos.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(Comandas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btnNuevaComandaActionPerformed
 
     /**

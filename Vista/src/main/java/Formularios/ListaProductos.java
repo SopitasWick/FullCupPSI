@@ -4,6 +4,8 @@ import Controlador.ProductoControlador;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.Producto;
+import Facades.IFachadaComandasControlador;
+import Implementaciones.GestionarComandaControlador;
 import Interfaces.IProductoControlador;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class ListaProductos extends javax.swing.JFrame {
     
-    
+    private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     List<Producto> todosLosProductos;
     
     
@@ -27,7 +29,7 @@ public class ListaProductos extends javax.swing.JFrame {
     /**
      * Creates new form frmListaProductos
      */
-    public ListaProductos(Comandas comand) {
+    public ListaProductos(Comandas comand) throws Exception {
         initComponents();
         
         
@@ -38,11 +40,10 @@ public class ListaProductos extends javax.swing.JFrame {
 
     
     
-    public void buscarProductos(){
-    
-        IProductoControlador ProductoControl = new ProductoControlador();
+    public void buscarProductos() throws Exception{
+
         
-        todosLosProductos = ProductoControl.obtenerTodosLosProductos();
+        todosLosProductos = FComandas.ObtenerListaProductos();
         
         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
         
@@ -63,7 +64,7 @@ public class ListaProductos extends javax.swing.JFrame {
         for (Producto p : todosLosProductos) {
             Object[] fila = {
                 p.getNombreProducto(),          // o p.getNombreProducto()
-                "nada",     // o p.getDescripcionProducto()
+                "nada",     // o p.getDescripcionProducto() AQUI VACIAR LO QUE SE TENGA DE LA
                 p.getPrecioProducto()// o p.getPrecioProducto()
             };
             modelo.addRow(fila);
@@ -91,7 +92,9 @@ public class ListaProductos extends javax.swing.JFrame {
                                 producto = p;
                             }
                         }
-                        
+                        //RIFARSELA AQUI PARA QUE ANTES DE QUE HABRA LA PANTALLA DETALLES
+                        //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
+                        //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
                         detalle = new DetallesProducto(ListaProductos.this, producto);
                         detalle.setVisible(true);
                         
