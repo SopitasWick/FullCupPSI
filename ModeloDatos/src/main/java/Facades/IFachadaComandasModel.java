@@ -17,6 +17,7 @@ import java.util.List;
 public interface IFachadaComandasModel{
     public List<Comanda>ObtenerListaComandas()throws Exception;
     public List<Producto> ObtenerListaProductos() throws Exception;
+    public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception;
     public List<ExtrasProductos> ObtenerDetallesProductos(Integer idProducto)throws Exception;
     public void GuardarComanda(Comanda comanda)throws Exception;
     public void GuardarDetalleComanda(Detallecomanda detComanda) throws Exception;

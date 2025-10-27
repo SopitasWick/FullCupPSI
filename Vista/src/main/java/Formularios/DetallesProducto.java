@@ -43,7 +43,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         this.listaProductos = listaProducto;
         
         this.cargarDatos();
-        this.cargarDatosDetalles();
+       // this.cargarDatosDetalles();
     }
     
     
@@ -70,37 +70,37 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtTotal.setText(String.valueOf(total));
     }
     
-    private void cargarDatosDetalles(){
-   if(this.producto.getIdProducto()<=5 && this.producto.getIdProducto()>=1){
-       //TAMAÑO
-       this.radioMediano2.setEnabled(true);
-       this.radioMediano3.setEnabled(true);
-       //TIPO LECHE
-       this.toggleAlmendras.setEnabled(true);
-       this.toggleAvena.setEnabled(true);
-       this.toggleDeslactosada.setEnabled(true);
-       this.toggleEntera.setEnabled(true);
-       //EXTRAS
-       this.spinnerBoba.setEnabled(true);
-       this.spinnerLecheAlmendras.setEnabled(true);
-       this.spinnerLecheDeCoco.setEnabled(true);
-       this.spinnerBoba.setEnabled(true);
-   }else{
-        //TAMAÑO
-       this.radioMediano2.setEnabled(false);
-       this.radioMediano3.setEnabled(false);
-       //TIPO LECHE
-       this.toggleAlmendras.setEnabled(false);
-       this.toggleAvena.setEnabled(false);
-       this.toggleDeslactosada.setEnabled(false);
-       this.toggleEntera.setEnabled(false);
-       //EXTRAS
-       this.spinnerBoba.setEnabled(false);
-       this.spinnerLecheAlmendras.setEnabled(false);
-       this.spinnerLecheDeCoco.setEnabled(false);
-       this.spinnerBoba.setEnabled(false);
-   }
-}
+//    private void cargarDatosDetalles(){
+//   if(this.producto.getIdProducto()<=5 && this.producto.getIdProducto()>=1){
+//       //TAMAÑO
+//       this.radioMediano2.setEnabled(true);
+//       this.radioMediano3.setEnabled(true);
+//       //TIPO LECHE
+//       this.toggleAlmendras.setEnabled(true);
+//       this.toggleAvena.setEnabled(true);
+//       this.toggleDeslactosada.setEnabled(true);
+//       this.toggleEntera.setEnabled(true);
+//       //EXTRAS
+//       this.spinnerBoba.setEnabled(true);
+//       this.spinnerLecheAlmendras.setEnabled(true);
+//       this.spinnerLecheDeCoco.setEnabled(true);
+//       this.spinnerBoba.setEnabled(true);
+//   }else{
+//        //TAMAÑO
+//       this.radioMediano2.setEnabled(false);
+//       this.radioMediano3.setEnabled(false);
+//       //TIPO LECHE
+//       this.toggleAlmendras.setEnabled(false);
+//       this.toggleAvena.setEnabled(false);
+//       this.toggleDeslactosada.setEnabled(false);
+//       this.toggleEntera.setEnabled(false);
+//       //EXTRAS
+//       this.spinnerBoba.setEnabled(false);
+//       this.spinnerLecheAlmendras.setEnabled(false);
+//       this.spinnerLecheDeCoco.setEnabled(false);
+//       this.spinnerBoba.setEnabled(false);
+//   }
+//}
 
     /**
      * This method is called from within the constructor to initialize the form.

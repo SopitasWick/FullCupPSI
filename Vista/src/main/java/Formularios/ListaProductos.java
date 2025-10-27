@@ -9,6 +9,8 @@ import Implementaciones.GestionarComandaControlador;
 import Interfaces.IProductoControlador;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -41,9 +43,8 @@ public class ListaProductos extends javax.swing.JFrame {
     
     
     public void buscarProductos() throws Exception{
-
         
-        todosLosProductos = FComandas.ObtenerListaProductos();
+        todosLosProductos = FComandas.ObtenerListaProductos();//****************
         
         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
         
@@ -52,7 +53,11 @@ public class ListaProductos extends javax.swing.JFrame {
     
     }
     
-    
+    public void buscarProductosPorCategoria(int idCategoria)throws Exception{
+         todosLosProductos = FComandas.ObtenerListaProductosCategoria(idCategoria);
+         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
+         llenarTablaProductos();
+    }
     
     public void llenarTablaProductos(){
         
@@ -194,11 +199,15 @@ public class ListaProductos extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnGuardar1 = new javax.swing.JButton();
         toggleTodos = new javax.swing.JToggleButton();
-        toggleCafe = new javax.swing.JToggleButton();
-        toggleTe = new javax.swing.JToggleButton();
-        toggleBebidasFrias = new javax.swing.JToggleButton();
-        togglePostres = new javax.swing.JToggleButton();
-        toggleSnacks = new javax.swing.JToggleButton();
+        toggleBCalientes = new javax.swing.JToggleButton();
+        toggleTonic = new javax.swing.JToggleButton();
+        toggleFrappeRocas = new javax.swing.JToggleButton();
+        toggleEspeciales = new javax.swing.JToggleButton();
+        toggleSmothies = new javax.swing.JToggleButton();
+        toggleCrepasDulces = new javax.swing.JToggleButton();
+        toggleEmparedados = new javax.swing.JToggleButton();
+        toggleCrepasSaladas = new javax.swing.JToggleButton();
+        btnProductosUnitarios = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -444,7 +453,7 @@ public class ListaProductos extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtTotal))
                             .addComponent(jLabel7))
-                        .addContainerGap(12, Short.MAX_VALUE))
+                        .addContainerGap(140, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(btnRegistrarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
@@ -484,26 +493,88 @@ public class ListaProductos extends javax.swing.JFrame {
         toggleTodos.setBackground(new java.awt.Color(242, 243, 245));
         buttonGroup1.add(toggleTodos);
         toggleTodos.setText("Todos");
+        toggleTodos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleTodosActionPerformed(evt);
+            }
+        });
 
-        toggleCafe.setBackground(new java.awt.Color(242, 243, 245));
-        buttonGroup1.add(toggleCafe);
-        toggleCafe.setText("Café");
+        toggleBCalientes.setBackground(new java.awt.Color(242, 243, 245));
+        buttonGroup1.add(toggleBCalientes);
+        toggleBCalientes.setText("Bebidas Calientes");
+        toggleBCalientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleBCalientesActionPerformed(evt);
+            }
+        });
 
-        toggleTe.setBackground(new java.awt.Color(242, 243, 245));
-        buttonGroup1.add(toggleTe);
-        toggleTe.setText("Té");
+        toggleTonic.setBackground(new java.awt.Color(242, 243, 245));
+        buttonGroup1.add(toggleTonic);
+        toggleTonic.setText("Tonic");
+        toggleTonic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleTonicActionPerformed(evt);
+            }
+        });
 
-        toggleBebidasFrias.setBackground(new java.awt.Color(242, 243, 245));
-        buttonGroup1.add(toggleBebidasFrias);
-        toggleBebidasFrias.setText("Bebidas Frías");
+        toggleFrappeRocas.setBackground(new java.awt.Color(242, 243, 245));
+        buttonGroup1.add(toggleFrappeRocas);
+        toggleFrappeRocas.setText("Frappe o Rocas");
+        toggleFrappeRocas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleFrappeRocasActionPerformed(evt);
+            }
+        });
 
-        togglePostres.setBackground(new java.awt.Color(242, 243, 245));
-        buttonGroup1.add(togglePostres);
-        togglePostres.setText("Postres");
+        toggleEspeciales.setBackground(new java.awt.Color(242, 243, 245));
+        buttonGroup1.add(toggleEspeciales);
+        toggleEspeciales.setText("Bebidas Especiales");
+        toggleEspeciales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleEspecialesActionPerformed(evt);
+            }
+        });
 
-        toggleSnacks.setBackground(new java.awt.Color(242, 243, 245));
-        buttonGroup1.add(toggleSnacks);
-        toggleSnacks.setText("Snacks");
+        toggleSmothies.setBackground(new java.awt.Color(242, 243, 245));
+        buttonGroup1.add(toggleSmothies);
+        toggleSmothies.setText("Smothies");
+        toggleSmothies.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleSmothiesActionPerformed(evt);
+            }
+        });
+
+        toggleCrepasDulces.setBackground(new java.awt.Color(242, 243, 245));
+        toggleCrepasDulces.setText("Crepas D");
+        toggleCrepasDulces.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleCrepasDulcesActionPerformed(evt);
+            }
+        });
+
+        toggleEmparedados.setBackground(new java.awt.Color(242, 243, 245));
+        toggleEmparedados.setText("Emparedados");
+        toggleEmparedados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleEmparedadosActionPerformed(evt);
+            }
+        });
+
+        toggleCrepasSaladas.setBackground(new java.awt.Color(242, 243, 245));
+        toggleCrepasSaladas.setText("Crepas S");
+        toggleCrepasSaladas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleCrepasSaladasActionPerformed(evt);
+            }
+        });
+
+        btnProductosUnitarios.setBackground(new java.awt.Color(242, 243, 245));
+        btnProductosUnitarios.setText("Productos Unitarios");
+        btnProductosUnitarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductosUnitariosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -514,23 +585,34 @@ public class ListaProductos extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtBuscarProductos)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtBuscarProductos)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(toggleTodos)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(toggleCafe)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(toggleTe)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(toggleBebidasFrias)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(togglePostres)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(toggleSnacks)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(toggleBCalientes)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(toggleTonic)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(toggleFrappeRocas)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(toggleEspeciales)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(toggleSmothies)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(toggleCrepasDulces)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(toggleCrepasSaladas)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(toggleEmparedados, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(321, 321, 321)
+                                        .addComponent(btnProductosUnitarios, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -557,17 +639,25 @@ public class ListaProductos extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(toggleTodos)
-                        .addComponent(toggleCafe)
-                        .addComponent(toggleTe)
-                        .addComponent(toggleBebidasFrias)
-                        .addComponent(togglePostres)
-                        .addComponent(toggleSnacks)))
-                .addGap(22, 22, 22)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(toggleTodos)
+                            .addComponent(toggleBCalientes)
+                            .addComponent(toggleTonic)
+                            .addComponent(toggleFrappeRocas)
+                            .addComponent(toggleEspeciales)
+                            .addComponent(toggleSmothies)
+                            .addComponent(toggleCrepasDulces)
+                            .addComponent(toggleCrepasSaladas)
+                            .addComponent(toggleEmparedados))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnProductosUnitarios)))
+                .addGap(2, 2, 2)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -584,7 +674,7 @@ public class ListaProductos extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1457, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -611,6 +701,87 @@ public class ListaProductos extends javax.swing.JFrame {
 //        detalles.setVisible(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
+    private void toggleBCalientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleBCalientesActionPerformed
+        try {
+            this.buscarProductosPorCategoria(1);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleBCalientesActionPerformed
+
+    private void toggleTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleTodosActionPerformed
+        try {
+            // TODO add your handling code here:
+            this.buscarProductos();
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleTodosActionPerformed
+
+    private void toggleTonicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleTonicActionPerformed
+try {
+            this.buscarProductosPorCategoria(2);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleTonicActionPerformed
+
+    private void toggleFrappeRocasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleFrappeRocasActionPerformed
+       try {
+            this.buscarProductosPorCategoria(3);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleFrappeRocasActionPerformed
+
+    private void toggleEspecialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEspecialesActionPerformed
+        try {
+            this.buscarProductosPorCategoria(4);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleEspecialesActionPerformed
+
+    private void toggleSmothiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleSmothiesActionPerformed
+        try {
+            this.buscarProductosPorCategoria(5);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleSmothiesActionPerformed
+
+    private void toggleCrepasDulcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleCrepasDulcesActionPerformed
+       try {
+            this.buscarProductosPorCategoria(6);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleCrepasDulcesActionPerformed
+
+    private void toggleCrepasSaladasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleCrepasSaladasActionPerformed
+       try {
+            this.buscarProductosPorCategoria(7);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleCrepasSaladasActionPerformed
+
+    private void toggleEmparedadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEmparedadosActionPerformed
+        try {
+            this.buscarProductosPorCategoria(8);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleEmparedadosActionPerformed
+
+    private void btnProductosUnitariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosUnitariosActionPerformed
+        try {
+            this.buscarProductosPorCategoria(9);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnProductosUnitariosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -622,6 +793,7 @@ public class ListaProductos extends javax.swing.JFrame {
     private javax.swing.JButton btnMesa;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnParaLlevar;
+    private javax.swing.JButton btnProductosUnitarios;
     private javax.swing.JButton btnRegistrarVenta;
     private javax.swing.JButton btnRestar;
     private javax.swing.JButton btnSumar1;
@@ -644,12 +816,15 @@ public class ListaProductos extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblProductos;
     private javax.swing.JTable tblitems;
-    private javax.swing.JToggleButton toggleBebidasFrias;
-    private javax.swing.JToggleButton toggleCafe;
-    private javax.swing.JToggleButton togglePostres;
-    private javax.swing.JToggleButton toggleSnacks;
-    private javax.swing.JToggleButton toggleTe;
+    private javax.swing.JToggleButton toggleBCalientes;
+    private javax.swing.JToggleButton toggleCrepasDulces;
+    private javax.swing.JToggleButton toggleCrepasSaladas;
+    private javax.swing.JToggleButton toggleEmparedados;
+    private javax.swing.JToggleButton toggleEspeciales;
+    private javax.swing.JToggleButton toggleFrappeRocas;
+    private javax.swing.JToggleButton toggleSmothies;
     private javax.swing.JToggleButton toggleTodos;
+    private javax.swing.JToggleButton toggleTonic;
     private javax.swing.JTextField txtBuscarProductos;
     private javax.swing.JLabel txtSubtotal;
     private javax.swing.JLabel txtTotal;

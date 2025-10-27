@@ -81,5 +81,10 @@ IFachadaComandasModel FModel;
     public void EditarComanda(Comanda comanda) throws Exception {
          FModel.EditarComanda(comanda);
     }
+
+    @Override
+    public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception {
+     return FModel.ObtenerListaProductosCategoria(idCategoria);
+    }
     
 }

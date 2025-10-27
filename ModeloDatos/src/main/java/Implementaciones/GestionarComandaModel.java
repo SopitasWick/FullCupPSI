@@ -112,6 +112,11 @@ DetallecomandaJpaController jpaDetalleComanda;
       jpaComanda.edit(comanda);
     }
 
+    @Override
+    public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception {
+      return jpaProducto.findProductosByIdCategoria(idCategoria);
+    }
+
 
   
     
