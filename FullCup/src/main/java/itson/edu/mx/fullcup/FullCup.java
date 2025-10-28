@@ -13,14 +13,7 @@ import Formularios.Comandas;
 public class FullCup {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-        
-        
-        Comandas comanda = new Comandas();
-        
-        comanda.setVisible(true);
-        
-        
-        
+          Comandas viston = new Comandas();
+          viston.setVisible(true);
     }
 }

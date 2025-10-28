@@ -2,61 +2,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Entidades;
+package DTOs;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 /**
  *
  * @author usuario
  */
-@Entity
-@Table(name = "producto")
-@NamedQueries({
-    @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
-    @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto"),
-    @NamedQuery(name = "Producto.findByNombreProducto", query = "SELECT p FROM Producto p WHERE p.nombreProducto = :nombreProducto"),
-    @NamedQuery(name = "Producto.findByPrecioProducto", query = "SELECT p FROM Producto p WHERE p.precioProducto = :precioProducto"),
-    @NamedQuery(name = "Producto.findByCantidadDisponibleproducto", query = "SELECT p FROM Producto p WHERE p.cantidadDisponibleproducto = :cantidadDisponibleproducto"),
-    @NamedQuery(name = "Producto.findByUnidadMedidaproducto", query = "SELECT p FROM Producto p WHERE p.unidadMedidaproducto = :unidadMedidaproducto"),
-    @NamedQuery(name = "Producto.findByIdCategoria", query = "SELECT p FROM Producto p WHERE p.idCategoria.idCategoria = :idCategoria")
-})
+
 public class Producto implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @Column(name = "idProducto")
     private Integer idProducto;
-    @Column(name = "nombre_producto")
     private String nombreProducto;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "precio_producto")
     private Float precioProducto;
-    @Column(name = "cantidadDisponible_producto")
     private Integer cantidadDisponibleproducto;
-    @Column(name = "unidadMedida_producto")
     private String unidadMedidaproducto;
-    @OneToMany(mappedBy = "idProducto")
     private List<Promocion> promocionList;
-    @OneToMany(mappedBy = "idProducto")
     private List<Detallecomanda> detallecomandaList;
-    @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
-    @ManyToOne
     private Categoria idCategoria;
-    
-    @OneToMany(mappedBy = "idProducto")
     private List<ExtrasProductos> extrasProductosList;
 
     public List<ExtrasProductos> getExtrasProductosList() {

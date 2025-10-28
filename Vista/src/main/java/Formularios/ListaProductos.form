@@ -27,7 +27,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanel2" alignment="0" pref="1457" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -58,26 +58,39 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtBuscarProductos" max="32767" attributes="0"/>
-                                  <Component id="jScrollPane1" pref="900" max="32767" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtBuscarProductos" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" pref="900" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="toggleTodos" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="toggleCafe" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="toggleTe" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="toggleBebidasFrias" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="togglePostres" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="toggleSnacks" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="toggleBCalientes" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="toggleTonic" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="toggleFrappeRocas" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="toggleEspeciales" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="toggleSmothies" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="toggleCrepasDulces" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="toggleCrepasSaladas" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="toggleEmparedados" min="-2" pref="102" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="321" max="-2" attributes="0"/>
+                                          <Component id="btnProductosUnitarios" min="-2" pref="150" max="-2" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="48" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jPanel4" pref="486" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
@@ -114,19 +127,29 @@
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jTextField1" min="-2" pref="40" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="toggleTodos" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="toggleCafe" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="toggleTe" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="toggleBebidasFrias" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="togglePostres" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="toggleSnacks" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jTextField1" min="-2" pref="40" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="toggleTodos" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleBCalientes" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleTonic" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleFrappeRocas" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleEspeciales" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleSmothies" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleCrepasDulces" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleCrepasSaladas" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="toggleEmparedados" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnProductosUnitarios" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -558,7 +581,7 @@
                                   </Group>
                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="12" max="32767" attributes="0"/>
+                              <EmptySpace pref="140" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="btnRegistrarVenta" max="32767" attributes="0"/>
@@ -716,8 +739,11 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Todos"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleTodosActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="toggleCafe">
+        <Component class="javax.swing.JToggleButton" name="toggleBCalientes">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f5" green="f3" red="f2" type="rgb"/>
@@ -725,10 +751,13 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Caf&#xe9;"/>
+            <Property name="text" type="java.lang.String" value="Bebidas Calientes"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleBCalientesActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="toggleTe">
+        <Component class="javax.swing.JToggleButton" name="toggleTonic">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f5" green="f3" red="f2" type="rgb"/>
@@ -736,10 +765,13 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="T&#xe9;"/>
+            <Property name="text" type="java.lang.String" value="Tonic"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleTonicActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="toggleBebidasFrias">
+        <Component class="javax.swing.JToggleButton" name="toggleFrappeRocas">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f5" green="f3" red="f2" type="rgb"/>
@@ -747,10 +779,13 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Bebidas Fr&#xed;as"/>
+            <Property name="text" type="java.lang.String" value="Frappe o Rocas"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleFrappeRocasActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="togglePostres">
+        <Component class="javax.swing.JToggleButton" name="toggleEspeciales">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f5" green="f3" red="f2" type="rgb"/>
@@ -758,10 +793,13 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Postres"/>
+            <Property name="text" type="java.lang.String" value="Bebidas Especiales"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleEspecialesActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="toggleSnacks">
+        <Component class="javax.swing.JToggleButton" name="toggleSmothies">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f5" green="f3" red="f2" type="rgb"/>
@@ -769,8 +807,55 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Snacks"/>
+            <Property name="text" type="java.lang.String" value="Smothies"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleSmothiesActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="toggleCrepasDulces">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f5" green="f3" red="f2" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Crepas D"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleCrepasDulcesActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="toggleEmparedados">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f5" green="f3" red="f2" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Emparedados"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleEmparedadosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="toggleCrepasSaladas">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f5" green="f3" red="f2" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Crepas S"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleCrepasSaladasActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnProductosUnitarios">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f5" green="f3" red="f2" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Productos Unitarios"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductosUnitariosActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

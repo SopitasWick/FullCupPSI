@@ -32,17 +32,19 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" pref="979" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -363,14 +365,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="radioChico1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                               <Component id="radioMediano2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                               <Component id="radioMediano3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
+                      <EmptySpace pref="88" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -381,7 +382,6 @@
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="radioChico1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="radioMediano2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="radioMediano3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -391,23 +391,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JRadioButton" name="radioChico1">
-              <Properties>
-                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                  <ComponentRef name="buttonGroup1"/>
-                </Property>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Helvetica Neue" size="16" style="1"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="27" green="18" red="11" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Chico (8 oz)"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioChico1ActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JRadioButton" name="radioMediano2">
               <Properties>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
@@ -648,7 +631,7 @@
                           <Component id="jPanel10" alignment="0" max="32767" attributes="0"/>
                           <Component id="jPanel11" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="10" max="32767" attributes="0"/>
+                      <EmptySpace pref="114" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -705,7 +688,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtExtraShot" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="spinnerShotExtra" min="-2" max="-2" attributes="0"/>
+                          <Component id="spinnerLecheDeCoco" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -716,7 +699,7 @@
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtExtraShot" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="spinnerShotExtra" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="spinnerLecheDeCoco" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="18" max="32767" attributes="0"/>
                       </Group>
@@ -732,10 +715,10 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="27" green="18" red="11" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Shot Extra de Caf&#xe9;"/>
+                    <Property name="text" type="java.lang.String" value="Leche de coco"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSpinner" name="spinnerShotExtra">
+                <Component class="javax.swing.JSpinner" name="spinnerLecheDeCoco">
                   <Properties>
                     <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
@@ -768,7 +751,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtCremaExtra" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="spinnerCremaExtra" min="-2" max="-2" attributes="0"/>
+                          <Component id="spinnerLecheAlmendras" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -779,7 +762,7 @@
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtCremaExtra" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="spinnerCremaExtra" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="spinnerLecheAlmendras" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="18" max="32767" attributes="0"/>
                       </Group>
@@ -795,10 +778,10 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="27" green="18" red="11" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Crema Batida"/>
+                    <Property name="text" type="java.lang.String" value="Leche de almendras"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSpinner" name="spinnerCremaExtra">
+                <Component class="javax.swing.JSpinner" name="spinnerLecheAlmendras">
                   <Properties>
                     <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
@@ -831,7 +814,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtVainillaExtra" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="spinnerVainilla" min="-2" max="-2" attributes="0"/>
+                          <Component id="spinnerShotExpreso" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -842,7 +825,7 @@
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtVainillaExtra" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="spinnerVainilla" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="spinnerShotExpreso" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="18" max="32767" attributes="0"/>
                       </Group>
@@ -858,10 +841,10 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="27" green="18" red="11" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Jarabe de Vainilla"/>
+                    <Property name="text" type="java.lang.String" value="Shot expreso"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSpinner" name="spinnerVainilla">
+                <Component class="javax.swing.JSpinner" name="spinnerShotExpreso">
                   <Properties>
                     <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
@@ -894,7 +877,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtCarameloExtra" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="213" max="32767" attributes="0"/>
-                          <Component id="spinnerCaramelo" min="-2" max="-2" attributes="0"/>
+                          <Component id="spinnerBoba" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -905,7 +888,7 @@
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtCarameloExtra" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="spinnerCaramelo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="spinnerBoba" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="18" max="32767" attributes="0"/>
                       </Group>
@@ -921,10 +904,10 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="27" green="18" red="11" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Jarabe de Caramelo"/>
+                    <Property name="text" type="java.lang.String" value="Boba"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSpinner" name="spinnerCaramelo">
+                <Component class="javax.swing.JSpinner" name="spinnerBoba">
                   <Properties>
                     <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
