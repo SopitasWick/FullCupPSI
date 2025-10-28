@@ -95,16 +95,16 @@ public class DetallesProducto extends javax.swing.JFrame {
         // Extras
         StringBuilder extras = new StringBuilder();
         if ((int) spinnerLecheDeCoco.getValue() > 0) {
-            extras.append("Caramelo x").append(spinnerLecheDeCoco.getValue()).append("  ");
+            extras.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append("  ");
         }
         if ((int) spinnerLecheAlmendras.getValue() > 0) {
-            extras.append("Vainilla x").append(spinnerLecheAlmendras.getValue()).append("  ");
+            extras.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append("  ");
         }
         if ((int) spinnerShotExpreso.getValue() > 0) {
-            extras.append("Shot extra x").append(spinnerShotExpreso.getValue()).append("  ");
+            extras.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append("  ");
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            extras.append("Crema extra x").append(spinnerBoba.getValue()).append("  ");
+            extras.append("Boba x").append(spinnerBoba.getValue()).append("  ");
         }
 
         if (extras.length() == 0) {
@@ -1076,19 +1076,19 @@ public class DetallesProducto extends javax.swing.JFrame {
         // Extras
         int extras = 0;
         if ((int) spinnerLecheDeCoco.getValue() > 0) {
-            sb.append("Caramelo x").append(spinnerLecheDeCoco.getValue()).append(". ");
+            sb.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append(". ");
             extras += (int) spinnerLecheDeCoco.getValue();
         }
         if ((int) spinnerLecheAlmendras.getValue() > 0) {
-            sb.append("Vainilla x").append(spinnerLecheAlmendras.getValue()).append(". ");
+            sb.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append(". ");
             extras += (int) spinnerLecheAlmendras.getValue();
         }
         if ((int) spinnerShotExpreso.getValue() > 0) {
-            sb.append("Shot extra x").append(spinnerShotExpreso.getValue()).append(". ");
+            sb.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append(". ");
             extras += (int) spinnerShotExpreso.getValue();
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            sb.append("Crema extra x").append(spinnerBoba.getValue()).append(". ");
+            sb.append("Boba x").append(spinnerBoba.getValue()).append(". ");
             extras += (int) spinnerBoba.getValue();
         }
 
@@ -1113,49 +1113,49 @@ public class DetallesProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_radioChico1ActionPerformed
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
-        ComandaJpaController jpaComanda = new ComandaJpaController();
-        DetallecomandaJpaController jpaDetalleComanda = new DetallecomandaJpaController();
 
-        int cantidadProductos = (int) spinnerCantidadProducto.getValue(); // cantidad del spinner
-
-        if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
+        // TODO add your handling code here:
+//        Detallecomanda detalleCo = new Detallecomanda();
+//
+//        detalleCo.setIdProducto(producto);
+//        detalleCo.setNotadetalleComanda(nota);
+//        detalleCo.setSubTotaldetalleComanda(total);
+        //aqui vaser 
+   //     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+                
+                
+        if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
             try {
                 ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
-                ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
                 ListaProductos.comanda.setEstadoComanda("Abierta");
                 ListaProductos.comanda.setFechaHoracomanda(new Date());
                 ListaProductos.comanda.setTotalComanda(total);
                 try {
                     FComandas.GuardarComanda(ListaProductos.comanda);
-                    jpaComanda.create(ListaProductos.comanda);
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
+        
 
         if (ListaProductos.comanda.getDetallecomandaList() == null) {
             ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
         }
-
+         Detallecomanda detalleCo = new Detallecomanda();
         // Crear un detalle por cada unidad
-        for (int i = 0; i < cantidadProductos; i++) {
-            Detallecomanda detalleCo = new Detallecomanda();
+        for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
+            
             detalleCo.setIdProducto(producto);
             detalleCo.setNotadetalleComanda(nota);
-            detalleCo.setSubTotaldetalleComanda(total / cantidadProductos); // subtotal individual
+            detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
 
             try {
                 detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
                 detalleCo.setIdComanda(ListaProductos.comanda);
-
                 FComandas.GuardarDetalleComanda(detalleCo);
-                jpaDetalleComanda.create(detalleCo);
 
                 ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
 
@@ -1163,20 +1163,13 @@ public class DetallesProducto extends javax.swing.JFrame {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        // Actualizar comanda
-        try {
-            FComandas.EditarComanda(ListaProductos.comanda);
-            jpaComanda.edit(ListaProductos.comanda);
-        } catch (Exception ex) {
-            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+        detalleCo.setSubTotaldetalleComanda(total);
 
         listaProductos.setVisible(true);
         listaProductos.detalleComanda = ListaProductos.comanda.getDetallecomandaList();
         listaProductos.llenarItemsComanda();
         this.dispose();
-
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -1194,7 +1187,7 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
- recalcularTotal();
+        recalcularTotal();
     }//GEN-LAST:event_radioMediano2ActionPerformed
 
     private void radioMediano3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano3ActionPerformed
