@@ -12,12 +12,13 @@ import java.util.logging.Logger;
 
 public class DetallesProducto extends javax.swing.JFrame {
 
-    
+    private javax.swing.JRadioButton radioConLeche;
+    private javax.swing.JRadioButton radioSinLeche;
+
     Producto producto;
     ListaProductos listaProductos;
     public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
-    
-    
+
     float precioTamano;
     float precioExtra;
     float precioLeche;
@@ -26,47 +27,81 @@ public class DetallesProducto extends javax.swing.JFrame {
     int cantidad;
     String nota;
     String tipoLeche;
-    
-    
-    
-    
+
     /**
      * Creates new form DetallesProducto
      */
     public DetallesProducto(ListaProductos listaProducto, Producto producto) {
         initComponents();
-        
-        
+
         this.producto = producto;
         this.listaProductos = listaProducto;
-        
+
         cargarDatos();
     }
-    
-    
-    
-    private void cargarDatos(){
-    
-    
+
+    private void cargarDatos() {
+
         txtNombreProducto.setText(producto.getNombreProducto());
         txtPrecioBase.setText(producto.getPrecioProducto().toString());
-        
-        
+
         txtPrecioLeche.setText(String.valueOf(0));
         txtPrecioExtra.setText(String.valueOf(0));
         txtPrecioProductoResumen.setText(producto.getPrecioProducto().toString());
-        
+
         txtProductoResumen.setText(producto.getNombreProducto());
-        
-        
+
         spinnerCantidadProducto.setValue(1);
-        
-        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
-        
+
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
     }
-    
+
+    private void actualizarResumen() {
+        // Nombre del producto
+        if (producto != null) {
+            txtProductoResumen.setText(producto.getNombreProducto());
+        }
+
+        // Tipo de leche
+        if (tipoLeche != null && !tipoLeche.isEmpty()) {
+            txtLeche.setText(tipoLeche);
+        } else {
+            txtLeche.setText("Ninguna");
+        }
+
+        // Extras
+        StringBuilder extras = new StringBuilder();
+        if ((int) spinnerCaramelo.getValue() > 0) {
+            extras.append("Caramelo x").append(spinnerCaramelo.getValue()).append("  ");
+        }
+        if ((int) spinnerVainilla.getValue() > 0) {
+            extras.append("Vainilla x").append(spinnerVainilla.getValue()).append("  ");
+        }
+        if ((int) spinnerShotExtra.getValue() > 0) {
+            extras.append("Shot extra x").append(spinnerShotExtra.getValue()).append("  ");
+        }
+        if ((int) spinnerCremaExtra.getValue() > 0) {
+            extras.append("Crema extra x").append(spinnerCremaExtra.getValue()).append("  ");
+        }
+
+        if (extras.length() == 0) {
+            txtExtra.setText("Ninguno");
+        } else {
+            txtExtra.setText(extras.toString());
+        }
+
+        // Actualiza precios en el resumen
+        txtPrecioLeche.setText(String.valueOf(precioLeche));
+        txtPrecioExtra.setText(String.valueOf(precioExtra));
+        txtPrecioProductoResumen.setText(String.valueOf(producto.getPrecioProducto()));
+
+        // Subtotal y total
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -254,7 +289,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,7 +399,12 @@ public class DetallesProducto extends javax.swing.JFrame {
         btnTipoLeche.add(toggleAlmendras);
         toggleAlmendras.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         toggleAlmendras.setForeground(new java.awt.Color(17, 24, 39));
-        toggleAlmendras.setText("Entera");
+        toggleAlmendras.setText("Leche Almendras");
+        toggleAlmendras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleAlmendrasActionPerformed(evt);
+            }
+        });
 
         toggleDeslactosada.setBackground(new java.awt.Color(242, 243, 245));
         btnTipoLeche.add(toggleDeslactosada);
@@ -444,6 +484,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtExtraShot.setText("Shot Extra de Café");
 
         spinnerShotExtra.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerShotExtra.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerShotExtraStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -474,6 +519,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtCremaExtra.setText("Crema Batida");
 
         spinnerCremaExtra.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerCremaExtra.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerCremaExtraStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -504,6 +554,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtVainillaExtra.setText("Jarabe de Vainilla");
 
         spinnerVainilla.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerVainilla.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerVainillaStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -534,6 +589,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtCarameloExtra.setText("Jarabe de Caramelo");
 
         spinnerCaramelo.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerCaramelo.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerCarameloStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -833,91 +893,160 @@ public class DetallesProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreProductoActionPerformed
 
-    private void radioChico1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioChico1ActionPerformed
-        // TODO add your handling code here:
-        
-        precioTamano = 0;        
-        
-        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
-    
-        
+    private void radioConLecheActionPerformed(java.awt.event.ActionEvent evt) {
+        toggleEntera.setEnabled(true);
+        toggleDeslactosada.setEnabled(true);
+        toggleAvena.setEnabled(true);
+        toggleAlmendras.setEnabled(true);
+    }
+
+    private void radioSinLecheActionPerformed(java.awt.event.ActionEvent evt) {
+        toggleEntera.setEnabled(false);
+        toggleDeslactosada.setEnabled(false);
+        toggleAvena.setEnabled(false);
+        toggleAlmendras.setEnabled(false);
+        tipoLeche = "";
+        txtLeche.setText("");
+        actualizarNota();
+    }
+
+    private void recalcularTotal() {
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-        
-        
+        actualizarNota();
+        actualizarResumen();
+    }
+
+    private void calcularExtrasYTotal() {
+        // Calcula el precio de los extras según la cantidad de cada spinner
+        precioExtra = ((int) spinnerCaramelo.getValue() * 5)
+                + ((int) spinnerVainilla.getValue() * 5)
+                + ((int) spinnerShotExtra.getValue() * 10)
+                + ((int) spinnerCremaExtra.getValue() * 7);
+
+        // Actualiza el label de precio de extras
+        txtPrecioExtra.setText(String.valueOf(precioExtra));
+
+        // Recalcula el total general
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+
+        // Actualiza los labels
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+
+        // Actualiza el resumen y la nota descriptiva
+        actualizarNota();
+        actualizarResumen();
+    }
+
+    private void actualizarNota() {
+        StringBuilder sb = new StringBuilder();
+
+        if (tipoLeche != null && !tipoLeche.isEmpty()) {
+            sb.append("Leche: ").append(tipoLeche).append(". ");
+        }
+
+        int extras = 0;
+        if ((int) spinnerCaramelo.getValue() > 0) {
+            sb.append("Caramelo x").append(spinnerCaramelo.getValue()).append(". ");
+            extras += (int) spinnerCaramelo.getValue();
+        }
+        if ((int) spinnerVainilla.getValue() > 0) {
+            sb.append("Vainilla x").append(spinnerVainilla.getValue()).append(". ");
+            extras += (int) spinnerVainilla.getValue();
+        }
+        if ((int) spinnerShotExtra.getValue() > 0) {
+            sb.append("Shot extra x").append(spinnerShotExtra.getValue()).append(". ");
+            extras += (int) spinnerShotExtra.getValue();
+        }
+        if ((int) spinnerCremaExtra.getValue() > 0) {
+            sb.append("Crema extra x").append(spinnerCremaExtra.getValue()).append(". ");
+            extras += (int) spinnerCremaExtra.getValue();
+        }
+
+        sb.append("Cantidad de extras: ").append(extras).append(". ");
+
+        if (ListaProductos.comanda != null && ListaProductos.comanda.getIdComanda() != null) {
+            // sb.append("Cliente: ").append(ListaProductos.comanda.getNombreCliente());
+        }
+
+        nota = sb.toString();
+        txtDescripcion.setText(nota);
+    }
+
+
+    private void radioChico1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioChico1ActionPerformed
+        // TODO add your handling code here:
+
+        precioTamano = 0;
+
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+
+        txtSubtotal.setText(String.valueOf(total));
+        txtTotal.setText(String.valueOf(total));
+
+
     }//GEN-LAST:event_radioChico1ActionPerformed
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         // TODO add your handling code here:
-        
+
         ComandaJpaController jpaComanda = new ComandaJpaController();
         DetallecomandaJpaController jpaDetalleComanda = new DetallecomandaJpaController();
 
         Detallecomanda detalleCo = new Detallecomanda();
-        detalleCo.setCaintidaddetalleComanda(cantidad); 
-        
+
         detalleCo.setIdProducto(producto);
         detalleCo.setNotadetalleComanda(nota);
         detalleCo.setSubTotaldetalleComanda(total);
-        
-                
-                
-        if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
+
+        if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
             ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
-            
+
             ListaProductos.comanda.setEstadoComanda("Abierta");
             ListaProductos.comanda.setFechaHoracomanda(new Date());
             ListaProductos.comanda.setTotalComanda(total);
             try {
                 jpaComanda.create(ListaProductos.comanda);
-                
+
                 detalleCo.setIdComanda(ListaProductos.comanda);
-                
+
                 listaDetalleComandas.add(detalleCo);
-                
+
                 ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
-                
+
                 detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
-                
+
                 jpaDetalleComanda.create(detalleCo);
-                
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
-        }
 
+        } else {
 
-        else{
-        
-            
             detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
-                
-            
-            
+
             detalleCo.setIdComanda(ListaProductos.comanda);
             listaDetalleComandas = ListaProductos.comanda.getDetallecomandaList();
             listaDetalleComandas.add(detalleCo);
-            
+
             ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
-            
+
             System.out.println(ListaProductos.comanda.toString());
-            
+
             try {
                 jpaDetalleComanda.create(detalleCo);
                 jpaComanda.edit(ListaProductos.comanda);
-             //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
-                
-                
+                //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
+
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
-        
-        
+
         listaProductos.setVisible(true);
         listaProductos.detalleComanda = listaDetalleComandas;
         listaProductos.llenarItemsComanda();
@@ -932,71 +1061,90 @@ public class DetallesProducto extends javax.swing.JFrame {
 
     private void radioMediano2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano2ActionPerformed
         // TODO add your handling code here:
-        
-        precioTamano = 10;
-        
-        
-        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
 
-        
+        precioTamano = 10;
+
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-        
+
     }//GEN-LAST:event_radioMediano2ActionPerformed
 
     private void radioMediano3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano3ActionPerformed
         // TODO add your handling code here:
         precioTamano = 20;
-        
-        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
 
-        
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
     }//GEN-LAST:event_radioMediano3ActionPerformed
 
     private void spinnerCantidadProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCantidadProductoStateChanged
         // TODO add your handling code here:
-        
-        if(((int)spinnerCantidadProducto.getValue()) < 1){
+
+        if (((int) spinnerCantidadProducto.getValue()) < 1) {
             spinnerCantidadProducto.setValue(1);
         }
-        
-        cantidad = (int) spinnerCantidadProducto.getValue();
-        
-        total = ((producto.getPrecioProducto() + precioTamano ) * cantidad) + precioLeche + precioExtra;
 
-        
+        cantidad = (int) spinnerCantidadProducto.getValue();
+
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-        
+
     }//GEN-LAST:event_spinnerCantidadProductoStateChanged
 
     private void toggleEnteraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEnteraActionPerformed
-        // TODO add your handling code here:
-        
         tipoLeche = "Leche entera";
-        txtLeche.setText(tipoLeche);
+        precioLeche = 0; // Sin costo adicional
+        txtPrecioLeche.setText(String.valueOf(precioLeche));
+        recalcularTotal();
+
     }//GEN-LAST:event_toggleEnteraActionPerformed
 
     private void toggleDeslactosadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleDeslactosadaActionPerformed
-        // TODO add your handling code here:
-        
         tipoLeche = "Deslactosada";
-        txtLeche.setText(tipoLeche);
+        precioLeche = 5; // Costo adicional ejemplo
+        txtPrecioLeche.setText(String.valueOf(precioLeche));
+        recalcularTotal();
     }//GEN-LAST:event_toggleDeslactosadaActionPerformed
 
     private void toggleAvenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleAvenaActionPerformed
-        // TODO add your handling code here:
-        
-        tipoLeche = "Leche entera";
-        txtLeche.setText(tipoLeche);
+        tipoLeche = "Leche de avena";
+        precioLeche = 7; // Costo adicional ejemplo
+        txtPrecioLeche.setText(String.valueOf(precioLeche));
+        recalcularTotal();
     }//GEN-LAST:event_toggleAvenaActionPerformed
+
+    private void spinnerShotExtraStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerShotExtraStateChanged
+        calcularExtrasYTotal();
+    }//GEN-LAST:event_spinnerShotExtraStateChanged
+
+    private void spinnerCremaExtraStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCremaExtraStateChanged
+        calcularExtrasYTotal();
+    }//GEN-LAST:event_spinnerCremaExtraStateChanged
+
+    private void spinnerVainillaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerVainillaStateChanged
+        calcularExtrasYTotal();
+    }//GEN-LAST:event_spinnerVainillaStateChanged
+
+    private void spinnerCarameloStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCarameloStateChanged
+        calcularExtrasYTotal();
+    }//GEN-LAST:event_spinnerCarameloStateChanged
+
+    private void toggleAlmendrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleAlmendrasActionPerformed
+        tipoLeche = "Leche de almendras";
+        precioLeche = 8; // Costo adicional ejemplo
+        txtPrecioLeche.setText(String.valueOf(precioLeche));
+        recalcularTotal();
+    }//GEN-LAST:event_toggleAlmendrasActionPerformed
 
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;

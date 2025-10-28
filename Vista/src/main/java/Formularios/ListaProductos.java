@@ -11,68 +11,56 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class ListaProductos extends javax.swing.JFrame {
-    
-    
+
     List<Producto> todosLosProductos;
-    
-    
+
     public static Comanda comanda = new Comanda();
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
-    
+
     DetallesProducto detalle;
-    
+
     Comandas comand;
-    
 
     /**
      * Creates new form frmListaProductos
      */
     public ListaProductos(Comandas comand) {
         initComponents();
-        
-        
+
         this.comand = comand;
-        
+
         buscarProductos();
     }
 
-    
-    
-    public void buscarProductos(){
-    
+    public void buscarProductos() {
+
         IProductoControlador ProductoControl = new ProductoControlador();
-        
+
         todosLosProductos = ProductoControl.obtenerTodosLosProductos();
-        
+
         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
-        
+
         llenarTablaProductos();
-        
-    
+
     }
-    
-    
-    
-    public void llenarTablaProductos(){
-        
+
+    public void llenarTablaProductos() {
+
         DefaultTableModel modelo = (DefaultTableModel) tblProductos.getModel();
 
         modelo.setRowCount(0);
-    
-        
+
         for (Producto p : todosLosProductos) {
             Object[] fila = {
-                p.getNombreProducto(),          // o p.getNombreProducto()
-                "nada",     // o p.getDescripcionProducto()
+                p.getNombreProducto(), // o p.getNombreProducto()
+                "nada", // o p.getDescripcionProducto()
                 p.getPrecioProducto()// o p.getPrecioProducto()
             };
             modelo.addRow(fila);
         }
-        
-        
-        
+
         tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
-            
+
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 if (evt.getClickCount() == 1) {
@@ -85,71 +73,82 @@ public class ListaProductos extends javax.swing.JFrame {
                         float precio = Float.parseFloat(target.getValueAt(filaSeleccionada, 2).toString());
 
                         Producto producto = new Producto();
-                        
-                        for (Producto p : todosLosProductos){
-                            if (p.getNombreProducto().equals(nombre) && p.getPrecioProducto() == precio){
+
+                        for (Producto p : todosLosProductos) {
+                            if (p.getNombreProducto().equals(nombre) && p.getPrecioProducto() == precio) {
                                 producto = p;
                             }
                         }
-                        
+
                         detalle = new DetallesProducto(ListaProductos.this, producto);
                         detalle.setVisible(true);
-                        
+
                         ListaProductos.this.setVisible(false);
 
                     }
                 }
             }
         });
-        
+
     }
-    
-    
-    
-    public void llenarItemsComanda(){
-        
+
+    public void llenarItemsComanda() {
+
         DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
 
         modelo.setRowCount(0);
-    
-        
-        for(int i = 0; i < detalleComanda.size(); i++){
-                    
+
+        for (int i = 0; i < detalleComanda.size(); i++) {
+
             Object[] fila = {
                 detalleComanda.get(i).getIdProducto().getNombreProducto(),
-                detalleComanda.get(i).getNotadetalleComanda(),     // o p.getDescripcionProducto()
+                detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
                 detalleComanda.get(i).getCaintidaddetalleComanda(),
                 detalleComanda.get(i).getIdProducto().getPrecioProducto()
             };
-            modelo.addRow(fila);        
-                    
+            modelo.addRow(fila);
+
         }
-        
+
         calcularTotal();
- 
+
     }
-    
-    
-    private void calcularTotal(){
-        
+
+    private void calcularTotal() {
         float total = 0;
-        
         DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
 
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            int cantidad = (int) modelo.getValueAt(i, 2);
-            float precio = (float) modelo.getValueAt(i, 3);
+            Object cantidadObj = modelo.getValueAt(i, 2);
+            Object precioObj = modelo.getValueAt(i, 3);
 
-            total = total + (cantidad * precio);
+            if (cantidadObj == null || precioObj == null) {
+                System.out.println("Fila " + i + " tiene valores nulos: cantidad=" + cantidadObj + ", precio=" + precioObj);
+                continue;
+            }
+
+            int cantidad;
+            float precio;
+
+            if (cantidadObj instanceof Integer) {
+                cantidad = (Integer) cantidadObj;
+            } else {
+                cantidad = Integer.parseInt(cantidadObj.toString());
+            }
+
+            if (precioObj instanceof Float) {
+                precio = (Float) precioObj;
+            } else {
+                precio = Float.parseFloat(precioObj.toString());
+            }
+
+            total += cantidad * precio;
         }
-        
+
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-        
     }
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -595,7 +594,7 @@ public class ListaProductos extends javax.swing.JFrame {
 
     private void txtBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarProductosActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txtBuscarProductosActionPerformed
 
     private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
@@ -611,7 +610,6 @@ public class ListaProductos extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
