@@ -42,11 +42,9 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         this.producto = producto;
         this.listaProductos = listaProducto;
-        
+      
         this.cargarDatos();
        // this.cargarDatosDetalles();
-
-        cargarDatos();
     }
 
     private void cargarDatos() {
@@ -83,17 +81,17 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         // Extras
         StringBuilder extras = new StringBuilder();
-        if ((int) spinnerCaramelo.getValue() > 0) {
-            extras.append("Caramelo x").append(spinnerCaramelo.getValue()).append("  ");
+        if ((int) spinnerLecheDeCoco.getValue() > 0) {
+            extras.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append("  ");
         }
-        if ((int) spinnerVainilla.getValue() > 0) {
-            extras.append("Vainilla x").append(spinnerVainilla.getValue()).append("  ");
+        if ((int) spinnerLecheAlmendras.getValue() > 0) {
+            extras.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append("  ");
         }
-        if ((int) spinnerShotExtra.getValue() > 0) {
-            extras.append("Shot extra x").append(spinnerShotExtra.getValue()).append("  ");
+        if ((int) spinnerShotExpreso.getValue() > 0) {
+            extras.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append("  ");
         }
-        if ((int) spinnerCremaExtra.getValue() > 0) {
-            extras.append("Crema extra x").append(spinnerCremaExtra.getValue()).append("  ");
+        if ((int) spinnerBoba.getValue() > 0) {
+            extras.append("Boba x").append(spinnerBoba.getValue()).append("  ");
         }
 
         if (extras.length() == 0) {
@@ -192,6 +190,9 @@ public class DetallesProducto extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         txtVainillaExtra = new javax.swing.JLabel();
         spinnerShotExpreso = new javax.swing.JSpinner();
+        jPanel11 = new javax.swing.JPanel();
+        txtCarameloExtra = new javax.swing.JLabel();
+        spinnerBoba = new javax.swing.JSpinner();
         jPanel12 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         txtProductoResumen = new javax.swing.JLabel();
@@ -211,9 +212,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         jPanel13 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         spinnerCantidadProducto = new javax.swing.JSpinner();
-        jPanel11 = new javax.swing.JPanel();
-        txtCarameloExtra = new javax.swing.JLabel();
-        spinnerBoba = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1440, 1024));
@@ -611,6 +609,41 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
+        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
+
+        txtCarameloExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        txtCarameloExtra.setForeground(new java.awt.Color(17, 24, 39));
+        txtCarameloExtra.setText("Boba");
+
+        spinnerBoba.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerBoba.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerCarameloStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txtCarameloExtra)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCarameloExtra)
+                    .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -621,8 +654,9 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel7)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(215, Short.MAX_VALUE))
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -635,7 +669,9 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -825,56 +861,18 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
-
-        txtCarameloExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtCarameloExtra.setForeground(new java.awt.Color(17, 24, 39));
-        txtCarameloExtra.setText("Boba");
-
-        spinnerBoba.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
-        spinnerBoba.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                spinnerCarameloStateChanged(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtCarameloExtra)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCarameloExtra)
-                    .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1466, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(339, 339, 339)
+                .addContainerGap(456, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -896,15 +894,9 @@ public class DetallesProducto extends javax.swing.JFrame {
                         .addGap(19, 19, 19)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 19, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40))))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -958,10 +950,10 @@ public class DetallesProducto extends javax.swing.JFrame {
 
     private void calcularExtrasYTotal() {
         // Calcula el precio de los extras según la cantidad de cada spinner
-        precioExtra = ((int) spinnerCaramelo.getValue() * 5)
-                + ((int) spinnerVainilla.getValue() * 5)
-                + ((int) spinnerShotExtra.getValue() * 10)
-                + ((int) spinnerCremaExtra.getValue() * 7);
+        precioExtra = ((int) spinnerLecheDeCoco.getValue() * 5)
+                + ((int) spinnerLecheAlmendras.getValue() * 5)
+                + ((int) spinnerShotExpreso.getValue() * 10)
+                + ((int) spinnerBoba.getValue() * 7);
 
         // Actualiza el label de precio de extras
         txtPrecioExtra.setText(String.valueOf(precioExtra));
@@ -986,21 +978,21 @@ public class DetallesProducto extends javax.swing.JFrame {
         }
 
         int extras = 0;
-        if ((int) spinnerCaramelo.getValue() > 0) {
-            sb.append("Caramelo x").append(spinnerCaramelo.getValue()).append(". ");
-            extras += (int) spinnerCaramelo.getValue();
+        if ((int) spinnerLecheDeCoco.getValue() > 0) {
+            sb.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append(". ");
+            extras += (int) spinnerLecheDeCoco.getValue();
         }
-        if ((int) spinnerVainilla.getValue() > 0) {
-            sb.append("Vainilla x").append(spinnerVainilla.getValue()).append(". ");
-            extras += (int) spinnerVainilla.getValue();
+        if ((int) spinnerLecheAlmendras.getValue() > 0) {
+            sb.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append(". ");
+            extras += (int) spinnerLecheAlmendras.getValue();
         }
-        if ((int) spinnerShotExtra.getValue() > 0) {
-            sb.append("Shot extra x").append(spinnerShotExtra.getValue()).append(". ");
-            extras += (int) spinnerShotExtra.getValue();
+        if ((int) spinnerShotExpreso.getValue() > 0) {
+            sb.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append(". ");
+            extras += (int) spinnerShotExpreso.getValue();
         }
-        if ((int) spinnerCremaExtra.getValue() > 0) {
-            sb.append("Crema extra x").append(spinnerCremaExtra.getValue()).append(". ");
-            extras += (int) spinnerCremaExtra.getValue();
+        if ((int) spinnerBoba.getValue() > 0) {
+            sb.append("Boba x").append(spinnerBoba.getValue()).append(". ");
+            extras += (int) spinnerBoba.getValue();
         }
 
         sb.append("Cantidad de extras: ").append(extras).append(". ");
@@ -1029,16 +1021,13 @@ public class DetallesProducto extends javax.swing.JFrame {
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         // TODO add your handling code here:
-
-        ComandaJpaController jpaComanda = new ComandaJpaController();
-        DetallecomandaJpaController jpaDetalleComanda = new DetallecomandaJpaController();
-
         Detallecomanda detalleCo = new Detallecomanda();
 
         detalleCo.setIdProducto(producto);
         detalleCo.setNotadetalleComanda(nota);
         detalleCo.setSubTotaldetalleComanda(total);
-        
+        //aqui vaser 
+        detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
                 
                 
         if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
@@ -1047,21 +1036,12 @@ public class DetallesProducto extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-    
-
-        if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
-            ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
-
             ListaProductos.comanda.setEstadoComanda("Abierta");
             ListaProductos.comanda.setFechaHoracomanda(new Date());
             ListaProductos.comanda.setTotalComanda(total);
             try {
                 FComandas.GuardarComanda(ListaProductos.comanda);
-                
-                jpaComanda.create(ListaProductos.comanda);
-
                 detalleCo.setIdComanda(ListaProductos.comanda);
-
                 listaDetalleComandas.add(detalleCo);
 
                 ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
@@ -1069,10 +1049,6 @@ public class DetallesProducto extends javax.swing.JFrame {
                 
                 FComandas.GuardarDetalleComanda(detalleCo);//**********
                
-
-                detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
-
-                jpaDetalleComanda.create(detalleCo);
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1085,9 +1061,6 @@ public class DetallesProducto extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-                
-            
-            detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
 
             detalleCo.setIdComanda(ListaProductos.comanda);
             listaDetalleComandas = ListaProductos.comanda.getDetallecomandaList();
@@ -1101,11 +1074,6 @@ public class DetallesProducto extends javax.swing.JFrame {
                 FComandas.GuardarDetalleComanda(detalleCo);//********
                 FComandas.EditarComanda(ListaProductos.comanda);//*******
              //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
-                
-                
-                jpaDetalleComanda.create(detalleCo);
-                jpaComanda.edit(ListaProductos.comanda);
-                //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
                 }
                 catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
@@ -1114,9 +1082,9 @@ public class DetallesProducto extends javax.swing.JFrame {
         }
         
         listaProductos.setVisible(true);
-        listaProductos.detalleComanda = listaDetalleComandas;
+        listaProductos.detalleComanda = listaDetalleComandas;//**********
         listaProductos.llenarItemsComanda();
-        this.dispose();}
+        this.dispose();
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
