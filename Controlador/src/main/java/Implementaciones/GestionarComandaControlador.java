@@ -44,8 +44,14 @@ IFachadaComandasModel FModel;
 
     @Override
     public void comandaCompletada(Integer idComanda) throws Exception {
-    FModel.comandaCompletada(idComanda);
+        FModel.comandaCompletada(idComanda);
     }
+    
+    @Override
+    public Comanda obtenerComanda (Integer idComanda) throws Exception{
+        return FModel.obtenerComanda(idComanda);
+    }
+    
 
     @Override
     public List<Comanda> obtenerComandasActivas() throws Exception {

@@ -23,6 +23,7 @@ public interface IFachadaComandasControlador{
     public void GuardarDetalleComanda(Detallecomanda detComanda) throws Exception;
     public void EditarComanda(Comanda comanda) throws Exception;
     public void comandaCompletada (Integer idComanda)throws Exception;
+    public Comanda obtenerComanda (Integer idComanda) throws Exception;
     public List<Comanda> obtenerComandasActivas()throws Exception;
      public List<Comanda> obtenerComandasCompletadas() throws Exception;
      public void comandaEliminada (Integer idComanda)throws Exception;

@@ -64,6 +64,11 @@ DetallecomandaJpaController jpaDetalleComanda;
         c.setEstadoComanda("Cerrada");
         jpaComanda.edit(c);
     }
+    
+    @Override
+    public Comanda obtenerComanda (Integer idComanda) throws Exception{
+        return jpaComanda.findComanda(idComanda);
+    }
 
     @Override
     public List<Comanda> obtenerComandasActivas() throws Exception {

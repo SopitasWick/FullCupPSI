@@ -18,6 +18,10 @@ public class Comandas extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    
+    
+    ListaProductos listaProductos;
+    
 
     /**
      * Creates new form frmComandas
@@ -87,10 +91,12 @@ public class Comandas extends javax.swing.JFrame {
         JPopupMenu popup = new JPopupMenu();
 
         JMenuItem itemCompletar = new JMenuItem("Marcar como completada");
-        JMenuItem itemEliminar = new JMenuItem("Eliminar comanda");
+        JMenuItem itemEliminar = new JMenuItem("Eliminar comanda");        
+        JMenuItem itemEditar = new JMenuItem("Editar comanda");
 
         popup.add(itemCompletar);
         popup.add(itemEliminar);
+        popup.add(itemEditar);
 
         // Listener para completar
         itemCompletar.addActionListener(e -> {
@@ -122,6 +128,27 @@ public class Comandas extends javax.swing.JFrame {
                 }
             }
         });
+        
+        
+        //Listener para editar
+        itemEditar.addActionListener(e -> {
+            Integer id = obtenerIdSeleccionado(tblComandasActivas);
+            if (id != null) {
+                try {
+                    
+                   Comanda comandaEditar = FComandas.obtenerComanda(id);
+                    System.out.println(comandaEditar.toString()); 
+                   
+                   listaProductos = new ListaProductos(this, comandaEditar);
+                   listaProductos.setVisible(true);
+                   this.setVisible(false);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
+                }
+            }
+        });
+        
 
         // Mostrar popup al hacer clic derecho
         tblComandasActivas.addMouseListener(new MouseAdapter() {
@@ -244,7 +271,7 @@ public class Comandas extends javax.swing.JFrame {
                         .addGap(144, 144, 144)
                         .addComponent(btnNuevaComanda))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,9 +444,8 @@ public class Comandas extends javax.swing.JFrame {
 
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
-        ListaProductos listaProductos;
         try {
-            listaProductos = new ListaProductos(this);
+            listaProductos = new ListaProductos(this, null);
             listaProductos.setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(Comandas.class.getName()).log(Level.SEVERE, null, ex);

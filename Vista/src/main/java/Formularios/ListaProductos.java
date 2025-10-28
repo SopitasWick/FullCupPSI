@@ -25,14 +25,17 @@ public class ListaProductos extends javax.swing.JFrame {
     DetallesProducto detalle;
 
     Comandas comand;
+    Comanda comandaEditar;
 
     /**
      * Creates new form frmListaProductos
+     * @param comandaEditar utilizada para editar, null en caso de ser nueva comanda
      */
-    public ListaProductos(Comandas comand) throws Exception {
+    public ListaProductos(Comandas comand, Comanda comandaEditar) throws Exception {
         initComponents();
 
         this.comand = comand;
+        this.comandaEditar = comandaEditar;
 
         buscarProductos();
     }
@@ -70,7 +73,7 @@ public class ListaProductos extends javax.swing.JFrame {
         for (Producto p : todosLosProductos) {
             Object[] fila = {
                 p.getNombreProducto(),          // o p.getNombreProducto()
-                "nada",     // o p.getDescripcionProducto() AQUI VACIAR LO QUE SE TENGA DE LA
+                "No Programado",     // o p.getDescripcionProducto() AQUI VACIAR LO QUE SE TENGA DE LA
                 p.getPrecioProducto()// o p.getPrecioProducto()
             };
             modelo.addRow(fila);
@@ -109,6 +112,9 @@ public class ListaProductos extends javax.swing.JFrame {
             }
         });
 
+        
+        llenarItemsComanda();
+        
     }
 
     public void llenarItemsComanda() {
@@ -116,18 +122,31 @@ public class ListaProductos extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
 
         modelo.setRowCount(0);
-
-        for (int i = 0; i < detalleComanda.size(); i++) {
-
-            Object[] fila = {
-                detalleComanda.get(i).getIdProducto().getNombreProducto(),
-                detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
-                detalleComanda.get(i).getCaintidaddetalleComanda(),
-                detalleComanda.get(i).getSubTotaldetalleComanda()
-            };
-            modelo.addRow(fila);
-
+        
+        
+        if(comandaEditar != null){
+            
+            System.out.println(comandaEditar.toString());
+            detalleComanda = comandaEditar.getDetallecomandaList();
         }
+
+        else{
+            System.out.println("Es nula");
+        }
+        
+            for (int i = 0; i < detalleComanda.size(); i++) {
+
+                Object[] fila = {
+                    detalleComanda.get(i).getIdProducto().getNombreProducto(),
+                    detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
+                    detalleComanda.get(i).getCaintidaddetalleComanda(),
+                    detalleComanda.get(i).getSubTotaldetalleComanda()
+                };
+                modelo.addRow(fila);
+
+            }
+        
+        
 
         calcularTotal();
 
