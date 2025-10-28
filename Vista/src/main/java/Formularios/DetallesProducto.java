@@ -11,12 +11,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
 public class DetallesProducto extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
-
 
     private javax.swing.JRadioButton radioConLeche;
     private javax.swing.JRadioButton radioSinLeche;
@@ -40,11 +40,22 @@ public class DetallesProducto extends javax.swing.JFrame {
     public DetallesProducto(ListaProductos listaProducto, Producto producto) {
         initComponents();
 
+        ButtonGroup grupoTamaño = new ButtonGroup();
+        grupoTamaño.add(jrbTamañoSi);
+        grupoTamaño.add(jrbTamañoNo);
+
+        ButtonGroup grupoLeche = new ButtonGroup();
+        grupoLeche.add(jrbLecheSi);
+        grupoLeche.add(jrbLecheNo);
+
+        ButtonGroup grupoExtras = new ButtonGroup();
+        grupoExtras.add(jrbExtrasSi);
+        grupoExtras.add(jrbExtrasNo);
         this.producto = producto;
         this.listaProductos = listaProducto;
-        
+
         this.cargarDatos();
-       // this.cargarDatosDetalles();
+        // this.cargarDatosDetalles();
 
         cargarDatos();
     }
@@ -83,17 +94,17 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         // Extras
         StringBuilder extras = new StringBuilder();
-        if ((int) spinnerCaramelo.getValue() > 0) {
-            extras.append("Caramelo x").append(spinnerCaramelo.getValue()).append("  ");
+        if ((int) spinnerLecheDeCoco.getValue() > 0) {
+            extras.append("Caramelo x").append(spinnerLecheDeCoco.getValue()).append("  ");
         }
-        if ((int) spinnerVainilla.getValue() > 0) {
-            extras.append("Vainilla x").append(spinnerVainilla.getValue()).append("  ");
+        if ((int) spinnerLecheAlmendras.getValue() > 0) {
+            extras.append("Vainilla x").append(spinnerLecheAlmendras.getValue()).append("  ");
         }
-        if ((int) spinnerShotExtra.getValue() > 0) {
-            extras.append("Shot extra x").append(spinnerShotExtra.getValue()).append("  ");
+        if ((int) spinnerShotExpreso.getValue() > 0) {
+            extras.append("Shot extra x").append(spinnerShotExpreso.getValue()).append("  ");
         }
-        if ((int) spinnerCremaExtra.getValue() > 0) {
-            extras.append("Crema extra x").append(spinnerCremaExtra.getValue()).append("  ");
+        if ((int) spinnerBoba.getValue() > 0) {
+            extras.append("Crema extra x").append(spinnerBoba.getValue()).append("  ");
         }
 
         if (extras.length() == 0) {
@@ -112,7 +123,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtTotal.setText(String.valueOf(total));
     }
 
-    
 //    private void cargarDatosDetalles(){
 //   if(this.producto.getIdProducto()<=5 && this.producto.getIdProducto()>=1){
 //       //TAMAÑO
@@ -144,8 +154,6 @@ public class DetallesProducto extends javax.swing.JFrame {
 //       this.spinnerBoba.setEnabled(false);
 //   }
 //}
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -175,12 +183,16 @@ public class DetallesProducto extends javax.swing.JFrame {
         radioMediano2 = new javax.swing.JRadioButton();
         radioMediano3 = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
+        jrbTamañoNo = new javax.swing.JRadioButton();
+        jrbTamañoSi = new javax.swing.JRadioButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         toggleEntera = new javax.swing.JToggleButton();
         toggleAlmendras = new javax.swing.JToggleButton();
         toggleDeslactosada = new javax.swing.JToggleButton();
         toggleAvena = new javax.swing.JToggleButton();
+        jrbLecheSi = new javax.swing.JRadioButton();
+        jrbLecheNo = new javax.swing.JRadioButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
@@ -192,6 +204,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         txtVainillaExtra = new javax.swing.JLabel();
         spinnerShotExpreso = new javax.swing.JSpinner();
+        jPanel11 = new javax.swing.JPanel();
+        txtCarameloExtra = new javax.swing.JLabel();
+        spinnerBoba = new javax.swing.JSpinner();
+        jrbExtrasNo = new javax.swing.JRadioButton();
+        jrbExtrasSi = new javax.swing.JRadioButton();
         jPanel12 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         txtProductoResumen = new javax.swing.JLabel();
@@ -211,9 +228,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         jPanel13 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         spinnerCantidadProducto = new javax.swing.JSpinner();
-        jPanel11 = new javax.swing.JPanel();
-        txtCarameloExtra = new javax.swing.JLabel();
-        spinnerBoba = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1440, 1024));
@@ -377,6 +391,20 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel5.setAlignmentX(16.0F);
         jLabel5.setAlignmentY(0.0F);
 
+        jrbTamañoNo.setText("No");
+        jrbTamañoNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbTamañoNoActionPerformed(evt);
+            }
+        });
+
+        jrbTamañoSi.setText("Si");
+        jrbTamañoSi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbTamañoSiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -384,24 +412,35 @@ public class DetallesProducto extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(57, 57, 57)
-                        .addComponent(radioMediano2)
-                        .addGap(36, 36, 36)
-                        .addComponent(radioMediano3)))
-                .addContainerGap(88, Short.MAX_VALUE))
+                        .addComponent(radioMediano2))
+                    .addComponent(jLabel5))
+                .addGap(36, 36, 36)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(radioMediano3)
+                        .addContainerGap(88, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jrbTamañoNo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jrbTamañoSi)
+                        .addGap(51, 51, 51))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel5)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jrbTamañoNo)
+                    .addComponent(jrbTamañoSi))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(radioMediano2)
                     .addComponent(radioMediano3))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -458,34 +497,55 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         });
 
+        jrbLecheSi.setText("Si");
+        jrbLecheSi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbLecheSiActionPerformed(evt);
+            }
+        });
+
+        jrbLecheNo.setText("No");
+        jrbLecheNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbLecheNoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel6))
+                        .addComponent(toggleEntera, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(toggleDeslactosada, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(toggleEntera, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(toggleDeslactosada, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(toggleAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(toggleAvena, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(toggleAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(toggleAvena, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jrbLecheNo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jrbLecheSi)
+                .addGap(51, 51, 51))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jrbLecheSi)
+                        .addComponent(jrbLecheNo)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(toggleEntera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(toggleDeslactosada, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -493,7 +553,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(toggleAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(toggleAvena, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
@@ -611,31 +671,94 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
+        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
+
+        txtCarameloExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        txtCarameloExtra.setForeground(new java.awt.Color(17, 24, 39));
+        txtCarameloExtra.setText("Boba");
+
+        spinnerBoba.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spinnerBoba.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spinnerCarameloStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txtCarameloExtra)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCarameloExtra)
+                    .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        jrbExtrasNo.setText("No");
+        jrbExtrasNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbExtrasNoActionPerformed(evt);
+            }
+        });
+
+        jrbExtrasSi.setText("Si");
+        jrbExtrasSi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbExtrasSiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(114, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jrbExtrasNo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jrbExtrasSi)
+                        .addGap(28, 28, 28))))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel7)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jrbExtrasNo)
+                    .addComponent(jrbExtrasSi))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -825,56 +948,18 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
-
-        txtCarameloExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtCarameloExtra.setForeground(new java.awt.Color(17, 24, 39));
-        txtCarameloExtra.setText("Boba");
-
-        spinnerBoba.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
-        spinnerBoba.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                spinnerCarameloStateChanged(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtCarameloExtra)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCarameloExtra)
-                    .addComponent(spinnerBoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1466, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(339, 339, 339)
+                .addContainerGap(456, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -896,15 +981,9 @@ public class DetallesProducto extends javax.swing.JFrame {
                         .addGap(19, 19, 19)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 19, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40))))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -958,10 +1037,10 @@ public class DetallesProducto extends javax.swing.JFrame {
 
     private void calcularExtrasYTotal() {
         // Calcula el precio de los extras según la cantidad de cada spinner
-        precioExtra = ((int) spinnerCaramelo.getValue() * 5)
-                + ((int) spinnerVainilla.getValue() * 5)
-                + ((int) spinnerShotExtra.getValue() * 10)
-                + ((int) spinnerCremaExtra.getValue() * 7);
+        precioExtra = ((int) spinnerLecheDeCoco.getValue() * 5)
+                + ((int) spinnerLecheAlmendras.getValue() * 5)
+                + ((int) spinnerShotExpreso.getValue() * 10)
+                + ((int) spinnerBoba.getValue() * 7);
 
         // Actualiza el label de precio de extras
         txtPrecioExtra.setText(String.valueOf(precioExtra));
@@ -981,33 +1060,39 @@ public class DetallesProducto extends javax.swing.JFrame {
     private void actualizarNota() {
         StringBuilder sb = new StringBuilder();
 
+        // Tamaño del vaso
+        if (precioTamano == 10) {
+            sb.append("Tamaño: Mediano. ");
+        } else if (precioTamano == 20) {
+            sb.append("Tamaño: Grande. ");
+        } 
+        
+
+        // Tipo de leche
         if (tipoLeche != null && !tipoLeche.isEmpty()) {
             sb.append("Leche: ").append(tipoLeche).append(". ");
         }
 
+        // Extras
         int extras = 0;
-        if ((int) spinnerCaramelo.getValue() > 0) {
-            sb.append("Caramelo x").append(spinnerCaramelo.getValue()).append(". ");
-            extras += (int) spinnerCaramelo.getValue();
+        if ((int) spinnerLecheDeCoco.getValue() > 0) {
+            sb.append("Caramelo x").append(spinnerLecheDeCoco.getValue()).append(". ");
+            extras += (int) spinnerLecheDeCoco.getValue();
         }
-        if ((int) spinnerVainilla.getValue() > 0) {
-            sb.append("Vainilla x").append(spinnerVainilla.getValue()).append(". ");
-            extras += (int) spinnerVainilla.getValue();
+        if ((int) spinnerLecheAlmendras.getValue() > 0) {
+            sb.append("Vainilla x").append(spinnerLecheAlmendras.getValue()).append(". ");
+            extras += (int) spinnerLecheAlmendras.getValue();
         }
-        if ((int) spinnerShotExtra.getValue() > 0) {
-            sb.append("Shot extra x").append(spinnerShotExtra.getValue()).append(". ");
-            extras += (int) spinnerShotExtra.getValue();
+        if ((int) spinnerShotExpreso.getValue() > 0) {
+            sb.append("Shot extra x").append(spinnerShotExpreso.getValue()).append(". ");
+            extras += (int) spinnerShotExpreso.getValue();
         }
-        if ((int) spinnerCremaExtra.getValue() > 0) {
-            sb.append("Crema extra x").append(spinnerCremaExtra.getValue()).append(". ");
-            extras += (int) spinnerCremaExtra.getValue();
+        if ((int) spinnerBoba.getValue() > 0) {
+            sb.append("Crema extra x").append(spinnerBoba.getValue()).append(". ");
+            extras += (int) spinnerBoba.getValue();
         }
 
         sb.append("Cantidad de extras: ").append(extras).append(". ");
-
-        if (ListaProductos.comanda != null && ListaProductos.comanda.getIdComanda() != null) {
-            // sb.append("Cliente: ").append(ListaProductos.comanda.getNombreCliente());
-        }
 
         nota = sb.toString();
         txtDescripcion.setText(nota);
@@ -1028,101 +1113,76 @@ public class DetallesProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_radioChico1ActionPerformed
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
-        // TODO add your handling code here:
-
         ComandaJpaController jpaComanda = new ComandaJpaController();
         DetallecomandaJpaController jpaDetalleComanda = new DetallecomandaJpaController();
 
-        Detallecomanda detalleCo = new Detallecomanda();
+        int cantidadProductos = (int) spinnerCantidadProducto.getValue(); // cantidad del spinner
 
-        detalleCo.setIdProducto(producto);
-        detalleCo.setNotadetalleComanda(nota);
-        detalleCo.setSubTotaldetalleComanda(total);
-        
-                
-                
-        if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
+        if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
             try {
                 ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-    
 
-        if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
-            ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
+            if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
+                ListaProductos.comanda.setIdComanda(jpaComanda.getComandaCount() + 1);
+                ListaProductos.comanda.setEstadoComanda("Abierta");
+                ListaProductos.comanda.setFechaHoracomanda(new Date());
+                ListaProductos.comanda.setTotalComanda(total);
+                try {
+                    FComandas.GuardarComanda(ListaProductos.comanda);
+                    jpaComanda.create(ListaProductos.comanda);
+                } catch (Exception ex) {
+                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
 
-            ListaProductos.comanda.setEstadoComanda("Abierta");
-            ListaProductos.comanda.setFechaHoracomanda(new Date());
-            ListaProductos.comanda.setTotalComanda(total);
+        if (ListaProductos.comanda.getDetallecomandaList() == null) {
+            ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
+        }
+
+        // Crear un detalle por cada unidad
+        for (int i = 0; i < cantidadProductos; i++) {
+            Detallecomanda detalleCo = new Detallecomanda();
+            detalleCo.setIdProducto(producto);
+            detalleCo.setNotadetalleComanda(nota);
+            detalleCo.setSubTotaldetalleComanda(total / cantidadProductos); // subtotal individual
+
             try {
-                FComandas.GuardarComanda(ListaProductos.comanda);
-                
-                jpaComanda.create(ListaProductos.comanda);
-
+                detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
                 detalleCo.setIdComanda(ListaProductos.comanda);
 
-                listaDetalleComandas.add(detalleCo);
-
-                ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
-                detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);//**********
-                
-                FComandas.GuardarDetalleComanda(detalleCo);//**********
-               
-
-                detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
-
+                FComandas.GuardarDetalleComanda(detalleCo);
                 jpaDetalleComanda.create(detalleCo);
+
+                ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
+
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } else {
-        
-            
-            try {
-                detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);//******
-            } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                
-            
-            detalleCo.setIdDetalleComanda(jpaDetalleComanda.getDetallecomandaCount() + 1);
-
-            detalleCo.setIdComanda(ListaProductos.comanda);
-            listaDetalleComandas = ListaProductos.comanda.getDetallecomandaList();
-            listaDetalleComandas.add(detalleCo);
-
-            ListaProductos.comanda.setDetallecomandaList(listaDetalleComandas);
-
-            System.out.println(ListaProductos.comanda.toString());
-
-            try {
-                FComandas.GuardarDetalleComanda(detalleCo);//********
-                FComandas.EditarComanda(ListaProductos.comanda);//*******
-             //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
-                
-                
-                jpaDetalleComanda.create(detalleCo);
-                jpaComanda.edit(ListaProductos.comanda);
-                //   System.out.println(ListaProductos.comanda.getDetallecomandaList().size());
-                }
-                catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
         }
-        
+
+        // Actualizar comanda
+        try {
+            FComandas.EditarComanda(ListaProductos.comanda);
+            jpaComanda.edit(ListaProductos.comanda);
+        } catch (Exception ex) {
+            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         listaProductos.setVisible(true);
-        listaProductos.detalleComanda = listaDetalleComandas;
+        listaProductos.detalleComanda = ListaProductos.comanda.getDetallecomandaList();
         listaProductos.llenarItemsComanda();
-        this.dispose();}
+        this.dispose();
+
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-        Comandas comandas = new Comandas();
-        comandas.setVisible(true);
+        listaProductos.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void radioMediano2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano2ActionPerformed
@@ -1134,7 +1194,7 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-
+ recalcularTotal();
     }//GEN-LAST:event_radioMediano2ActionPerformed
 
     private void radioMediano3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioMediano3ActionPerformed
@@ -1145,6 +1205,7 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
+         recalcularTotal();
     }//GEN-LAST:event_radioMediano3ActionPerformed
 
     private void spinnerCantidadProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCantidadProductoStateChanged
@@ -1208,6 +1269,52 @@ public class DetallesProducto extends javax.swing.JFrame {
         recalcularTotal();
     }//GEN-LAST:event_toggleAlmendrasActionPerformed
 
+    private void jrbTamañoNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbTamañoNoActionPerformed
+
+        radioMediano2.setEnabled(false);
+        radioMediano3.setEnabled(false);
+        precioTamano = 0;
+        recalcularTotal();
+    }//GEN-LAST:event_jrbTamañoNoActionPerformed
+
+    private void jrbTamañoSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbTamañoSiActionPerformed
+        radioMediano2.setEnabled(true);
+        radioMediano3.setEnabled(true);
+    }//GEN-LAST:event_jrbTamañoSiActionPerformed
+
+    private void jrbLecheSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbLecheSiActionPerformed
+        toggleEntera.setEnabled(true);
+        toggleDeslactosada.setEnabled(true);
+        toggleAvena.setEnabled(true);
+        toggleAlmendras.setEnabled(true);
+    }//GEN-LAST:event_jrbLecheSiActionPerformed
+
+    private void jrbLecheNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbLecheNoActionPerformed
+        toggleEntera.setEnabled(false);
+        toggleDeslactosada.setEnabled(false);
+        toggleAvena.setEnabled(false);
+        toggleAlmendras.setEnabled(false);
+        tipoLeche = "";
+        precioLeche = 0;
+        recalcularTotal();
+    }//GEN-LAST:event_jrbLecheNoActionPerformed
+
+    private void jrbExtrasSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbExtrasSiActionPerformed
+        spinnerLecheDeCoco.setEnabled(true);
+        spinnerLecheAlmendras.setEnabled(true);
+        spinnerShotExpreso.setEnabled(true);
+        spinnerBoba.setEnabled(true);
+    }//GEN-LAST:event_jrbExtrasSiActionPerformed
+
+    private void jrbExtrasNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbExtrasNoActionPerformed
+        spinnerLecheDeCoco.setEnabled(false);
+        spinnerLecheAlmendras.setEnabled(false);
+        spinnerShotExpreso.setEnabled(false);
+        spinnerBoba.setEnabled(false);
+        precioExtra = 0;
+        recalcularTotal();
+    }//GEN-LAST:event_jrbExtrasNoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1243,6 +1350,12 @@ public class DetallesProducto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton jrbExtrasNo;
+    private javax.swing.JRadioButton jrbExtrasSi;
+    private javax.swing.JRadioButton jrbLecheNo;
+    private javax.swing.JRadioButton jrbLecheSi;
+    private javax.swing.JRadioButton jrbTamañoNo;
+    private javax.swing.JRadioButton jrbTamañoSi;
     private javax.swing.JRadioButton radioMediano2;
     private javax.swing.JRadioButton radioMediano3;
     private javax.swing.JSpinner spinnerBoba;
