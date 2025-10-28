@@ -554,8 +554,11 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="27" green="18" red="11" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Entera"/>
+                <Property name="text" type="java.lang.String" value="Leche Almendras"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleAlmendrasActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="toggleDeslactosada">
               <Properties>
@@ -721,6 +724,9 @@
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spinnerShotExtraStateChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -781,6 +787,9 @@
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spinnerCremaExtraStateChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -841,6 +850,9 @@
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spinnerVainillaStateChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -901,6 +913,9 @@
                       <SpinnerModel initial="0" maximum="5" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spinnerCarameloStateChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
