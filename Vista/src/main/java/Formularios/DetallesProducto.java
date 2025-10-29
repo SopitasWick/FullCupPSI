@@ -1201,7 +1201,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         else{
             if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null ){
                 try {
-                    ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
+                    //ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1229,7 +1229,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
 
                 try {
-                    detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
+                   // detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
                     detalleCo.setIdComanda(ListaProductos.comanda);
                     
                     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
