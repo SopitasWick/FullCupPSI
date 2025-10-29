@@ -4,6 +4,8 @@
  */
 package Implementaciones;
 
+import Entidades.Comanda;
+import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import Entidades.Producto;
 import Facades.IFachadaExtraModel;
@@ -48,7 +50,13 @@ public class GestionarExtrasModel implements IFachadaExtraModel{
     public List<ExtrasProductos> obtenerTodosLosExtrasPorProducto(Producto producto) throws Exception {
         return extraJPA.findExtrasByProducto(producto.getIdProducto());
     }
-      @Override
+    
+    @Override
+    public List<ExtrasProductos> obtenerTodosLosExtrasPorDetalleComanda(Detallecomanda detalleComanda) throws Exception {
+        return extraJPA.findExtrasByDetalleComanda(detalleComanda.getIdDetalleComanda());
+    }
+     
+    @Override
     public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception {
         return extraJPA.findExtraProductoEntities();
     }

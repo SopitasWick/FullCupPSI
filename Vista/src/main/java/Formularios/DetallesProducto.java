@@ -40,6 +40,7 @@ public class DetallesProducto extends javax.swing.JFrame {
 
     Producto producto;
     Comanda comandaEditar;
+    Detallecomanda detalle;
     ListaProductos listaProductos;
     public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
 
@@ -55,7 +56,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     /**
      * Creates new form DetallesProducto
      */
-    public DetallesProducto(ListaProductos listaProducto, Producto producto, Comanda comandaEditar) {
+    public DetallesProducto(ListaProductos listaProducto, Producto producto, Comanda comandaEditar, Detallecomanda detalle) {
         initComponents();
 
         ButtonGroup grupoTamaño = new ButtonGroup();
@@ -72,11 +73,18 @@ public class DetallesProducto extends javax.swing.JFrame {
         this.producto = producto;
         this.listaProductos = listaProducto;
         this.comandaEditar = comandaEditar;
+        this.detalle = detalle;
 
         this.cargarDatos();
         // this.cargarDatosDetalles();
 
         cargarDatos();
+        
+        
+        if(comandaEditar != null){
+            cargarDatosEditar();
+        }
+        
     }
 
     private void cargarDatos() {
@@ -99,11 +107,92 @@ public class DetallesProducto extends javax.swing.JFrame {
         
         
         
-        if(comandaEditar != null){
+        
+    }
+    
+    
+    public void cargarDatosEditar(){
+        
+        if(comandaEditar != null && detalle != null){
             
+            System.out.println("editarComanda");
+
+            
+            List<ExtrasProductos> extrasEditar = detalle.getExtrasProductosList();
+            
+            
+            //Tamaño Vaso
+            
+            if(extrasEditar != null && !extrasEditar.isEmpty()){
+                if(extrasEditar.get(0).getIdTamanoVaso() != null){
+                    jrbTamañoSi.setSelected(true);
+                    TamanoVaso vaso = extrasEditar.get(0).getIdTamanoVaso();
+
+                    if(vaso.getIdTamanoVaso() == 1){
+                        radioMediano2.setSelected(true);
+                        precioTamano = vaso.getPrecio();
+                        recalcularTotal();
+                    }
+
+                    if(vaso.getIdTamanoVaso() == 2){
+                        radioMediano3.setSelected(true);
+                        precioTamano = vaso.getPrecio();
+                        recalcularTotal();
+                    }
+
+                }
+
+
+
+                //Leche
+                if(extrasEditar.get(0).getIdLeche() != null){
+                    jrbLecheSi.setSelected(true);
+                    Leche leche = extrasEditar.get(0).getIdLeche();
+
+
+                    if(leche.getNombre().equalsIgnoreCase("Leche entera")){
+                        tipoLeche = "Leche entera";
+                        precioLeche = 0; // Sin costo adicional
+                        txtPrecioLeche.setText(String.valueOf(precioLeche));
+                        recalcularTotal(); 
+                        toggleEntera.setSelected(true);
+                    }
+
+                    if(leche.getNombre().equalsIgnoreCase("Deslactosada")){
+                        tipoLeche = "Deslactosada";
+                        precioLeche = 5; // Sin costo adicional
+                        txtPrecioLeche.setText(String.valueOf(precioLeche));
+                        recalcularTotal();
+                        toggleDeslactosada.setSelected(true);
+                    }
+
+                    if(leche.getNombre().equalsIgnoreCase("Leche de avena")){
+                        tipoLeche = "Leche de avena";
+                        precioLeche = 7; // Sin costo adicional
+                        txtPrecioLeche.setText(String.valueOf(precioLeche));
+                        recalcularTotal();
+                        toggleAvena.setSelected(true);
+                    }
+
+                    if(leche.getNombre().equalsIgnoreCase("Leche de almendras")){
+                        tipoLeche = "Leche de almendras";
+                        precioLeche = 8; // Sin costo adicional
+                        txtPrecioLeche.setText(String.valueOf(precioLeche));
+                        recalcularTotal();
+                        toggleAlmendras.setSelected(true);
+                    }
+
+
+
+
+
+                }
+
+
+            }
         }
-        
-        
+    
+    
     }
     
 
@@ -114,19 +203,16 @@ public class DetallesProducto extends javax.swing.JFrame {
         }
 
 //        // Tipo de leche
-//        if(comandaEditar != null){
-////            if(comandaEditar.getDetallecomandaList().) 
-//         comandaEditar.getDetallecomandaList()
-//        }
         
-        else{
         
+
+            System.out.println("NoeditarComanda");
             if (tipoLeche != null && !tipoLeche.isEmpty()) {
                 txtLeche.setText(tipoLeche);
             } else {
                 txtLeche.setText("Ninguna");
             }
-        }
+        
 
         // Extras
         StringBuilder extras = new StringBuilder();
@@ -1162,6 +1248,9 @@ public class DetallesProducto extends javax.swing.JFrame {
    //     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
                 
           
+    Detallecomanda detalleCo = new Detallecomanda();
+   
+   
         if(comandaEditar != null){
             
             
@@ -1170,7 +1259,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             if (ListaProductos.comanda.getDetallecomandaList() == null) {
                 ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
             }
-             Detallecomanda detalleCo = new Detallecomanda();
+             detalleCo = new Detallecomanda();
             // Crear un detalle por cada unidad
             for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
 
@@ -1211,6 +1300,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     try {
                        
                         FComandas.GuardarComanda(ListaProductos.comanda);
+                        ListaProductos.idComanda = ListaProductos.comanda.getIdComanda();
                     } catch (Exception ex) {
                         Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1220,7 +1310,8 @@ public class DetallesProducto extends javax.swing.JFrame {
             if (ListaProductos.comanda.getDetallecomandaList() == null) {
                 ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
             }
-             Detallecomanda detalleCo = new Detallecomanda();
+            
+             detalleCo = new Detallecomanda();
             // Crear un detalle por cada unidad
             for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
 
@@ -1245,10 +1336,14 @@ public class DetallesProducto extends javax.swing.JFrame {
                 }
             }
             
+ 
             
-            
-            
-            //Manejo de extras
+        }
+        
+        //Manejo de extras
+        
+        
+        
             ExtrasProductos extra = new ExtrasProductos();
             Leche leche = null;
             
@@ -1292,6 +1387,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 }
                 
                 extra.setIdTamanoVaso(vaso);
+                extra.setIdDetalleComanda(detalleCo);
                 
               }
               
@@ -1319,11 +1415,10 @@ public class DetallesProducto extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
-        }
         
-        ListaProductos.detalleComanda = listaDetalleComandas;
+        
+        
+        
         listaProductos.setVisible(true);
         listaProductos.llenarItemsComanda();
         this.dispose();

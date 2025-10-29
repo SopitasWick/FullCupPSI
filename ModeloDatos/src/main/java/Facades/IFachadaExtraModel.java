@@ -4,6 +4,7 @@
  */
 package Facades;
 
+import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import Entidades.Producto;
 import java.util.List;
@@ -25,6 +26,9 @@ public interface IFachadaExtraModel {
     
     public List<ExtrasProductos> obtenerTodosLosExtrasPorProducto(Producto producto) throws Exception;
     
-        public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception;
+    public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception;
+        
+    public List<ExtrasProductos> obtenerTodosLosExtrasPorDetalleComanda(Detallecomanda detalleComanda) throws Exception;
+
 
 }

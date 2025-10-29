@@ -32,7 +32,7 @@ public class ListaProductos extends javax.swing.JFrame {
 
     DetallesProducto detalle;
     
-    Integer idComanda;
+    static Integer idComanda;
 
     Comandas comand;
 
@@ -120,10 +120,10 @@ public class ListaProductos extends javax.swing.JFrame {
                         
                         if (idComanda != null){
                         
-                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda);
+                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda, null);
                         }
                         else{
-                            detalle = new DetallesProducto(ListaProductos.this, producto, null);
+                            detalle = new DetallesProducto(ListaProductos.this, producto, null, null);
                         }
                         
 
@@ -258,9 +258,11 @@ public class ListaProductos extends javax.swing.JFrame {
                     
                    Comanda comandaEditar = FComandas.obtenerComanda(idComanda);
                    
-                   detalle = new DetallesProducto(this, comandaEditar.getDetallecomandaList().get(id).getIdProducto(), comandaEditar);
+                   System.out.println("idd" + id);
+                    System.out.println("detalle size" + detalleComanda.size());
+                   detalle = new DetallesProducto(this, detalleComanda.get(id).getIdProducto(), comandaEditar, detalleComanda.get(1));
                    detalle.setVisible(true);
-                    System.out.println(id);
+                   System.out.println("idd" + id);
                    ListaProductos.this.setVisible(false);
 
                 } catch (Exception ex) {

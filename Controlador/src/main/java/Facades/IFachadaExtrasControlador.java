@@ -4,6 +4,7 @@
  */
 package Facades;
 
+import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import java.util.List;
 
@@ -23,5 +24,8 @@ public interface IFachadaExtrasControlador {
     public void eliminarExtrasProductos(Integer id) throws Exception;
     
     public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception;
+    
+    public List<ExtrasProductos> obtenerTodosLosExtrasPorComandas(Detallecomanda detallecomanda) throws Exception;
+
     
 }

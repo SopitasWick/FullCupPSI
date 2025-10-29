@@ -4,6 +4,8 @@
  */
 package Implementaciones;
 
+import Entidades.Comanda;
+import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import Facades.IFachadaExtraModel;
 import Facades.IFachadaExtrasControlador;
@@ -43,9 +45,15 @@ public class GestionarExtrasControlador implements IFachadaExtrasControlador{
     public void eliminarExtrasProductos(Integer id) throws Exception {
         eModel.eliminarExtrasProductos(id);
     }
+    
      @Override
     public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception {
         return eModel.obtenerTodosLosExtras();
+    }
+    
+    @Override
+    public List<ExtrasProductos> obtenerTodosLosExtrasPorComandas(Detallecomanda detallecomanda) throws Exception {
+        return eModel.obtenerTodosLosExtrasPorDetalleComanda(detallecomanda);
     }
     
 }
