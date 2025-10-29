@@ -9,6 +9,8 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,6 +31,7 @@ public class Categoria implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idCategoria")
     private Integer idCategoria;
@@ -36,16 +39,17 @@ public class Categoria implements Serializable {
     private String nombre;
     @OneToMany(mappedBy = "idCategoria")
     private List<Producto> productoList;
-@OneToMany(mappedBy = "idCategoria")
-private List<ExtrasProductos> extrasProductosList;
+    @OneToMany(mappedBy = "idCategoria")
+    private List<ExtrasProductos> extrasProductosList;
 
-public List<ExtrasProductos> getExtrasProductosList() {
-    return extrasProductosList;
-}
+    public List<ExtrasProductos> getExtrasProductosList() {
+        return extrasProductosList;
+    }
 
-public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
-    this.extrasProductosList = extrasProductosList;
-}
+    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
+        this.extrasProductosList = extrasProductosList;
+    }
+
     public Categoria() {
     }
 
@@ -101,5 +105,5 @@ public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
     public String toString() {
         return "Entidades.Categoria[ idCategoria=" + idCategoria + " ]";
     }
-    
+
 }

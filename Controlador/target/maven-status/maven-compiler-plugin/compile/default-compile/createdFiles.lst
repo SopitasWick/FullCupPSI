@@ -1,8 +1,14 @@
 Facades\IFachadaComandasControlador.class
 Implementaciones\GestionarDetallesComandaControlador.class
-Implementaciones\GestionarLecheControlador.class
-Implementaciones\GestionarExtrasControlador.class
+Facades\IFachadaCategoriaControlador.class
 Facades\IFachadaLecheControlador.class
-Facades\IFachadaExtrasControlador.class
 Implementaciones\GestionarComandaControlador.class
+Pruebas\PruebasTamañoVaso.class
 Facades\IFachadaDetallesComandaControlador.class
+Implementaciones\GestionarCategoriaControlador.class
+Implementaciones\GestionarLecheControlador.class
+Facades\IFachadaTamanoVasosControlador.class
+Implementaciones\GestionarExtrasControlador.class
+Pruebas\PruebaCategorias.class
+Facades\IFachadaExtrasControlador.class
+Implementaciones\GestionarTamanoVasosControlador.class
