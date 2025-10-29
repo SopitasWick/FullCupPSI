@@ -156,6 +156,19 @@ public class DetallecomandaJpaController implements Serializable {
     public List<Detallecomanda> findDetallecomandaEntities() {
         return findDetallecomandaEntities(true, -1, -1);
     }
+    
+    
+    public List<Detallecomanda> findByDetalleComandaByComanda(Comanda comanda) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createNamedQuery("Detallecomanda.findByDetalleComandaByComanda", Detallecomanda.class)
+                     .setParameter("idComanda", comanda)
+                     .getResultList();
+        } finally {
+            em.close();
+        }
+
+    }
 
     public List<Detallecomanda> findDetallecomandaEntities(int maxResults, int firstResult) {
         return findDetallecomandaEntities(false, maxResults, firstResult);

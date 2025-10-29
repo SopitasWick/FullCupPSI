@@ -136,12 +136,10 @@ public class Comandas extends javax.swing.JFrame {
             if (id != null) {
                 try {
                     
-                   Comanda comandaEditar = FComandas.obtenerComanda(id);
-                    System.out.println(comandaEditar.toString()); 
                    
-                   listaProductos = new ListaProductos(this, comandaEditar);
+                   listaProductos = new ListaProductos(this, id);
                    listaProductos.setVisible(true);
-                   this.setVisible(false);
+                   Comandas.this.setVisible(false);
 
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());

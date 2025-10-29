@@ -1,9 +1,16 @@
 package Formularios;
 
+import Entidades.Comanda;
 import Entidades.Detallecomanda;
+import Entidades.ExtrasProductos;
+import Entidades.Leche;
 import Entidades.Producto;
 import Facades.IFachadaComandasControlador;
+import Facades.IFachadaExtrasControlador;
+import Facades.IFachadaLecheControlador;
 import Implementaciones.GestionarComandaControlador;
+import Implementaciones.GestionarExtrasControlador;
+import Implementaciones.GestionarLecheControlador;
 import JPA.ComandaJpaController;
 import JPA.DetallecomandaJpaController;
 import java.util.ArrayList;
@@ -17,11 +24,14 @@ import javax.swing.JRadioButton;
 public class DetallesProducto extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
+    private final IFachadaLecheControlador fLeche = new GestionarLecheControlador();
+    private final IFachadaExtrasControlador fExtras = new GestionarExtrasControlador();
 
     private javax.swing.JRadioButton radioConLeche;
     private javax.swing.JRadioButton radioSinLeche;
 
     Producto producto;
+    Comanda comandaEditar;
     ListaProductos listaProductos;
     public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
 
@@ -37,7 +47,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     /**
      * Creates new form DetallesProducto
      */
-    public DetallesProducto(ListaProductos listaProducto, Producto producto) {
+    public DetallesProducto(ListaProductos listaProducto, Producto producto, Comanda comandaEditar) {
         initComponents();
 
         ButtonGroup grupoTamaño = new ButtonGroup();
@@ -53,6 +63,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         grupoExtras.add(jrbExtrasNo);
         this.producto = producto;
         this.listaProductos = listaProducto;
+        this.comandaEditar = comandaEditar;
 
         this.cargarDatos();
         // this.cargarDatosDetalles();
@@ -77,7 +88,16 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
+        
+        
+        
+        if(comandaEditar != null){
+            
+        }
+        
+        
     }
+    
 
     private void actualizarResumen() {
         // Nombre del producto
@@ -86,10 +106,17 @@ public class DetallesProducto extends javax.swing.JFrame {
         }
 
         // Tipo de leche
-        if (tipoLeche != null && !tipoLeche.isEmpty()) {
-            txtLeche.setText(tipoLeche);
-        } else {
-            txtLeche.setText("Ninguna");
+//        if(comandaEditar != null){
+//            if(comandaEditar.getDetallecomandaList().)
+//        }
+        
+        else{
+        
+            if (tipoLeche != null && !tipoLeche.isEmpty()) {
+                txtLeche.setText(tipoLeche);
+            } else {
+                txtLeche.setText("Ninguna");
+            }
         }
 
         // Extras
@@ -1125,53 +1152,152 @@ public class DetallesProducto extends javax.swing.JFrame {
         //aqui vaser 
    //     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
                 
-                
-        if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null){
-            try {
-                ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
-            } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+          
+        if(comandaEditar != null){
+            
+            
+            listaProductos.comanda = comandaEditar;
+            //se puede mejorar
+            if (ListaProductos.comanda.getDetallecomandaList() == null) {
+                ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
             }
-                ListaProductos.comanda.setEstadoComanda("Abierta");
-                ListaProductos.comanda.setFechaHoracomanda(new Date());
-                ListaProductos.comanda.setTotalComanda(total);
+             Detallecomanda detalleCo = new Detallecomanda();
+            // Crear un detalle por cada unidad
+            for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
+
+                detalleCo.setIdProducto(producto);
+                detalleCo.setNotadetalleComanda(nota);
+                detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
+
                 try {
-                    FComandas.GuardarComanda(ListaProductos.comanda);
+                    detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
+                    detalleCo.setIdComanda(comandaEditar);
+                    
+                    
+                    detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+                    detalleCo.setSubTotaldetalleComanda(total);
+                    
+                    FComandas.GuardarDetalleComanda(detalleCo);
+
+                    //ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
+
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
         
-
-        if (ListaProductos.comanda.getDetallecomandaList() == null) {
-            ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
         }
-         Detallecomanda detalleCo = new Detallecomanda();
-        // Crear un detalle por cada unidad
-        for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
+   
+        else{
+            if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null ){
+                try {
+                    ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
+                } catch (Exception ex) {
+                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                    ListaProductos.comanda.setEstadoComanda("Abierta");
+                    ListaProductos.comanda.setFechaHoracomanda(new Date());
+                    ListaProductos.comanda.setTotalComanda(total);
+                    try {
+                        FComandas.GuardarComanda(ListaProductos.comanda);
+                    } catch (Exception ex) {
+                        Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+
+            if (ListaProductos.comanda.getDetallecomandaList() == null) {
+                ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
+            }
+             Detallecomanda detalleCo = new Detallecomanda();
+            // Crear un detalle por cada unidad
+            for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
+
+                detalleCo.setIdProducto(producto);
+                detalleCo.setNotadetalleComanda(nota);
+                detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
+
+                try {
+                    detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
+                    detalleCo.setIdComanda(ListaProductos.comanda);
+                    
+                    detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+                    detalleCo.setSubTotaldetalleComanda(total);
+                    
+                    
+                    FComandas.GuardarDetalleComanda(detalleCo);
+
+                    ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
+
+                } catch (Exception ex) {
+                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             
-            detalleCo.setIdProducto(producto);
-            detalleCo.setNotadetalleComanda(nota);
-            detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
-
+            
+            
+            
+            //Manejo de extras
+            ExtrasProductos extra = new ExtrasProductos();
+            Leche leche = null;
+            
+            
+            if (jrbLecheSi.isSelected()){
+                
+              try{  
+                if(tipoLeche.equalsIgnoreCase("Leche entera")){
+                    leche = fLeche.obtenerLeche(1);
+                }
+                
+                if(tipoLeche.equalsIgnoreCase("Deslactosada")){
+                    leche = fLeche.obtenerLeche(2);
+                }
+                
+                if(tipoLeche.equalsIgnoreCase("Leche de avena")){
+                    leche = fLeche.obtenerLeche(3);
+                }
+                
+                if(tipoLeche.equalsIgnoreCase("Leche de almendras")){
+                    leche = fLeche.obtenerLeche(4);
+                }
+   
+                extra.setIdLeche(leche);
+              }
+              
+              catch(Exception e){
+                  e.printStackTrace();
+              }
+                
+                
+            }
+            
+            
+            
+            extra.setIdProducto(producto);
+            
+            
+            //manejo de extras
+            if (jrbExtrasSi.isSelected()){
+                
+            }
+            
+            
             try {
-                detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
-                detalleCo.setIdComanda(ListaProductos.comanda);
-                FComandas.GuardarDetalleComanda(detalleCo);
-
-                ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
-
+                System.out.println(extra.toString());
+                fExtras.agregarExtrasProductos(extra);
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            
         }
-        detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
-        detalleCo.setSubTotaldetalleComanda(total);
-
+        
+        ListaProductos.detalleComanda = listaDetalleComandas;
         listaProductos.setVisible(true);
-        listaProductos.detalleComanda = ListaProductos.comanda.getDetallecomandaList();
         listaProductos.llenarItemsComanda();
         this.dispose();
+        
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

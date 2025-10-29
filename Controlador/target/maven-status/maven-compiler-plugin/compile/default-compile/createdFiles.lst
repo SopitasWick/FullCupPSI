@@ -1,2 +1,8 @@
 Facades\IFachadaComandasControlador.class
+Implementaciones\GestionarDetallesComandaControlador.class
+Implementaciones\GestionarLecheControlador.class
+Implementaciones\GestionarExtrasControlador.class
+Facades\IFachadaLecheControlador.class
+Facades\IFachadaExtrasControlador.class
 Implementaciones\GestionarComandaControlador.class
+Facades\IFachadaDetallesComandaControlador.class

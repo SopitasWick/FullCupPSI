@@ -4,11 +4,18 @@ import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.Producto;
 import Facades.IFachadaComandasControlador;
+import Facades.IFachadaDetallesComandaControlador;
 import Implementaciones.GestionarComandaControlador;
+import Implementaciones.GestionarDetallesComandaControlador;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,6 +23,7 @@ public class ListaProductos extends javax.swing.JFrame {
 
     
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
+    private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
 
     List<Producto> todosLosProductos;
 
@@ -23,21 +31,23 @@ public class ListaProductos extends javax.swing.JFrame {
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
 
     DetallesProducto detalle;
+    
+    Integer idComanda;
 
     Comandas comand;
-    Comanda comandaEditar;
 
     /**
      * Creates new form frmListaProductos
      * @param comandaEditar utilizada para editar, null en caso de ser nueva comanda
      */
-    public ListaProductos(Comandas comand, Comanda comandaEditar) throws Exception {
+    public ListaProductos(Comandas comand, Integer idComanda) throws Exception {
         initComponents();
 
         this.comand = comand;
-        this.comandaEditar = comandaEditar;
+        this.idComanda = idComanda;
 
         buscarProductos();
+        configurarPopupTablaActivas();
     }
 
 
@@ -48,6 +58,8 @@ public class ListaProductos extends javax.swing.JFrame {
 
         try {
             todosLosProductos = FComandas.ObtenerListaProductos();
+            comanda = FComandas.obtenerComanda(idComanda);
+            
         } catch (Exception ex) {
             Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -102,9 +114,18 @@ public class ListaProductos extends javax.swing.JFrame {
                         //RIFARSELA AQUI PARA QUE ANTES DE QUE HABRA LA PANTALLA DETALLES
                         //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
-                        detalle = new DetallesProducto(ListaProductos.this, producto);
-                        detalle.setVisible(true);
+                        
+                        if (idComanda == 0){
+                        
+                            detalle = new DetallesProducto(ListaProductos.this, producto, null);
+                        }
+                        else{
+                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda);
+                        }
+                        
 
+                        detalle.setVisible(true);
+                        
                         ListaProductos.this.setVisible(false);
 
                     }
@@ -124,15 +145,21 @@ public class ListaProductos extends javax.swing.JFrame {
         modelo.setRowCount(0);
         
         
-        if(comandaEditar != null){
-            
-            System.out.println(comandaEditar.toString());
-            detalleComanda = comandaEditar.getDetallecomandaList();
+        try {
+            detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        else{
-            System.out.println("Es nula");
-        }
+        
+//        if(idComanda != 0){
+//            
+//            detalleComanda = comandaEditar.getDetallecomandaList();
+//        }
+//
+//        else{
+//            System.out.println("Es nula");
+//        }
+        
         
             for (int i = 0; i < detalleComanda.size(); i++) {
 
@@ -187,6 +214,109 @@ public class ListaProductos extends javax.swing.JFrame {
         txtTotal.setText(String.valueOf(total));
     }
 
+    
+    
+    private void configurarPopupTablaActivas() {
+        JPopupMenu popup = new JPopupMenu();
+
+        JMenuItem itemEliminar = new JMenuItem("Eliminar item");        
+        JMenuItem itemEditar = new JMenuItem("Editar item");
+
+        popup.add(itemEditar);
+        popup.add(itemEliminar);
+        
+
+
+
+        // Listener para eliminar
+        itemEliminar.addActionListener(e -> {
+            Integer id = obtenerIdSeleccionado(tblitems);
+            if (id != null) {
+                int confirm = JOptionPane.showConfirmDialog(this,
+                        "¿Seguro que deseas eliminar este item?",
+                        "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try {
+                        fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+                        llenarItemsComanda();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+        
+        
+      //  Listener para editar
+        itemEditar.addActionListener(e -> {
+            Integer id = obtenerIdSeleccionado(tblitems);
+            if (id != null) {
+                try {
+                    
+                   Comanda comandaEditar = FComandas.obtenerComanda(idComanda);
+                   
+                   detalle = new DetallesProducto(this, comandaEditar.getDetallecomandaList().get(id).getIdProducto(), comandaEditar);
+                   detalle.setVisible(true);
+                    System.out.println(id);
+                   ListaProductos.this.setVisible(false);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
+                }
+            }
+        });
+        
+
+        // Mostrar popup al hacer clic derecho
+        tblitems.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mostrarPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                mostrarPopup(e);
+            }
+
+            private void mostrarPopup(MouseEvent e) {
+                if (e.isPopupTrigger() && tblitems.getSelectedRow() >= 0) {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+    }
+
+    /**
+     * Obtiene el ID (columna 0) de la fila seleccionada en una tabla
+     */
+    private Integer obtenerIdSeleccionado(javax.swing.JTable tabla) {
+        int fila = tabla.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila primero.");
+            return null;
+        }
+        Object valor = tabla.getModel().getValueAt(fila, 0);
+        if (valor instanceof Integer) {
+            return (Integer) valor;
+        }
+        return fila;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -282,7 +412,7 @@ public class ListaProductos extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(1216, Short.MAX_VALUE))
+                .addContainerGap(1213, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -405,7 +535,7 @@ public class ListaProductos extends javax.swing.JFrame {
                     .addComponent(btnSumar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnModificar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
@@ -533,7 +663,7 @@ public class ListaProductos extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         toggleTodos.setBackground(new java.awt.Color(242, 243, 245));
