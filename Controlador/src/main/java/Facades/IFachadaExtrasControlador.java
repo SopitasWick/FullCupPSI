@@ -14,7 +14,7 @@ import java.util.List;
 public interface IFachadaExtrasControlador {
     
     
-    public ExtrasProductos obtenerExtras(Integer id) throws Exception;
+  public ExtrasProductos obtenerExtras(Integer id) throws Exception;
     
     public void agregarExtrasProductos(ExtrasProductos extra) throws Exception;
     
@@ -22,6 +22,6 @@ public interface IFachadaExtrasControlador {
     
     public void eliminarExtrasProductos(Integer id) throws Exception;
     
-    public List<ExtrasProductos> obtenerTodasLasLeches() throws Exception;
+    public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception;
     
 }

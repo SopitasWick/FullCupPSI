@@ -20,7 +20,7 @@ public class PruebaCategorias {
         GestionarCategoriaControlador controlador = new GestionarCategoriaControlador();
         
         try {
-            System.out.println("=== PRUEBA DE GESTIÓN DE CATEGORÍAS ===\n");
+            System.out.println(" PRUEBA DE GESTIÓN DE CATEGORÍAS \n");
             
             System.out.println("1. Agregando nuevas categorías...");
             
@@ -85,7 +85,7 @@ public class PruebaCategorias {
                 }
             }
             
-            System.out.println("\n=== PRUEBA COMPLETADA EXITOSAMENTE ===");
+            System.out.println("\n PRUEBA COMPLETADA EXITOSAMENTE ");
             
         } catch (Exception e) {
             System.err.println("ERROR: " + e.getMessage());

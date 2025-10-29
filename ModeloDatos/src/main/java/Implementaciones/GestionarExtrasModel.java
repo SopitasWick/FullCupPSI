@@ -48,5 +48,8 @@ public class GestionarExtrasModel implements IFachadaExtraModel{
     public List<ExtrasProductos> obtenerTodosLosExtrasPorProducto(Producto producto) throws Exception {
         return extraJPA.findExtrasByProducto(producto.getIdProducto());
     }
-    
+      @Override
+    public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception {
+        return extraJPA.findExtraProductoEntities();
+    }
 }

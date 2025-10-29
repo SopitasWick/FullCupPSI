@@ -16,37 +16,39 @@ import java.util.List;
 public class GestionarExtrasControlador implements IFachadaExtrasControlador{
 
     
-    IFachadaExtraModel eModel;
-
     
-    public GestionarExtrasControlador(){
+    
+    IFachadaExtraModel eModel;
+    
+    public GestionarExtrasControlador() {
         this.eModel = new GestionarExtrasModel();
     }
-    
     
     @Override
     public ExtrasProductos obtenerExtras(Integer id) throws Exception {
         return eModel.obtenerExtras(id);
     }
-
+    
     @Override
     public void agregarExtrasProductos(ExtrasProductos extra) throws Exception {
         eModel.agregarExtrasProductos(extra);
     }
-
+    
     @Override
     public void editarExtrasProductos(ExtrasProductos extra) throws Exception {
         eModel.editarExtrasProductos(extra);
     }
-
+    
     @Override
     public void eliminarExtrasProductos(Integer id) throws Exception {
         eModel.eliminarExtrasProductos(id);
     }
-
-    @Override
-    public List<ExtrasProductos> obtenerTodasLasLeches() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+     @Override
+    public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception {
+        return eModel.obtenerTodosLosExtras();
     }
     
 }
+    
+    
+

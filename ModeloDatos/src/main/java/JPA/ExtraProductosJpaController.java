@@ -5,6 +5,7 @@
 package JPA;
 
 import Entidades.Categoria;
+import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import Entidades.Leche;
 import Entidades.Producto;
@@ -66,9 +67,14 @@ public class ExtraProductosJpaController implements Serializable {
                 extraProducto.setIdLeche(idLeche);
             }
             
+            Detallecomanda idDetalleComanda = extraProducto.getIdDetalleComanda();
+            if (idDetalleComanda != null) {
+                idDetalleComanda = em.getReference(idDetalleComanda.getClass(), idDetalleComanda.getIdDetalleComanda());
+                extraProducto.setIdDetalleComanda(idDetalleComanda);
+            }
+            
             em.persist(extraProducto);
             
-            // Solo actualizar las listas de Producto y Categoria
             if (idProducto != null) {
                 idProducto.getExtrasProductosList().add(extraProducto);
                 idProducto = em.merge(idProducto);
@@ -79,7 +85,11 @@ public class ExtraProductosJpaController implements Serializable {
                 idCategoria = em.merge(idCategoria);
             }
             
-            // TamanoVaso y Leche NO tienen listas, JPA maneja la relación automáticamente
+            if (idDetalleComanda != null) {
+                idDetalleComanda.getExtrasProductosList().add(extraProducto);
+                idDetalleComanda = em.merge(idDetalleComanda);
+            }
+            
             
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -134,7 +144,6 @@ public class ExtraProductosJpaController implements Serializable {
                 throw new NonexistentEntityException("The extra producto with id " + id + " no longer exists.", enfe);
             }
             
-            // Solo actualizar las listas de Producto y Categoria
             Producto idProducto = extraProducto.getIdProducto();
             if (idProducto != null) {
                 idProducto.getExtrasProductosList().remove(extraProducto);
@@ -147,7 +156,13 @@ public class ExtraProductosJpaController implements Serializable {
                 idCategoria = em.merge(idCategoria);
             }
             
-            // TamanoVaso y Leche NO tienen listas, JPA maneja la relación automáticamente
+            // Actualizar la lista de DetalleComanda
+            Detallecomanda idDetalleComanda = extraProducto.getIdDetalleComanda();
+            if (idDetalleComanda != null) {
+                idDetalleComanda.getExtrasProductosList().remove(extraProducto);
+                idDetalleComanda = em.merge(idDetalleComanda);
+            }
+            
             
             em.remove(extraProducto);
             em.getTransaction().commit();
@@ -247,7 +262,19 @@ public class ExtraProductosJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<ExtrasProductos> findExtrasByDetalleComanda(Integer idDetalleComanda) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createQuery("SELECT e FROM ExtrasProductos e WHERE e.idDetalleComanda.idDetalleComanda = :idDetalleComanda");
+            q.setParameter("idDetalleComanda", idDetalleComanda);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
+
 
 
 

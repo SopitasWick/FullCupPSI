@@ -18,7 +18,7 @@ public class PruebasTamañoVaso {
         GestionarTamanoVasosControlador controlador = new GestionarTamanoVasosControlador();
         
         try {
-            System.out.println("=== PRUEBA DE GESTIÓN DE TAMAÑOS DE VASOS ===\n");
+            System.out.println(" PRUEBA DE GESTIÓN DE TAMAÑOS DE VASOS \n");
             
             System.out.println("1. Agregando nuevos tamaños de vaso...");
             
@@ -78,7 +78,7 @@ public class PruebasTamañoVaso {
                 }
             }
             
-            System.out.println("\n=== PRUEBA COMPLETADA EXITOSAMENTE ===");
+            System.out.println("\nPRUEBA COMPLETADA EXITOSAMENTE ");
             
         } catch (Exception e) {
             System.err.println("ERROR: " + e.getMessage());

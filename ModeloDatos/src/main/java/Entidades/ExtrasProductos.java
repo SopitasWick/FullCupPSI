@@ -54,7 +54,9 @@ public class ExtrasProductos implements Serializable {
     @JoinColumn(name = "idLeche", referencedColumnName = "idLeche")
     @ManyToOne
     private Leche idLeche;
-    
+     @JoinColumn(name = "idDetalleComanda", referencedColumnName = "idDetalleComanda")
+    @ManyToOne
+    private Detallecomanda idDetalleComanda;
     public ExtrasProductos() {
     }
     
@@ -67,6 +69,18 @@ public class ExtrasProductos implements Serializable {
         this.nombreExtra = nombreExtra;
         this.precioExtra = precioExtra;
         this.cantidad = cantidad;
+    }
+
+    public ExtrasProductos(Integer idExtraProducto, String nombreExtra, Float precioExtra, int cantidad, Producto idProducto, Categoria idCategoria, TamanoVaso idTamanoVaso, Leche idLeche, Detallecomanda idDetalleComanda) {
+        this.idExtraProducto = idExtraProducto;
+        this.nombreExtra = nombreExtra;
+        this.precioExtra = precioExtra;
+        this.cantidad = cantidad;
+        this.idProducto = idProducto;
+        this.idCategoria = idCategoria;
+        this.idTamanoVaso = idTamanoVaso;
+        this.idLeche = idLeche;
+        this.idDetalleComanda = idDetalleComanda;
     }
     
     public Integer getIdExtraProducto() {
@@ -131,6 +145,14 @@ public class ExtrasProductos implements Serializable {
     
     public void setIdLeche(Leche idLeche) {
         this.idLeche = idLeche;
+    }
+
+    public Detallecomanda getIdDetalleComanda() {
+        return idDetalleComanda;
+    }
+
+    public void setIdDetalleComanda(Detallecomanda idDetalleComanda) {
+        this.idDetalleComanda = idDetalleComanda;
     }
     
     @Override

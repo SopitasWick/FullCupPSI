@@ -25,4 +25,6 @@ public interface IFachadaExtraModel {
     
     public List<ExtrasProductos> obtenerTodosLosExtrasPorProducto(Producto producto) throws Exception;
     
+        public List<ExtrasProductos> obtenerTodosLosExtras() throws Exception;
+
 }

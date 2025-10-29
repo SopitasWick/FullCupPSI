@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -55,7 +57,8 @@ public class Detallecomanda implements Serializable {
     @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
     @ManyToOne
     private Producto idProducto;
-
+@OneToMany(mappedBy = "idDetalleComanda")
+private List<ExtrasProductos> extrasProductosList;
     public Detallecomanda() {
     }
 
@@ -69,6 +72,24 @@ public class Detallecomanda implements Serializable {
         this.subTotaldetalleComanda = subTotaldetalleComanda;
         this.idComanda = idComanda;
         this.idProducto = idProducto;
+    }
+
+    public Detallecomanda(Integer idDetalleComanda, Integer caintidaddetalleComanda, String notadetalleComanda, Float subTotaldetalleComanda, Comanda idComanda, Producto idProducto, List<ExtrasProductos> extrasProductosList) {
+        this.idDetalleComanda = idDetalleComanda;
+        this.caintidaddetalleComanda = caintidaddetalleComanda;
+        this.notadetalleComanda = notadetalleComanda;
+        this.subTotaldetalleComanda = subTotaldetalleComanda;
+        this.idComanda = idComanda;
+        this.idProducto = idProducto;
+        this.extrasProductosList = extrasProductosList;
+    }
+
+    public List<ExtrasProductos> getExtrasProductosList() {
+        return extrasProductosList;
+    }
+
+    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
+        this.extrasProductosList = extrasProductosList;
     }
     
 
