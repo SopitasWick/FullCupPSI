@@ -443,6 +443,7 @@ public class Comandas extends javax.swing.JFrame {
         try {
             listaProductos = new ListaProductos(this, null);
             listaProductos.setVisible(true);
+            this.setVisible(false);
         } catch (Exception ex) {
             Logger.getLogger(Comandas.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -25,6 +25,7 @@ public class GestionarTamanoVasosControlador implements IFachadaTamanoVasosContr
         return tvModel.obtenerTamanoVaso(id);
     }
     
+    @Override
     public void agregarTamanoVaso(TamanoVaso tamanoVaso) throws Exception {
         tvModel.agregarTamanoVaso(tamanoVaso);
     }

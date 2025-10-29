@@ -58,7 +58,10 @@ public class ListaProductos extends javax.swing.JFrame {
 
         try {
             todosLosProductos = FComandas.ObtenerListaProductos();
-            comanda = FComandas.obtenerComanda(idComanda);
+            
+            if(idComanda != null){
+                comanda = FComandas.obtenerComanda(idComanda);
+            }
             
         } catch (Exception ex) {
             Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,12 +118,12 @@ public class ListaProductos extends javax.swing.JFrame {
                         //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
                         
-                        if (idComanda == 0){
+                        if (idComanda != null){
                         
-                            detalle = new DetallesProducto(ListaProductos.this, producto, null);
+                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda);
                         }
                         else{
-                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda);
+                            detalle = new DetallesProducto(ListaProductos.this, producto, null);
                         }
                         
 

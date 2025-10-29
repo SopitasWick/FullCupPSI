@@ -1,16 +1,22 @@
 package Formularios;
 
+import Entidades.Categoria;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import Entidades.Leche;
 import Entidades.Producto;
+import Entidades.TamanoVaso;
+import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaComandasControlador;
 import Facades.IFachadaExtrasControlador;
 import Facades.IFachadaLecheControlador;
+import Facades.IFachadaTamanoVasosControlador;
+import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarExtrasControlador;
 import Implementaciones.GestionarLecheControlador;
+import Implementaciones.GestionarTamanoVasosControlador;
 import JPA.ComandaJpaController;
 import JPA.DetallecomandaJpaController;
 import java.util.ArrayList;
@@ -26,6 +32,8 @@ public class DetallesProducto extends javax.swing.JFrame {
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaLecheControlador fLeche = new GestionarLecheControlador();
     private final IFachadaExtrasControlador fExtras = new GestionarExtrasControlador();
+    private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
+    private final IFachadaTamanoVasosControlador fVasos = new GestionarTamanoVasosControlador();
 
     private javax.swing.JRadioButton radioConLeche;
     private javax.swing.JRadioButton radioSinLeche;
@@ -105,9 +113,10 @@ public class DetallesProducto extends javax.swing.JFrame {
             txtProductoResumen.setText(producto.getNombreProducto());
         }
 
-        // Tipo de leche
+//        // Tipo de leche
 //        if(comandaEditar != null){
-//            if(comandaEditar.getDetallecomandaList().)
+////            if(comandaEditar.getDetallecomandaList().) 
+//         comandaEditar.getDetallecomandaList()
 //        }
         
         else{
@@ -1200,6 +1209,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     ListaProductos.comanda.setFechaHoracomanda(new Date());
                     ListaProductos.comanda.setTotalComanda(total);
                     try {
+                       
                         FComandas.GuardarComanda(ListaProductos.comanda);
                     } catch (Exception ex) {
                         Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
@@ -1263,6 +1273,26 @@ public class DetallesProducto extends javax.swing.JFrame {
                 }
    
                 extra.setIdLeche(leche);
+                
+                
+                Categoria cat = fCategoria.obtenerCategoria(1);
+                
+                extra.setIdCategoria(cat);
+                
+                
+                TamanoVaso vaso;
+                
+                //vaso
+                if(radioMediano2.isSelected()){
+                    vaso = fVasos.obtenerTamanoVaso(1);
+                }
+                
+                else{
+                    vaso = fVasos.obtenerTamanoVaso(2);
+                }
+                
+                extra.setIdTamanoVaso(vaso);
+                
               }
               
               catch(Exception e){
