@@ -5,6 +5,7 @@
 package Facades;
 
 import Entidades.Producto;
+import Entidades.Valoropcion;
 import java.util.List;
 
 /**
@@ -23,5 +24,9 @@ public interface IFachadaProductoModel {
     public List<Producto> obtenerTodosLosProductos() throws Exception;
     
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception;
+    
+    //INICIO BLOQUE PARA IDENTIFICAR LOS DETALLES DE CADA PRODUCTO****************************
+    public List<Valoropcion> obtenerDetallesPorProducto (Integer idProducto) throws Exception;
+    //FIN BLOQUE PARA IDENTIFICAR LOS DETALLES DE CADA PRODUCTO****************************
     
 }

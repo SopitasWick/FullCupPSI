@@ -5,8 +5,12 @@
 package Implementaciones;
 
 import Entidades.Producto;
+import Entidades.Productoopcion;
+import Entidades.Valoropcion;
 import Facades.IFachadaProductoModel;
 import JPA.ProductoJpaController;
+import JPA.ProductoopcionJpaController;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +20,11 @@ import java.util.List;
 public class GestionarProductoModel  implements IFachadaProductoModel  {
      
     ProductoJpaController productoJPA;
+    ProductoopcionJpaController productoOpcionJPA;
     
     public GestionarProductoModel() {
         this.productoJPA = new ProductoJpaController();
+        this.productoOpcionJPA = new ProductoopcionJpaController();
     }
     
     @Override
@@ -50,4 +56,18 @@ public class GestionarProductoModel  implements IFachadaProductoModel  {
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception {
         return productoJPA.findProductosByIdCategoria(idCategoria);
     }
+
+    @Override
+    public List<Valoropcion> obtenerDetallesPorProducto(Integer idProducto) throws Exception {
+    List<Valoropcion> listaValores = new ArrayList<>();
+    List<Productoopcion> listaProductoOpcion = productoOpcionJPA.findProductoopcionByProducto(idProducto);
+
+    for (Productoopcion po : listaProductoOpcion) {
+        if (po.getIdOpcionProducto() != null && po.getIdOpcionProducto().getValoropcionList() != null) {
+            listaValores.addAll(po.getIdOpcionProducto().getValoropcionList());
+        }
+    }
+
+    return listaValores;
+}
 }

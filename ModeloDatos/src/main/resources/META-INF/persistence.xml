@@ -16,6 +16,10 @@
     <class>Entidades.ExtrasProductos</class>
     <class>Entidades.Leche</class>
     <class>Entidades.TamanoVaso</class>
+    <class>Entidades.Detalleopcion</class>
+    <class>Entidades.Opcionproducto</class>
+    <class>Entidades.Valoropcion</class>
+    <class>Entidades.Productoopcion</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/fullcup?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;serverTimezone=America/Mazatlan "/>
       <property name="javax.persistence.jdbc.user" value="root"/>

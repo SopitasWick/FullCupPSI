@@ -5,6 +5,7 @@
 package Implementaciones;
 
 import Entidades.Producto;
+import Entidades.Valoropcion;
 import Facades.IFachadaProductoControlador;
 import Facades.IFachadaProductoModel;
 import java.util.List;
@@ -48,5 +49,10 @@ public class GestionarProductoControlador implements IFachadaProductoControlador
     @Override
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception {
         return productoModel.obtenerProductosPorCategoria(idCategoria);
+    }
+
+    @Override
+    public List<Valoropcion> obtenerDetallesPorProducto(Integer idProducto) throws Exception {
+    return productoModel.obtenerDetallesPorProducto(idProducto);
     }
 }
