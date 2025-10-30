@@ -15,3 +15,4 @@ Implementaciones\GestionarExtrasControlador.class
 Pruebas\PruebaCategorias.class
 Facades\IFachadaExtrasControlador.class
 Implementaciones\GestionarTamanoVasosControlador.class
+Pruebas\PruebaDetallesProducto.class

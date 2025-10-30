@@ -7,16 +7,24 @@ import Facades.IFachadaComandasControlador;
 import Facades.IFachadaDetallesComandaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarDetallesComandaControlador;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class ListaProductos extends javax.swing.JFrame {
@@ -26,6 +34,10 @@ public class ListaProductos extends javax.swing.JFrame {
     private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
 
     List<Producto> todosLosProductos;
+    
+    
+    Dimension dimension = null;
+    String rutaBtnEliminar = "src/main/java/iconos/BotonEliminar.png";
 
     public static Comanda comanda = new Comanda();
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
@@ -48,9 +60,134 @@ public class ListaProductos extends javax.swing.JFrame {
 
         buscarProductos();
         configurarPopupTablaActivas();
+        
+        
+        cargarPanelComanda();
+        
     }
 
+    
+    
+    public void cargarPanelComanda(){
+        
+        jPanelItems.removeAll();
+        
+        try {
+            detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        int margenY = 70;
+        
+        for (int i = 0; i < detalleComanda.size(); i++){
+            
+            //SubPanel
+            JPanel subPanel = new JPanel();
+            subPanel.setBackground(Color.WHITE);
+            subPanel.setOpaque(false);
+            subPanel.setBorder(new LineBorder(Color.BLACK));
+            subPanel.setBounds(0, margenY * i, jPanelItems.getWidth()-10, 70);
+            subPanel.setLayout(null);
+            subPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            
+            
+            
+            //Nombre del producto
+            JLabel jlabelNombreProducto = new JLabel();
+            jlabelNombreProducto.setBounds(10, 8, 300, 20);
+            jlabelNombreProducto.setFont(new java.awt.Font("Segoe UI", 1, 16));
+            jlabelNombreProducto.setText(detalleComanda.get(i).getIdProducto().getNombreProducto());
+            subPanel.add(jlabelNombreProducto);
+            
+            
+            
+            //Detalles del producto
+            JLabel jlabelDetalleProducto = new JLabel();
+            jlabelDetalleProducto.setBounds(10, 30, 300, 20);
+            jlabelDetalleProducto.setFont(new java.awt.Font("Segoe UI", 0, 10));
+            jlabelDetalleProducto.setText(detalleComanda.get(i).getNotadetalleComanda());
+            subPanel.add(jlabelDetalleProducto);
+            
+            
+            //boton Eliminar
+            JLabel jlabelBotonEliminar = new JLabel();
+            jlabelBotonEliminar.setBounds(subPanel.getWidth()-30, 8, 20, 20);
+           // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
+            setImagenLabel(jlabelBotonEliminar, rutaBtnEliminar);
+            subPanel.add(jlabelBotonEliminar);
+            
+            int id = i;
+            
+             jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            int confirm = JOptionPane.showConfirmDialog(ListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            try {
+                                fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+                                cargarPanelComanda();
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                            }
+                        }
+                            
+                        }
+                        
+             });
+            
+            
+            subPanel.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseClicked(MouseEvent e){
+                    JOptionPane.showMessageDialog(ListaProductos.this, "No programado aun, pero seria editar cuando se haga");
+                }
+            
+            
+            });
+            
+            
+            
+            if (jPanelItems.getPreferredSize().height < margenY * (i + 1)) {
+                if (dimension == null) {
+                    dimension = new Dimension();
+                }
+                dimension.setSize(jPanelItems.getPreferredSize().width, margenY * (i + 1));
+                jPanelItems.setPreferredSize(dimension);
+            }
+            
+            
+            
+            jPanelItems.add(subPanel);
+            jPanelItems.revalidate();
+            jPanelItems.repaint();
+            
+            
+        }
+        
+    }
 
+    
+    public void setImagenLabel(JLabel label, String rutaImagen) {
+        try {
+            ImageIcon icon = new ImageIcon(rutaImagen);
+
+            Image img = icon.getImage().getScaledInstance(
+                label.getWidth(), 
+                label.getHeight(), 
+                Image.SCALE_SMOOTH
+            );
+
+            label.setIcon(new ImageIcon(img));
+            label.setText(null); 
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen: " + e.getMessage());
+        }   
+    }
+    
+    
     
     
     public void buscarProductos() {
@@ -143,9 +280,9 @@ public class ListaProductos extends javax.swing.JFrame {
 
     public void llenarItemsComanda() {
 
-        DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
+       // DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
 
-        modelo.setRowCount(0);
+      //  modelo.setRowCount(0);
         
         
         try {
@@ -172,50 +309,50 @@ public class ListaProductos extends javax.swing.JFrame {
                     detalleComanda.get(i).getCaintidaddetalleComanda(),
                     detalleComanda.get(i).getSubTotaldetalleComanda()
                 };
-                modelo.addRow(fila);
+            //    modelo.addRow(fila);
 
             }
         
         
 
-        calcularTotal();
+       // calcularTotal();
 
     }
 
-    private void calcularTotal() {
-        float total = 0;
-        DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
-
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            Object cantidadObj = modelo.getValueAt(i, 2);
-            Object precioObj = modelo.getValueAt(i, 3);
-
-            if (cantidadObj == null || precioObj == null) {
-                System.out.println("Fila " + i + " tiene valores nulos: cantidad=" + cantidadObj + ", precio=" + precioObj);
-                continue;
-            }
-
-            int cantidad;
-            float precio;
-
-            if (cantidadObj instanceof Integer) {
-                cantidad = (Integer) cantidadObj;
-            } else {
-                cantidad = Integer.parseInt(cantidadObj.toString());
-            }
-
-            if (precioObj instanceof Float) {
-                precio = (Float) precioObj;
-            } else {
-                precio = Float.parseFloat(precioObj.toString());
-            }
-
-            total += cantidad * precio;
-        }
-
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
-    }
+//    private void calcularTotal() {
+//        float total = 0;
+//       // DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
+//
+//        for (int i = 0; i < modelo.getRowCount(); i++) {
+//            Object cantidadObj = modelo.getValueAt(i, 2);
+//            Object precioObj = modelo.getValueAt(i, 3);
+//
+//            if (cantidadObj == null || precioObj == null) {
+//                System.out.println("Fila " + i + " tiene valores nulos: cantidad=" + cantidadObj + ", precio=" + precioObj);
+//                continue;
+//            }
+//
+//            int cantidad;
+//            float precio;
+//
+//            if (cantidadObj instanceof Integer) {
+//                cantidad = (Integer) cantidadObj;
+//            } else {
+//                cantidad = Integer.parseInt(cantidadObj.toString());
+//            }
+//
+//            if (precioObj instanceof Float) {
+//                precio = (Float) precioObj;
+//            } else {
+//                precio = Float.parseFloat(precioObj.toString());
+//            }
+//
+//            total += cantidad * precio;
+//        }
+//
+//        txtSubtotal.setText(String.valueOf(total));
+//        txtTotal.setText(String.valueOf(total));
+//    }
 
     
     
@@ -232,65 +369,66 @@ public class ListaProductos extends javax.swing.JFrame {
 
 
         // Listener para eliminar
-        itemEliminar.addActionListener(e -> {
-            Integer id = obtenerIdSeleccionado(tblitems);
-            if (id != null) {
-                int confirm = JOptionPane.showConfirmDialog(this,
-                        "¿Seguro que deseas eliminar este item?",
-                        "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    try {
-                        fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
-                        llenarItemsComanda();
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
-                    }
-                }
-            }
-        });
+//        itemEliminar.addActionListener(e -> {
+//            Integer id = obtenerIdSeleccionado(tblitems);
+//            if (id != null) {
+//                int confirm = JOptionPane.showConfirmDialog(this,
+//                        "¿Seguro que deseas eliminar este item?",
+//                        "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+//                if (confirm == JOptionPane.YES_OPTION) {
+//                    try {
+//                        fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+//                        llenarItemsComanda();
+//                    } catch (Exception ex) {
+//                        JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
+//                    }
+//                }
+//            }
+//        });
         
         
-      //  Listener para editar
-        itemEditar.addActionListener(e -> {
-            Integer id = obtenerIdSeleccionado(tblitems);
-            if (id != null) {
-                try {
-                    
-                   Comanda comandaEditar = FComandas.obtenerComanda(idComanda);
-                   
-                   System.out.println("idd" + id);
-                    System.out.println("detalle size" + detalleComanda.size());
-                   detalle = new DetallesProducto(this, detalleComanda.get(id).getIdProducto(), comandaEditar, detalleComanda.get(1));
-                   detalle.setVisible(true);
-                   System.out.println("idd" + id);
-                   ListaProductos.this.setVisible(false);
-
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
-                }
-            }
-        });
-        
-
-        // Mostrar popup al hacer clic derecho
-        tblitems.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                mostrarPopup(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                mostrarPopup(e);
-            }
-
-            private void mostrarPopup(MouseEvent e) {
-                if (e.isPopupTrigger() && tblitems.getSelectedRow() >= 0) {
-                    popup.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        });
+//      //  Listener para editar
+//        itemEditar.addActionListener(e -> {
+//            Integer id = obtenerIdSeleccionado(tblitems);
+//            if (id != null) {
+//                try {
+//                    
+//                   Comanda comandaEditar = FComandas.obtenerComanda(idComanda);
+//                   
+//                   System.out.println("idd" + id);
+//                    System.out.println("detalle size" + detalleComanda.size());
+//                   detalle = new DetallesProducto(this, detalleComanda.get(id).getIdProducto(), comandaEditar, detalleComanda.get(1));
+//                   detalle.setVisible(true);
+//                   System.out.println("idd" + id);
+//                   ListaProductos.this.setVisible(false);
+//
+//                } catch (Exception ex) {
+//                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
+//                }
+//            }
+//        });
+//        
+//
+//        // Mostrar popup al hacer clic derecho
+//        tblitems.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                mostrarPopup(e);
+//            }
+//
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                mostrarPopup(e);
+//            }
+//
+//            private void mostrarPopup(MouseEvent e) {
+//                if (e.isPopupTrigger() && tblitems.getSelectedRow() >= 0) {
+//                    popup.show(e.getComponent(), e.getX(), e.getY());
+//                }
+//            }
+//        });
     }
+
 
     /**
      * Obtiene el ID (columna 0) de la fila seleccionada en una tabla
@@ -343,10 +481,7 @@ public class ListaProductos extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblitems = new javax.swing.JTable();
-        btnRestar = new javax.swing.JButton();
-        btnSumar1 = new javax.swing.JButton();
-        btnModificar = new javax.swing.JButton();
+        jPanelItems = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -375,8 +510,6 @@ public class ListaProductos extends javax.swing.JFrame {
         btnProductosUnitarios = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1440, 1024));
-        setPreferredSize(new java.awt.Dimension(1440, 1024));
         setResizable(false);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -456,92 +589,33 @@ public class ListaProductos extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
         jPanel4.setMaximumSize(new java.awt.Dimension(430, 375));
         jPanel4.setPreferredSize(new java.awt.Dimension(430, 375));
+        jPanel4.setLayout(null);
 
         jLabel4.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(17, 24, 39));
         jLabel4.setText("Items de la Comanda");
         jLabel4.setAlignmentX(16.0F);
         jLabel4.setAlignmentY(0.0F);
+        jPanel4.add(jLabel4);
+        jLabel4.setBounds(10, 10, 184, 24);
 
-        jScrollPane2.setMaximumSize(new java.awt.Dimension(424, 247));
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(420, 247));
+        jPanelItems.setPreferredSize(new java.awt.Dimension(390, 318));
 
-        tblitems.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Producto", "Descripción", "Cantidad", "Precio"
-            }
-        ));
-        tblitems.setMaximumSize(new java.awt.Dimension(420, 247));
-        tblitems.setPreferredSize(new java.awt.Dimension(424, 247));
-        jScrollPane2.setViewportView(tblitems);
-
-        btnRestar.setBackground(new java.awt.Color(242, 243, 245));
-        btnRestar.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        btnRestar.setForeground(new java.awt.Color(75, 85, 99));
-        btnRestar.setText("-");
-
-        btnSumar1.setBackground(new java.awt.Color(242, 243, 245));
-        btnSumar1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        btnSumar1.setForeground(new java.awt.Color(75, 85, 99));
-        btnSumar1.setText("+");
-
-        btnModificar.setBackground(new java.awt.Color(242, 243, 245));
-        btnModificar.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        btnModificar.setForeground(new java.awt.Color(75, 85, 99));
-        btnModificar.setText("Modificar");
-        btnModificar.setBorder(null);
-        btnModificar.setBorderPainted(false);
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(btnModificar))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(btnRestar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnSumar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(161, 161, 161))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+        javax.swing.GroupLayout jPanelItemsLayout = new javax.swing.GroupLayout(jPanelItems);
+        jPanelItems.setLayout(jPanelItemsLayout);
+        jPanelItemsLayout.setHorizontalGroup(
+            jPanelItemsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 408, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRestar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSumar1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnModificar)
-                .addContainerGap(7, Short.MAX_VALUE))
+        jPanelItemsLayout.setVerticalGroup(
+            jPanelItemsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 328, Short.MAX_VALUE)
         );
+
+        jScrollPane2.setViewportView(jPanelItems);
+
+        jPanel4.add(jScrollPane2);
+        jScrollPane2.setBounds(10, 40, 410, 330);
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(39, 24, 17));
@@ -807,7 +881,7 @@ public class ListaProductos extends javax.swing.JFrame {
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
@@ -872,20 +946,69 @@ public class ListaProductos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarProductosActionPerformed
-        // TODO add your handling code here:
+    private void btnProductosUnitariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosUnitariosActionPerformed
+        try {
+            this.buscarProductosPorCategoria(9);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnProductosUnitariosActionPerformed
 
-    }//GEN-LAST:event_txtBuscarProductosActionPerformed
+    private void toggleCrepasSaladasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleCrepasSaladasActionPerformed
+        try {
+            this.buscarProductosPorCategoria(7);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleCrepasSaladasActionPerformed
 
-    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
+    private void toggleEmparedadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEmparedadosActionPerformed
+        try {
+            this.buscarProductosPorCategoria(8);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleEmparedadosActionPerformed
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
-//        DetallesProducto detalles = new DetallesProducto();
-//        detalles.setVisible(true);
-    }//GEN-LAST:event_btnModificarActionPerformed
+    private void toggleCrepasDulcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleCrepasDulcesActionPerformed
+        try {
+            this.buscarProductosPorCategoria(6);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleCrepasDulcesActionPerformed
+
+    private void toggleSmothiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleSmothiesActionPerformed
+        try {
+            this.buscarProductosPorCategoria(5);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleSmothiesActionPerformed
+
+    private void toggleEspecialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEspecialesActionPerformed
+        try {
+            this.buscarProductosPorCategoria(4);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleEspecialesActionPerformed
+
+    private void toggleFrappeRocasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleFrappeRocasActionPerformed
+        try {
+            this.buscarProductosPorCategoria(3);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleFrappeRocasActionPerformed
+
+    private void toggleTonicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleTonicActionPerformed
+        try {
+            this.buscarProductosPorCategoria(2);
+        } catch (Exception ex) {
+            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_toggleTonicActionPerformed
 
     private void toggleBCalientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleBCalientesActionPerformed
         try {
@@ -904,69 +1027,13 @@ public class ListaProductos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_toggleTodosActionPerformed
 
-    private void toggleTonicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleTonicActionPerformed
-try {
-            this.buscarProductosPorCategoria(2);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleTonicActionPerformed
+    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
 
-    private void toggleFrappeRocasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleFrappeRocasActionPerformed
-       try {
-            this.buscarProductosPorCategoria(3);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleFrappeRocasActionPerformed
-
-    private void toggleEspecialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEspecialesActionPerformed
-        try {
-            this.buscarProductosPorCategoria(4);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleEspecialesActionPerformed
-
-    private void toggleSmothiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleSmothiesActionPerformed
-        try {
-            this.buscarProductosPorCategoria(5);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleSmothiesActionPerformed
-
-    private void toggleCrepasDulcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleCrepasDulcesActionPerformed
-       try {
-            this.buscarProductosPorCategoria(6);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleCrepasDulcesActionPerformed
-
-    private void toggleCrepasSaladasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleCrepasSaladasActionPerformed
-       try {
-            this.buscarProductosPorCategoria(7);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleCrepasSaladasActionPerformed
-
-    private void toggleEmparedadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEmparedadosActionPerformed
-        try {
-            this.buscarProductosPorCategoria(8);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_toggleEmparedadosActionPerformed
-
-    private void btnProductosUnitariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosUnitariosActionPerformed
-        try {
-            this.buscarProductosPorCategoria(9);
-        } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnProductosUnitariosActionPerformed
+    private void txtBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarProductosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarProductosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -976,12 +1043,9 @@ try {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar1;
     private javax.swing.JButton btnMesa;
-    private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnParaLlevar;
     private javax.swing.JButton btnProductosUnitarios;
     private javax.swing.JButton btnRegistrarVenta;
-    private javax.swing.JButton btnRestar;
-    private javax.swing.JButton btnSumar1;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -996,12 +1060,12 @@ try {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblProductos;
-    private javax.swing.JTable tblitems;
     private javax.swing.JToggleButton toggleBCalientes;
     private javax.swing.JToggleButton toggleCrepasDulces;
     private javax.swing.JToggleButton toggleCrepasSaladas;
