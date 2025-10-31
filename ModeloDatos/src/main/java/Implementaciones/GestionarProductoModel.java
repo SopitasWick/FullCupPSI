@@ -17,41 +17,41 @@ import java.util.List;
  *
  * @author Orlando Leyva
  */
-public class GestionarProductoModel  implements IFachadaProductoModel  {
-     
+public class GestionarProductoModel implements IFachadaProductoModel {
+
     ProductoJpaController productoJPA;
     ProductoopcionJpaController productoOpcionJPA;
-    
+
     public GestionarProductoModel() {
         this.productoJPA = new ProductoJpaController();
         this.productoOpcionJPA = new ProductoopcionJpaController();
     }
-    
+
     @Override
     public Producto obtenerProducto(Integer id) throws Exception {
         return productoJPA.findProducto(id);
     }
-    
+
     @Override
     public void agregarProducto(Producto producto) throws Exception {
         productoJPA.create(producto);
     }
-    
+
     @Override
     public void editarProducto(Producto producto) throws Exception {
         productoJPA.edit(producto);
     }
-    
+
     @Override
     public void eliminarProducto(Integer id) throws Exception {
         productoJPA.destroy(id);
     }
-    
+
     @Override
     public List<Producto> obtenerTodosLosProductos() throws Exception {
         return productoJPA.findProductoEntities();
     }
-    
+
     @Override
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception {
         return productoJPA.findProductosByIdCategoria(idCategoria);
@@ -59,15 +59,15 @@ public class GestionarProductoModel  implements IFachadaProductoModel  {
 
     @Override
     public List<Valoropcion> obtenerDetallesPorProducto(Integer idProducto) throws Exception {
-    List<Valoropcion> listaValores = new ArrayList<>();
-    List<Productoopcion> listaProductoOpcion = productoOpcionJPA.findProductoopcionByProducto(idProducto);
-
-    for (Productoopcion po : listaProductoOpcion) {
-        if (po.getIdOpcionProducto() != null && po.getIdOpcionProducto().getValoropcionList() != null) {
-            listaValores.addAll(po.getIdOpcionProducto().getValoropcionList());
+        List<Valoropcion> listaValores = new ArrayList<>();
+        List<Productoopcion> listaProductoOpcion = productoOpcionJPA.findProductoopcionByProducto(idProducto);
+        System.out.println(listaProductoOpcion);
+        for (Productoopcion po : listaProductoOpcion) {
+            if (po.getIdOpcionProducto() != null && po.getIdOpcionProducto().getValoropcionList() != null) {
+                listaValores.addAll(po.getIdOpcionProducto().getValoropcionList());
+            }
         }
-    }
 
-    return listaValores;
-}
+        return listaValores;
+    }
 }

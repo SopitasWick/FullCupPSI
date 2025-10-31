@@ -7,15 +7,19 @@ import Entidades.ExtrasProductos;
 import Entidades.Leche;
 import Entidades.Producto;
 import Entidades.TamanoVaso;
+import Entidades.Valoropcion;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaComandasControlador;
 import Facades.IFachadaExtrasControlador;
 import Facades.IFachadaLecheControlador;
+import Facades.IFachadaProductoControlador;
 import Facades.IFachadaTamanoVasosControlador;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarExtrasControlador;
 import Implementaciones.GestionarLecheControlador;
+import Implementaciones.GestionarProductoControlador;
+import Implementaciones.GestionarProductoModel;
 import Implementaciones.GestionarTamanoVasosControlador;
 import JPA.ComandaJpaController;
 import JPA.DetallecomandaJpaController;
@@ -79,12 +83,11 @@ public class DetallesProducto extends javax.swing.JFrame {
         // this.cargarDatosDetalles();
 
         cargarDatos();
-        
-        
-        if(comandaEditar != null){
+
+        if (comandaEditar != null) {
             cargarDatosEditar();
         }
-        
+        mostrarOpcionesSegunCategoria(producto);
     }
 
     private void cargarDatos() {
@@ -104,37 +107,30 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-        
-        
-        
-        
+
     }
-    
-    
-    public void cargarDatosEditar(){
-        
-        if(comandaEditar != null && detalle != null){
-            
+
+    public void cargarDatosEditar() {
+
+        if (comandaEditar != null && detalle != null) {
+
             System.out.println("editarComanda");
 
-            
             List<ExtrasProductos> extrasEditar = detalle.getExtrasProductosList();
-            
-            
+
             //Tamaño Vaso
-            
-            if(extrasEditar != null && !extrasEditar.isEmpty()){
-                if(extrasEditar.get(0).getIdTamanoVaso() != null){
+            if (extrasEditar != null && !extrasEditar.isEmpty()) {
+                if (extrasEditar.get(0).getIdTamanoVaso() != null) {
                     jrbTamañoSi.setSelected(true);
                     TamanoVaso vaso = extrasEditar.get(0).getIdTamanoVaso();
 
-                    if(vaso.getIdTamanoVaso() == 1){
+                    if (vaso.getIdTamanoVaso() == 1) {
                         radioMediano2.setSelected(true);
                         precioTamano = vaso.getPrecio();
                         recalcularTotal();
                     }
 
-                    if(vaso.getIdTamanoVaso() == 2){
+                    if (vaso.getIdTamanoVaso() == 2) {
                         radioMediano3.setSelected(true);
                         precioTamano = vaso.getPrecio();
                         recalcularTotal();
@@ -142,23 +138,20 @@ public class DetallesProducto extends javax.swing.JFrame {
 
                 }
 
-
-
                 //Leche
-                if(extrasEditar.get(0).getIdLeche() != null){
+                if (extrasEditar.get(0).getIdLeche() != null) {
                     jrbLecheSi.setSelected(true);
                     Leche leche = extrasEditar.get(0).getIdLeche();
 
-
-                    if(leche.getNombre().equalsIgnoreCase("Leche entera")){
+                    if (leche.getNombre().equalsIgnoreCase("Leche entera")) {
                         tipoLeche = "Leche entera";
                         precioLeche = 0; // Sin costo adicional
                         txtPrecioLeche.setText(String.valueOf(precioLeche));
-                        recalcularTotal(); 
+                        recalcularTotal();
                         toggleEntera.setSelected(true);
                     }
 
-                    if(leche.getNombre().equalsIgnoreCase("Deslactosada")){
+                    if (leche.getNombre().equalsIgnoreCase("Deslactosada")) {
                         tipoLeche = "Deslactosada";
                         precioLeche = 5; // Sin costo adicional
                         txtPrecioLeche.setText(String.valueOf(precioLeche));
@@ -166,7 +159,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                         toggleDeslactosada.setSelected(true);
                     }
 
-                    if(leche.getNombre().equalsIgnoreCase("Leche de avena")){
+                    if (leche.getNombre().equalsIgnoreCase("Leche de avena")) {
                         tipoLeche = "Leche de avena";
                         precioLeche = 7; // Sin costo adicional
                         txtPrecioLeche.setText(String.valueOf(precioLeche));
@@ -174,7 +167,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                         toggleAvena.setSelected(true);
                     }
 
-                    if(leche.getNombre().equalsIgnoreCase("Leche de almendras")){
+                    if (leche.getNombre().equalsIgnoreCase("Leche de almendras")) {
                         tipoLeche = "Leche de almendras";
                         precioLeche = 8; // Sin costo adicional
                         txtPrecioLeche.setText(String.valueOf(precioLeche));
@@ -182,19 +175,48 @@ public class DetallesProducto extends javax.swing.JFrame {
                         toggleAlmendras.setSelected(true);
                     }
 
-
-
-
-
                 }
-
 
             }
         }
-    
-    
+
     }
-    
+
+    private void mostrarOpcionesSegunCategoria(Producto producto) {
+        if (producto == null || producto.getIdCategoria() == null) {
+            System.out.println("No se pudo determinar la categoría del producto.");
+            return;
+        }
+
+        int idCategoria = producto.getIdCategoria().getIdCategoria();
+
+        // Ocultamos todos los paneles por defecto
+        panelTamano.setVisible(false);
+        panelLeche.setVisible(false);
+        panelExtras.setVisible(false);
+
+        // Mostramos los paneles correspondientes según la categoría
+        switch (idCategoria) {
+            case 1: // Café
+                panelTamano.setVisible(true);
+                panelLeche.setVisible(true);
+                panelExtras.setVisible(true);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
+                break;
+        }
+
+        Fondo.revalidate();
+        Fondo.repaint();
+
+        System.out.println("Categoría detectada: " + idCategoria);
+    }
 
     private void actualizarResumen() {
         // Nombre del producto
@@ -203,16 +225,12 @@ public class DetallesProducto extends javax.swing.JFrame {
         }
 
 //        // Tipo de leche
-        
-        
-
-            System.out.println("NoeditarComanda");
-            if (tipoLeche != null && !tipoLeche.isEmpty()) {
-                txtLeche.setText(tipoLeche);
-            } else {
-                txtLeche.setText("Ninguna");
-            }
-        
+        System.out.println("NoeditarComanda");
+        if (tipoLeche != null && !tipoLeche.isEmpty()) {
+            txtLeche.setText(tipoLeche);
+        } else {
+            txtLeche.setText("Ninguna");
+        }
 
         // Extras
         StringBuilder extras = new StringBuilder();
@@ -302,13 +320,13 @@ public class DetallesProducto extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
         txtPrecioBase = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
+        panelTamano = new javax.swing.JPanel();
         radioMediano2 = new javax.swing.JRadioButton();
         radioMediano3 = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         jrbTamañoNo = new javax.swing.JRadioButton();
         jrbTamañoSi = new javax.swing.JRadioButton();
-        jPanel6 = new javax.swing.JPanel();
+        panelLeche = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         toggleEntera = new javax.swing.JToggleButton();
         toggleAlmendras = new javax.swing.JToggleButton();
@@ -316,7 +334,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         toggleAvena = new javax.swing.JToggleButton();
         jrbLecheSi = new javax.swing.JRadioButton();
         jrbLecheNo = new javax.swing.JRadioButton();
-        jPanel7 = new javax.swing.JPanel();
+        panelExtras = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         txtExtraShot = new javax.swing.JLabel();
@@ -471,7 +489,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -487,9 +505,9 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
-        jPanel5.setPreferredSize(new java.awt.Dimension(500, 200));
+        panelTamano.setBackground(new java.awt.Color(255, 255, 255));
+        panelTamano.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
+        panelTamano.setPreferredSize(new java.awt.Dimension(500, 200));
 
         buttonGroup1.add(radioMediano2);
         radioMediano2.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -531,46 +549,46 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelTamanoLayout = new javax.swing.GroupLayout(panelTamano);
+        panelTamano.setLayout(panelTamanoLayout);
+        panelTamanoLayout.setHorizontalGroup(
+            panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTamanoLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addGap(57, 57, 57)
                         .addComponent(radioMediano2))
                     .addComponent(jLabel5))
                 .addGap(36, 36, 36)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addComponent(radioMediano3)
-                        .addContainerGap(87, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap(88, Short.MAX_VALUE))
+                    .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jrbTamañoNo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jrbTamañoSi)
                         .addGap(51, 51, 51))))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        panelTamanoLayout.setVerticalGroup(
+            panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTamanoLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jrbTamañoNo)
                     .addComponent(jrbTamañoSi))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(radioMediano2)
                     .addComponent(radioMediano3))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
 
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
+        panelLeche.setBackground(new java.awt.Color(255, 255, 255));
+        panelLeche.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
 
         jLabel6.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(17, 24, 39));
@@ -636,23 +654,23 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelLecheLayout = new javax.swing.GroupLayout(panelLeche);
+        panelLeche.setLayout(panelLecheLayout);
+        panelLecheLayout.setHorizontalGroup(
+            panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLecheLayout.createSequentialGroup()
                 .addGap(36, 36, 36)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelLecheLayout.createSequentialGroup()
                         .addComponent(toggleEntera, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(toggleDeslactosada, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGroup(panelLecheLayout.createSequentialGroup()
                         .addComponent(toggleAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(toggleAvena, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(36, Short.MAX_VALUE))
-            .addGroup(jPanel6Layout.createSequentialGroup()
+            .addGroup(panelLecheLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -661,29 +679,29 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addComponent(jrbLecheSi)
                 .addGap(51, 51, 51))
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        panelLecheLayout.setVerticalGroup(
+            panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLecheLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jrbLecheSi)
                         .addComponent(jrbLecheNo)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(toggleEntera, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(toggleDeslactosada, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelLecheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(toggleAlmendras, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(toggleAvena, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
 
-        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
-        jPanel7.setMaximumSize(new java.awt.Dimension(472, 377));
+        panelExtras.setBackground(new java.awt.Color(255, 255, 255));
+        panelExtras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
+        panelExtras.setMaximumSize(new java.awt.Dimension(472, 377));
 
         jLabel7.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(17, 24, 39));
@@ -782,7 +800,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtVainillaExtra)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(spinnerShotExpreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
@@ -846,21 +864,21 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelExtrasLayout = new javax.swing.GroupLayout(panelExtras);
+        panelExtras.setLayout(panelExtrasLayout);
+        panelExtrasLayout.setHorizontalGroup(
+            panelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExtrasLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelExtrasLayout.createSequentialGroup()
+                        .addGroup(panelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(123, Short.MAX_VALUE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addContainerGap(130, Short.MAX_VALUE))
+                    .addGroup(panelExtrasLayout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jrbExtrasNo)
@@ -868,11 +886,11 @@ public class DetallesProducto extends javax.swing.JFrame {
                         .addComponent(jrbExtrasSi)
                         .addGap(28, 28, 28))))
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        panelExtrasLayout.setVerticalGroup(
+            panelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelExtrasLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jrbExtrasNo)
                     .addComponent(jrbExtrasSi))
@@ -884,7 +902,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -1078,14 +1096,14 @@ public class DetallesProducto extends javax.swing.JFrame {
         Fondo.setLayout(FondoLayout);
         FondoLayout.setHorizontalGroup(
             FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1446, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1476, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FondoLayout.createSequentialGroup()
-                .addContainerGap(430, Short.MAX_VALUE)
+                .addContainerGap(453, Short.MAX_VALUE)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelTamano, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelLeche, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelExtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1103,13 +1121,13 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(FondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(FondoLayout.createSequentialGroup()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panelTamano, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(panelLeche, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 149, Short.MAX_VALUE))
+                .addComponent(panelExtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 65, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(Fondo);
@@ -1189,8 +1207,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             sb.append("Tamaño: Mediano. ");
         } else if (precioTamano == 20) {
             sb.append("Tamaño: Grande. ");
-        } 
-        
+        }
 
         // Tipo de leche
         if (tipoLeche != null && !tipoLeche.isEmpty()) {
@@ -1245,21 +1262,17 @@ public class DetallesProducto extends javax.swing.JFrame {
 //        detalleCo.setNotadetalleComanda(nota);
 //        detalleCo.setSubTotaldetalleComanda(total);
         //aqui vaser 
-   //     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
-                
-          
-    Detallecomanda detalleCo = new Detallecomanda();
-   
-   
-        if(comandaEditar != null){
-            
-            
+        //     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+        Detallecomanda detalleCo = new Detallecomanda();
+
+        if (comandaEditar != null) {
+
             listaProductos.comanda = comandaEditar;
             //se puede mejorar
             if (ListaProductos.comanda.getDetallecomandaList() == null) {
                 ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
             }
-             detalleCo = new Detallecomanda();
+            detalleCo = new Detallecomanda();
             // Crear un detalle por cada unidad
             for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
 
@@ -1270,48 +1283,42 @@ public class DetallesProducto extends javax.swing.JFrame {
                 try {
                     detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
                     detalleCo.setIdComanda(comandaEditar);
-                    
-                    
+
                     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
                     detalleCo.setSubTotaldetalleComanda(total);
-                    
+
                     FComandas.GuardarDetalleComanda(detalleCo);
 
                     //ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
-
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
-        
-        }
-   
-        else{
-            if(ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null ){
+        } else {
+            if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
                 try {
                     //ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                    ListaProductos.comanda.setEstadoComanda("Abierta");
-                    ListaProductos.comanda.setFechaHoracomanda(new Date());
-                    ListaProductos.comanda.setTotalComanda(total);
-                    try {
-                       
-                        FComandas.GuardarComanda(ListaProductos.comanda);
-                        ListaProductos.idComanda = ListaProductos.comanda.getIdComanda();
-                    } catch (Exception ex) {
-                        Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                ListaProductos.comanda.setEstadoComanda("Abierta");
+                ListaProductos.comanda.setFechaHoracomanda(new Date());
+                ListaProductos.comanda.setTotalComanda(total);
+                try {
 
+                    FComandas.GuardarComanda(ListaProductos.comanda);
+                    ListaProductos.idComanda = ListaProductos.comanda.getIdComanda();
+                } catch (Exception ex) {
+                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 
             if (ListaProductos.comanda.getDetallecomandaList() == null) {
                 ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
             }
-            
-             detalleCo = new Detallecomanda();
+
+            detalleCo = new Detallecomanda();
             // Crear un detalle por cada unidad
             for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
 
@@ -1320,13 +1327,12 @@ public class DetallesProducto extends javax.swing.JFrame {
                 detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
 
                 try {
-                   // detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
+                    // detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
                     detalleCo.setIdComanda(ListaProductos.comanda);
-                    
+
                     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
                     detalleCo.setSubTotaldetalleComanda(total);
-                    
-                    
+
                     FComandas.GuardarDetalleComanda(detalleCo);
 
                     ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
@@ -1335,94 +1341,74 @@ public class DetallesProducto extends javax.swing.JFrame {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
- 
-            
+
         }
-        
+
         //Manejo de extras
-        
-        
-        
-            ExtrasProductos extra = new ExtrasProductos();
-            Leche leche = null;
-            
-            
-            if (jrbLecheSi.isSelected()){
-                
-              try{  
-                if(tipoLeche.equalsIgnoreCase("Leche entera")){
+        ExtrasProductos extra = new ExtrasProductos();
+        Leche leche = null;
+
+        if (jrbLecheSi.isSelected()) {
+
+            try {
+                if (tipoLeche.equalsIgnoreCase("Leche entera")) {
                     leche = fLeche.obtenerLeche(1);
                 }
-                
-                if(tipoLeche.equalsIgnoreCase("Deslactosada")){
+
+                if (tipoLeche.equalsIgnoreCase("Deslactosada")) {
                     leche = fLeche.obtenerLeche(2);
                 }
-                
-                if(tipoLeche.equalsIgnoreCase("Leche de avena")){
+
+                if (tipoLeche.equalsIgnoreCase("Leche de avena")) {
                     leche = fLeche.obtenerLeche(3);
                 }
-                
-                if(tipoLeche.equalsIgnoreCase("Leche de almendras")){
+
+                if (tipoLeche.equalsIgnoreCase("Leche de almendras")) {
                     leche = fLeche.obtenerLeche(4);
                 }
-   
+
                 extra.setIdLeche(leche);
-                
-                
+
                 Categoria cat = fCategoria.obtenerCategoria(1);
-                
+
                 extra.setIdCategoria(cat);
-                
-                
+
                 TamanoVaso vaso;
-                
+
                 //vaso
-                if(radioMediano2.isSelected()){
+                if (radioMediano2.isSelected()) {
                     vaso = fVasos.obtenerTamanoVaso(1);
-                }
-                
-                else{
+                } else {
                     vaso = fVasos.obtenerTamanoVaso(2);
                 }
-                
+
                 extra.setIdTamanoVaso(vaso);
                 extra.setIdDetalleComanda(detalleCo);
-                
-              }
-              
-              catch(Exception e){
-                  e.printStackTrace();
-              }
-                
-                
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            
-            
-            
-            extra.setIdProducto(producto);
-            
-            
-            //manejo de extras
-            if (jrbExtrasSi.isSelected()){
-                
-            }
-            
-            
-            try {
-                System.out.println(extra.toString());
-                fExtras.agregarExtrasProductos(extra);
-            } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-        
-        
-        
+
+        }
+
+        extra.setIdProducto(producto);
+
+        //manejo de extras
+        if (jrbExtrasSi.isSelected()) {
+
+        }
+
+        try {
+            System.out.println(extra.toString());
+            fExtras.agregarExtrasProductos(extra);
+        } catch (Exception ex) {
+            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         listaProductos.setVisible(true);
         listaProductos.cargarPanelComanda();
         this.dispose();
-        
+
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -1451,7 +1437,7 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-         recalcularTotal();
+        recalcularTotal();
     }//GEN-LAST:event_radioMediano3ActionPerformed
 
     private void spinnerCantidadProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerCantidadProductoStateChanged
@@ -1590,9 +1576,6 @@ public class DetallesProducto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1603,6 +1586,9 @@ public class DetallesProducto extends javax.swing.JFrame {
     private javax.swing.JRadioButton jrbLecheSi;
     private javax.swing.JRadioButton jrbTamañoNo;
     private javax.swing.JRadioButton jrbTamañoSi;
+    private javax.swing.JPanel panelExtras;
+    private javax.swing.JPanel panelLeche;
+    private javax.swing.JPanel panelTamano;
     private javax.swing.JRadioButton radioMediano2;
     private javax.swing.JRadioButton radioMediano3;
     private javax.swing.JSpinner spinnerBoba;
