@@ -5,7 +5,7 @@ Pruebas\PruebasExtra.class
 Facades\IFachadaCategoriaControlador.class
 Facades\IFachadaLecheControlador.class
 Implementaciones\GestionarComandaControlador.class
-Pruebas\PruebasTamañoVaso.class
+Pruebas\PruebasTamaÃ±oVaso.class
 Facades\IFachadaDetallesComandaControlador.class
 Implementaciones\GestionarCategoriaControlador.class
 Implementaciones\GestionarLecheControlador.class

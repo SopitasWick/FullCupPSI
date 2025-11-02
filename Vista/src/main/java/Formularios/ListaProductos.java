@@ -130,6 +130,7 @@ public class ListaProductos extends javax.swing.JFrame {
                                 cargarPanelComanda();
                             } catch (Exception ex) {
                                 JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                                ex.printStackTrace();
                             }
                         }
                             
