@@ -38,6 +38,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     private final IFachadaExtrasControlador fExtras = new GestionarExtrasControlador();
     private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
     private final IFachadaTamanoVasosControlador fVasos = new GestionarTamanoVasosControlador();
+    private final IFachadaProductoControlador fProductos = new GestionarProductoControlador();
 
     private javax.swing.JRadioButton radioConLeche;
     private javax.swing.JRadioButton radioSinLeche;
@@ -82,11 +83,10 @@ public class DetallesProducto extends javax.swing.JFrame {
         this.cargarDatos();
         // this.cargarDatosDetalles();
 
-        cargarDatos();
-
         if (comandaEditar != null) {
             cargarDatosEditar();
         }
+        this.agregarValoresTxtSpinners();
         mostrarOpcionesSegunCategoria(producto);
     }
 
@@ -183,41 +183,76 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void mostrarOpcionesSegunCategoria(Producto producto) {
+        List <Valoropcion> vopcion = new ArrayList<>();
         if (producto == null || producto.getIdCategoria() == null) {
             System.out.println("No se pudo determinar la categoría del producto.");
             return;
         }
 
-        int idCategoria = producto.getIdCategoria().getIdCategoria();
+        //AQUI VA A PASAR LA MAGIA
+        //VAMOS A INVOCAR EL METODO ObtenerDetallesPorProducto, y le vamos a pasar el id del producto
+        //del parametro
 
         // Ocultamos todos los paneles por defecto
         panelTamano.setVisible(false);
         panelLeche.setVisible(false);
         panelExtras.setVisible(false);
 
-        // Mostramos los paneles correspondientes según la categoría
-        switch (idCategoria) {
-            case 1: // Café
-                panelTamano.setVisible(true);
-                panelLeche.setVisible(true);
-                panelExtras.setVisible(true);
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            default:
-                break;
+        try {
+            //Lista que tienen los detalles por producto
+         vopcion =  fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
+        } catch (Exception ex) {
+            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //Buscamos los detalles del producto
+        for (Valoropcion opciones : vopcion) {
+        System.out.println("Detalle encontrado: " + opciones.getNombreValor());
+        int idOpcion= opciones.getIdOpcionProducto().getIdOpcionProducto();
+        // Mostramos los paneles correspondientes según la categoría
+        switch (idOpcion) {// UN PRODUCTO PUEDE TENER MAS DE UNA OPCION
+            //TODAS LAS BEBIDAS LOS CONTIENEN******************
+            case 1 -> { //Café tiene los tres
+                panelTamano.setVisible(true);
+                }
+            case 2-> {
+                panelLeche.setVisible(true);
+            }
+            case 3->{
+                panelExtras.setVisible(true);
+            }
+            //TODAS LAS BEBIDAS LOS CONTIENEN******************
+            //DE AQUI PARA ABAJO YA SE VUELVE INDIVIDUAL EXCEPTO EL CASE 5 QUE CORRESPONDE
+            //A LOS PRODUCTOS QUE SE VENDEN POR UNIDAD
+            case 4 -> { //Crepa de jamon extras de sus mismos ingredientes
+                panelExtras.setVisible(true);
+                //Modificar contenido del panel en base al producto -- Faltan mejoras
+                this.txtExtraShot.setText("Jamon");
+                //Modificar valor spinner
+                this.spinnerLecheDeCoco.setToolTipText("Jamon");
+                }
+            case 5 -> {
+                System.out.println("Producto unitario - sin detalles");
+                }
+            default -> {
+                }
+          }
+            // Una coca - paneles ya ocultos por defecto
+                     } 
 
+        
         Fondo.revalidate();
         Fondo.repaint();
 
-        System.out.println("Categoría detectada: " + idCategoria);
+        //System.out.println("Categoría detectada: " + idCategoria);
     }
-
+    private void modificarPanelDetallePorProducto(){ };//Si no se usa directo en el switch
+    private void agregarValoresTxtSpinners(){
+        this.spinnerBoba.setToolTipText("Boba");
+        this.spinnerLecheAlmendras.setToolTipText("Leche almendras");
+        this.spinnerLecheDeCoco.setToolTipText("Leche coco");
+        this.spinnerShotExpreso.setToolTipText("Shot expreso");
+    }
+    
     private void actualizarResumen() {
         // Nombre del producto
         if (producto != null) {
@@ -232,19 +267,19 @@ public class DetallesProducto extends javax.swing.JFrame {
             txtLeche.setText("Ninguna");
         }
 
-        // Extras
+        // Extras AQUI VAN LOS TXT
         StringBuilder extras = new StringBuilder();
         if ((int) spinnerLecheDeCoco.getValue() > 0) {
-            extras.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append("  ");
+            extras.append(this.spinnerLecheDeCoco.getToolTipText()).append(" x").append(spinnerLecheDeCoco.getValue()).append("  ");
         }
         if ((int) spinnerLecheAlmendras.getValue() > 0) {
-            extras.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append("  ");
+            extras.append(this.spinnerLecheAlmendras.getToolTipText()).append(" x").append(spinnerLecheAlmendras.getValue()).append("  ");
         }
         if ((int) spinnerShotExpreso.getValue() > 0) {
-            extras.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append("  ");
+            extras.append(this.spinnerShotExpreso.getToolTipText()).append(" x").append(spinnerShotExpreso.getValue()).append("  ");
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            extras.append("Boba x").append(spinnerBoba.getValue()).append("  ");
+            extras.append(this.spinnerCantidadProducto.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append("  ");
         }
 
         if (extras.length() == 0) {
@@ -1214,22 +1249,22 @@ public class DetallesProducto extends javax.swing.JFrame {
             sb.append("Leche: ").append(tipoLeche).append(". ");
         }
 
-        // Extras
+        // Extras ACTUALIZAR ESTO COMO ARRIBA
         int extras = 0;
         if ((int) spinnerLecheDeCoco.getValue() > 0) {
-            sb.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append(". ");
+            sb.append(spinnerLecheDeCoco.getToolTipText()).append(" x").append(spinnerLecheDeCoco.getValue()).append(". ");
             extras += (int) spinnerLecheDeCoco.getValue();
         }
         if ((int) spinnerLecheAlmendras.getValue() > 0) {
-            sb.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append(". ");
+            sb.append(spinnerLecheAlmendras.getToolTipText()).append(" x").append(spinnerLecheAlmendras.getValue()).append(". ");
             extras += (int) spinnerLecheAlmendras.getValue();
         }
         if ((int) spinnerShotExpreso.getValue() > 0) {
-            sb.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append(". ");
+            sb.append(spinnerShotExpreso.getToolTipText()).append(" x").append(spinnerShotExpreso.getValue()).append(". ");
             extras += (int) spinnerShotExpreso.getValue();
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            sb.append("Boba x").append(spinnerBoba.getValue()).append(". ");
+            sb.append(spinnerBoba.getToolTipText()).append(spinnerBoba.getValue()).append(". ");
             extras += (int) spinnerBoba.getValue();
         }
 
