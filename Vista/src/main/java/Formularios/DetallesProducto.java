@@ -10,12 +10,14 @@ import Entidades.TamanoVaso;
 import Entidades.Valoropcion;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaComandasControlador;
+import Facades.IFachadaDetallesComandaControlador;
 import Facades.IFachadaExtrasControlador;
 import Facades.IFachadaLecheControlador;
 import Facades.IFachadaProductoControlador;
 import Facades.IFachadaTamanoVasosControlador;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
+import Implementaciones.GestionarDetallesComandaControlador;
 import Implementaciones.GestionarExtrasControlador;
 import Implementaciones.GestionarLecheControlador;
 import Implementaciones.GestionarProductoControlador;
@@ -38,6 +40,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     private final IFachadaExtrasControlador fExtras = new GestionarExtrasControlador();
     private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
     private final IFachadaTamanoVasosControlador fVasos = new GestionarTamanoVasosControlador();
+    private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
     private final IFachadaProductoControlador fProductos = new GestionarProductoControlador();
 
     private javax.swing.JRadioButton radioConLeche;
@@ -83,7 +86,9 @@ public class DetallesProducto extends javax.swing.JFrame {
         this.cargarDatos();
         // this.cargarDatosDetalles();
 
-        if (comandaEditar != null) {
+        //cargarDatos();
+        // La comprobación correcta es sobre 'detalle'
+        if (detalle != null) {
             cargarDatosEditar();
         }
         this.agregarValoresTxtSpinners();
@@ -103,83 +108,83 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         spinnerCantidadProducto.setValue(1);
 
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+        cantidad = (int) spinnerCantidadProducto.getValue();
 
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
-
+        recalcularTotal();
+//
+//        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+//
+//        txtSubtotal.setText(String.valueOf(total));
+//        txtTotal.setText(String.valueOf(total));
     }
 
     public void cargarDatosEditar() {
+        // La comprobación real es si 'detalle' existe
+        if (detalle != null) {
 
-        if (comandaEditar != null && detalle != null) {
+            System.out.println("--- MODO EDICIÓN DETECTADO ---");
 
-            System.out.println("editarComanda");
+            // --- CAMBIOS ---
+            // Cargar cantidad y nota guardadas
+            spinnerCantidadProducto.setValue(detalle.getCaintidaddetalleComanda());
+            txtDescripcion.setText(detalle.getNotadetalleComanda());
+            // Asignar la cantidad a la variable de clase
+            cantidad = detalle.getCaintidaddetalleComanda();
 
+            // cargar extras
             List<ExtrasProductos> extrasEditar = detalle.getExtrasProductosList();
 
-            //Tamaño Vaso
             if (extrasEditar != null && !extrasEditar.isEmpty()) {
-                if (extrasEditar.get(0).getIdTamanoVaso() != null) {
-                    jrbTamañoSi.setSelected(true);
-                    TamanoVaso vaso = extrasEditar.get(0).getIdTamanoVaso();
+                ExtrasProductos extras = extrasEditar.get(0); // Más seguro
 
+                //Tamaño Vaso
+                if (extras.getIdTamanoVaso() != null) {
+                    jrbTamañoSi.setSelected(true);
+                    radioMediano2.setEnabled(true);
+                    radioMediano3.setEnabled(true);
+                    TamanoVaso vaso = extras.getIdTamanoVaso();
+                    // Precios de los vasos
                     if (vaso.getIdTamanoVaso() == 1) {
                         radioMediano2.setSelected(true);
                         precioTamano = vaso.getPrecio();
-                        recalcularTotal();
                     }
-
                     if (vaso.getIdTamanoVaso() == 2) {
                         radioMediano3.setSelected(true);
                         precioTamano = vaso.getPrecio();
-                        recalcularTotal();
                     }
-
+                } else {
+                    jrbTamañoNo.setSelected(true);
+                    radioMediano2.setEnabled(false);
+                    radioMediano3.setEnabled(false);
                 }
 
                 //Leche
-                if (extrasEditar.get(0).getIdLeche() != null) {
+                if (extras.getIdLeche() != null) {
                     jrbLecheSi.setSelected(true);
-                    Leche leche = extrasEditar.get(0).getIdLeche();
+                    toggleEntera.setEnabled(true);
+                    toggleDeslactosada.setEnabled(true);
+                    toggleAvena.setEnabled(true);
+                    toggleAlmendras.setEnabled(true);
+                    Leche leche = extras.getIdLeche();
 
                     if (leche.getNombre().equalsIgnoreCase("Leche entera")) {
                         tipoLeche = "Leche entera";
-                        precioLeche = 0; // Sin costo adicional
-                        txtPrecioLeche.setText(String.valueOf(precioLeche));
-                        recalcularTotal();
+                        precioLeche = 0;
                         toggleEntera.setSelected(true);
                     }
-
-                    if (leche.getNombre().equalsIgnoreCase("Deslactosada")) {
-                        tipoLeche = "Deslactosada";
-                        precioLeche = 5; // Sin costo adicional
-                        txtPrecioLeche.setText(String.valueOf(precioLeche));
-                        recalcularTotal();
-                        toggleDeslactosada.setSelected(true);
-                    }
-
-                    if (leche.getNombre().equalsIgnoreCase("Leche de avena")) {
-                        tipoLeche = "Leche de avena";
-                        precioLeche = 7; // Sin costo adicional
-                        txtPrecioLeche.setText(String.valueOf(precioLeche));
-                        recalcularTotal();
-                        toggleAvena.setSelected(true);
-                    }
-
-                    if (leche.getNombre().equalsIgnoreCase("Leche de almendras")) {
-                        tipoLeche = "Leche de almendras";
-                        precioLeche = 8; // Sin costo adicional
-                        txtPrecioLeche.setText(String.valueOf(precioLeche));
-                        recalcularTotal();
-                        toggleAlmendras.setSelected(true);
-                    }
-
+                    
+                } else {
+                    jrbLecheNo.setSelected(true);
+                    toggleEntera.setEnabled(false);
+                    toggleDeslactosada.setEnabled(false);
+                    toggleAvena.setEnabled(false);
+                    toggleAlmendras.setEnabled(false);
                 }
-
             }
-        }
 
+            // Al final recalcular todo con los datos cargados
+            recalcularTotal();
+        }
     }
 
     private void mostrarOpcionesSegunCategoria(Producto producto) {
@@ -288,10 +293,11 @@ public class DetallesProducto extends javax.swing.JFrame {
             txtExtra.setText(extras.toString());
         }
 
-        // Actualiza precios en el resumen
-        txtPrecioLeche.setText(String.valueOf(precioLeche));
-        txtPrecioExtra.setText(String.valueOf(precioExtra));
-        txtPrecioProductoResumen.setText(String.valueOf(producto.getPrecioProducto()));
+        // --- CAMBIOS ---
+        // Actualiza precios multiplicados por la cantidad
+        txtPrecioLeche.setText(String.valueOf(precioLeche * cantidad));
+        txtPrecioExtra.setText(String.valueOf(precioExtra * cantidad));
+        txtPrecioProductoResumen.setText(String.valueOf(producto.getPrecioProducto() * cantidad));
 
         // Subtotal y total
         txtSubtotal.setText(String.valueOf(total));
@@ -1205,11 +1211,18 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void recalcularTotal() {
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+        // --- CAMBIO ---
+        // 1. Siempre obtener la cantidad ACTUAL del spinner
+        cantidad = (int) spinnerCantidadProducto.getValue();
+
+        // --- CAMBIO ---
+        // 2. El total es (base + tamaño) * cant + (leche * cant) + (extra * cant)
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + (precioLeche * cantidad) + (precioExtra * cantidad);
+
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
         actualizarNota();
-        actualizarResumen();
+        actualizarResumen(); // 'actualizarResumen' también debe ser corregido
     }
 
     private void calcularExtrasYTotal() {
@@ -1222,16 +1235,16 @@ public class DetallesProducto extends javax.swing.JFrame {
         // Actualiza el label de precio de extras
         txtPrecioExtra.setText(String.valueOf(precioExtra));
 
-        // Recalcula el total general
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+        // --- CORRECCIÓN ---
+        recalcularTotal();
 
         // Actualiza los labels
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
+//        txtSubtotal.setText(String.valueOf(total));
+//        txtTotal.setText(String.valueOf(total));
 
         // Actualiza el resumen y la nota descriptiva
-        actualizarNota();
-        actualizarResumen();
+//        actualizarNota();
+//        actualizarResumen();
     }
 
     private void actualizarNota() {
@@ -1298,152 +1311,130 @@ public class DetallesProducto extends javax.swing.JFrame {
 //        detalleCo.setSubTotaldetalleComanda(total);
         //aqui vaser 
         //     detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+        // (Tu lógica para crear la comanda si es nueva está bien)
         Detallecomanda detalleCo = new Detallecomanda();
 
-        if (comandaEditar != null) {
-
-            listaProductos.comanda = comandaEditar;
-            //se puede mejorar
-            if (ListaProductos.comanda.getDetallecomandaList() == null) {
-                ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
-            }
-            detalleCo = new Detallecomanda();
-            // Crear un detalle por cada unidad
-            for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
-
-                detalleCo.setIdProducto(producto);
-                detalleCo.setNotadetalleComanda(nota);
-                detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
-
-                try {
-                    detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
-                    detalleCo.setIdComanda(comandaEditar);
-
-                    detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
-                    detalleCo.setSubTotaldetalleComanda(total);
-
-                    FComandas.GuardarDetalleComanda(detalleCo);
-
-                    //ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
-                } catch (Exception ex) {
-                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-        } else {
+        if (comandaEditar == null) { // Es una comanda nueva
             if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
                 try {
-                    //ListaProductos.comanda.setIdComanda(FComandas.totalComandas() + 1);
-                } catch (Exception ex) {
-                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                ListaProductos.comanda.setEstadoComanda("Abierta");
-                ListaProductos.comanda.setFechaHoracomanda(new Date());
-                ListaProductos.comanda.setTotalComanda(total);
-                try {
-
+                    ListaProductos.comanda.setEstadoComanda("Abierta");
+                    ListaProductos.comanda.setFechaHoracomanda(new Date());
+                    ListaProductos.comanda.setTotalComanda(total);
                     FComandas.GuardarComanda(ListaProductos.comanda);
                     ListaProductos.idComanda = ListaProductos.comanda.getIdComanda();
+                    comandaEditar = ListaProductos.comanda;
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
                 }
+            } else {
+                comandaEditar = ListaProductos.comanda;
             }
-
-            if (ListaProductos.comanda.getDetallecomandaList() == null) {
-                ListaProductos.comanda.setDetallecomandaList(new ArrayList<>());
-            }
-
-            detalleCo = new Detallecomanda();
-            // Crear un detalle por cada unidad
-            for (int i = 0; i < (Integer) spinnerCantidadProducto.getValue(); i++) {
-
-                detalleCo.setIdProducto(producto);
-                detalleCo.setNotadetalleComanda(nota);
-                detalleCo.setSubTotaldetalleComanda(total / (Integer) spinnerCantidadProducto.getValue()); // subtotal individual
-
-                try {
-                    // detalleCo.setIdDetalleComanda(FComandas.totalProductoDetalles() + 1);
-                    detalleCo.setIdComanda(ListaProductos.comanda);
-
-                    detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
-                    detalleCo.setSubTotaldetalleComanda(total);
-
-                    FComandas.GuardarDetalleComanda(detalleCo);
-
-                    ListaProductos.comanda.getDetallecomandaList().add(detalleCo);
-
-                } catch (Exception ex) {
-                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
         }
 
-        //Manejo de extras
+        if (comandaEditar.getDetallecomandaList() == null) {
+            comandaEditar.setDetallecomandaList(new ArrayList<>());
+        }
+
+        // --- LÓGICA DE EDICIÓN (CORREGIDA) ---
+        if (this.detalle != null) {
+            try {
+                System.out.println("Modo Editar: Eliminando detalle antiguo ID: " + this.detalle.getIdDetalleComanda());
+
+                // --- PASO 1: Eliminar los 'ExtrasProductos' (hijos) PRIMERO ---
+                if (this.detalle.getExtrasProductosList() != null && !this.detalle.getExtrasProductosList().isEmpty()) {
+                    System.out.println("Eliminando extras antiguos...");
+
+                    // Creamos una copia de la lista para evitar ConcurrentModificationException
+                    List<ExtrasProductos> extrasAntiguos = new ArrayList<>(this.detalle.getExtrasProductosList());
+
+                    for (ExtrasProductos extraAntiguo : extrasAntiguos) {
+
+                        // ----- CORRECCIÓN -----
+                        fExtras.eliminarExtrasProductos(extraAntiguo.getIdExtraProducto());
+                    }
+                }
+
+                // --- PASO 2: Eliminar el 'Detallecomanda' (padre) ---
+                fDC.eliminarDetallesComandas(this.detalle.getIdDetalleComanda());
+
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al eliminar detalle antiguo", ex);
+                // Si falla aquí, no continuamos para no duplicar
+                return;
+            }
+        }
+
+        // --- LÓGICA DE GUARDADO (PARA NUEVO O EDITADO) ---
+        detalleCo = new Detallecomanda();
+        detalleCo.setIdProducto(producto);
+        detalleCo.setNotadetalleComanda(nota);
+        detalleCo.setSubTotaldetalleComanda(total);
+        detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+        detalleCo.setIdComanda(comandaEditar);
+
+        try {
+            System.out.println("Guardando nuevo detalle...");
+            FComandas.GuardarDetalleComanda(detalleCo);
+        } catch (Exception ex) {
+            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al guardar nuevo detalle", ex);
+        }
+
+        //Manejo de extras (asociado al *nuevo* detalleCo)
         ExtrasProductos extra = new ExtrasProductos();
         Leche leche = null;
+        boolean hayExtras = false;
 
         if (jrbLecheSi.isSelected()) {
-
+            hayExtras = true;
             try {
                 if (tipoLeche.equalsIgnoreCase("Leche entera")) {
                     leche = fLeche.obtenerLeche(1);
-                }
-
-                if (tipoLeche.equalsIgnoreCase("Deslactosada")) {
+                } else if (tipoLeche.equalsIgnoreCase("Deslactosada")) {
                     leche = fLeche.obtenerLeche(2);
-                }
-
-                if (tipoLeche.equalsIgnoreCase("Leche de avena")) {
+                } else if (tipoLeche.equalsIgnoreCase("Leche de avena")) {
                     leche = fLeche.obtenerLeche(3);
-                }
-
-                if (tipoLeche.equalsIgnoreCase("Leche de almendras")) {
+                } else if (tipoLeche.equalsIgnoreCase("Leche de almendras")) {
                     leche = fLeche.obtenerLeche(4);
                 }
-
                 extra.setIdLeche(leche);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-                Categoria cat = fCategoria.obtenerCategoria(1);
-
-                extra.setIdCategoria(cat);
-
+        if (jrbTamañoSi.isSelected()) {
+            hayExtras = true;
+            try {
                 TamanoVaso vaso;
-
-                //vaso
                 if (radioMediano2.isSelected()) {
                     vaso = fVasos.obtenerTamanoVaso(1);
                 } else {
                     vaso = fVasos.obtenerTamanoVaso(2);
                 }
-
                 extra.setIdTamanoVaso(vaso);
-                extra.setIdDetalleComanda(detalleCo);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
-        extra.setIdProducto(producto);
+        // (Lógica de spinners de extras)
+        if (hayExtras) {
+            try {
+                extra.setIdProducto(producto);
+                extra.setIdDetalleComanda(detalleCo);
 
-        //manejo de extras
-        if (jrbExtrasSi.isSelected()) {
-
+                System.out.println("Guardando extras...");
+                fExtras.agregarExtrasProductos(extra);
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al guardar extras", ex);
+            }
         }
 
-        try {
-            System.out.println(extra.toString());
-            fExtras.agregarExtrasProductos(extra);
-        } catch (Exception ex) {
-            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        // Volver a la lista de productos
         listaProductos.setVisible(true);
         listaProductos.cargarPanelComanda();
         this.dispose();
-
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -1480,14 +1471,13 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         if (((int) spinnerCantidadProducto.getValue()) < 1) {
             spinnerCantidadProducto.setValue(1);
+            // Salir si el valor no es válido
+            return;
         }
 
-        cantidad = (int) spinnerCantidadProducto.getValue();
-
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
-
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
+        // --- CAMBIO ---
+        // No recalcular aquí, solo llamar al método que ya lo hace
+        recalcularTotal();
 
     }//GEN-LAST:event_spinnerCantidadProductoStateChanged
 

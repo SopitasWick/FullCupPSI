@@ -73,9 +73,16 @@ public class ListaProductos extends javax.swing.JFrame {
         jPanelItems.removeAll();
         
         try {
-            detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
+            // Asegurarse de que la comanda no sea nula antes de buscar detalles
+            if (comanda != null) {
+                 detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
+            } else {
+                detalleComanda = new ArrayList<>(); // Inicializar lista vacía si la comanda es nula
+            }
+           
         } catch (Exception ex) {
             Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            detalleComanda = new ArrayList<>(); // En caso de error, usar lista vacía
         }
         
         int margenY = 70;
@@ -120,28 +127,50 @@ public class ListaProductos extends javax.swing.JFrame {
             int id = i;
             
              jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            int confirm = JOptionPane.showConfirmDialog(ListaProductos.this, "¿Seguro que deseas eliminar este item?",
-                                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                        if (confirm == JOptionPane.YES_OPTION) {
-                            try {
-                                fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
-                                cargarPanelComanda();
-                            } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                int confirm = JOptionPane.showConfirmDialog(ListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                                        "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                                if (confirm == JOptionPane.YES_OPTION) {
+                                    try {
+                                        fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+                                        cargarPanelComanda();
+                                    } catch (Exception ex) {
+                                        JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                                    }
+                                }
+                                e.consume();
                             }
-                        }
                             
-                        }
-                        
              });
             
             
+            // --- Cambioss ---
+            // Este es el listener para editar el ítem al hacer clic en el panel
             subPanel.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mouseClicked(MouseEvent e){
-                    JOptionPane.showMessageDialog(ListaProductos.this, "No programado aun, pero seria editar cuando se haga");
+                    // 1. Obtenemos el Detallecomanda específico usando el índice 'id'
+                    Detallecomanda detalleParaEditar = detalleComanda.get(id);
+                    
+                    // 2. Obtenemos el Producto de ese detalle
+                    Producto productoParaEditar = detalleParaEditar.getIdProducto();
+                    
+                    // 3. Obtenemos la comanda actual (que es estática en esta clase)
+                    Comanda comandaActual = ListaProductos.comanda;
+
+                    // 4. Creamos la nueva ventana de Detalles, pasando los objetos correctos
+                    // El constructor es: (ListaProductos, Producto, Comanda, Detallecomanda)
+                    detalle = new DetallesProducto(
+                        ListaProductos.this,   // La instancia de esta ventana
+                        productoParaEditar,    // El producto del ítem
+                        comandaActual,         // La comanda que se está editando
+                        detalleParaEditar      // El detalle específico para editar
+                    );
+                    
+                    // 5. Mostrar la ventana de detalles y ocultamos la actual
+                    detalle.setVisible(true);
+                    ListaProductos.this.setVisible(false);
                 }
             
             
