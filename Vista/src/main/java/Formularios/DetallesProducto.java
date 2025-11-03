@@ -172,7 +172,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                         precioLeche = 0;
                         toggleEntera.setSelected(true);
                     }
-                    
+
                 } else {
                     jrbLecheNo.setSelected(true);
                     toggleEntera.setEnabled(false);
@@ -188,7 +188,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void mostrarOpcionesSegunCategoria(Producto producto) {
-        List <Valoropcion> vopcion = new ArrayList<>();
+        List<Valoropcion> vopcion = new ArrayList<>();
         if (producto == null || producto.getIdCategoria() == null) {
             System.out.println("No se pudo determinar la categoría del producto.");
             return;
@@ -197,7 +197,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         //AQUI VA A PASAR LA MAGIA
         //VAMOS A INVOCAR EL METODO ObtenerDetallesPorProducto, y le vamos a pasar el id del producto
         //del parametro
-
         // Ocultamos todos los paneles por defecto
         panelTamano.setVisible(false);
         panelLeche.setVisible(false);
@@ -205,59 +204,62 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         try {
             //Lista que tienen los detalles por producto
-         vopcion =  fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
+            vopcion = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
         } catch (Exception ex) {
             Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
         //Buscamos los detalles del producto
         for (Valoropcion opciones : vopcion) {
-        System.out.println("Detalle encontrado: " + opciones.getNombreValor());
-        int idOpcion= opciones.getIdOpcionProducto().getIdOpcionProducto();
-        // Mostramos los paneles correspondientes según la categoría
-        switch (idOpcion) {// UN PRODUCTO PUEDE TENER MAS DE UNA OPCION
-            //TODAS LAS BEBIDAS LOS CONTIENEN******************
-            case 1 -> { //Café tiene los tres
-                panelTamano.setVisible(true);
+            System.out.println("Detalle encontrado: " + opciones.getNombreValor());
+            int idOpcion = opciones.getIdOpcionProducto().getIdOpcionProducto();
+            // Mostramos los paneles correspondientes según la categoría
+            switch (idOpcion) {// UN PRODUCTO PUEDE TENER MAS DE UNA OPCION
+                //TODAS LAS BEBIDAS LOS CONTIENEN******************
+                case 1 -> { //Café tiene los tres
+                    panelTamano.setVisible(true);
                 }
-            case 2-> {
-                panelLeche.setVisible(true);
+                case 2 -> {
+                    panelLeche.setVisible(true);
+                }
+                case 3 -> {
+                    panelExtras.setVisible(true);
+                }
+                //TODAS LAS BEBIDAS LOS CONTIENEN******************
+                //DE AQUI PARA ABAJO YA SE VUELVE INDIVIDUAL EXCEPTO EL CASE 5 QUE CORRESPONDE
+                //A LOS PRODUCTOS QUE SE VENDEN POR UNIDAD
+                case 4 -> { //Crepa de jamon extras de sus mismos ingredientes
+                    panelExtras.setVisible(true);
+                    //Modificar contenido del panel en base al producto -- Faltan mejoras
+                    this.txtExtraShot.setText("Jamon");
+                    //Modificar valor spinner
+                    this.spinnerLecheDeCoco.setToolTipText("Jamon");
+                }
+                case 5 -> {
+                    System.out.println("Producto unitario - sin detalles");
+                }
+                default -> {
+                }
             }
-            case 3->{
-                panelExtras.setVisible(true);
-            }
-            //TODAS LAS BEBIDAS LOS CONTIENEN******************
-            //DE AQUI PARA ABAJO YA SE VUELVE INDIVIDUAL EXCEPTO EL CASE 5 QUE CORRESPONDE
-            //A LOS PRODUCTOS QUE SE VENDEN POR UNIDAD
-            case 4 -> { //Crepa de jamon extras de sus mismos ingredientes
-                panelExtras.setVisible(true);
-                //Modificar contenido del panel en base al producto -- Faltan mejoras
-                this.txtExtraShot.setText("Jamon");
-                //Modificar valor spinner
-                this.spinnerLecheDeCoco.setToolTipText("Jamon");
-                }
-            case 5 -> {
-                System.out.println("Producto unitario - sin detalles");
-                }
-            default -> {
-                }
-          }
             // Una coca - paneles ya ocultos por defecto
-                     } 
+        }
 
-        
         Fondo.revalidate();
         Fondo.repaint();
 
         //System.out.println("Categoría detectada: " + idCategoria);
     }
-    private void modificarPanelDetallePorProducto(){ };//Si no se usa directo en el switch
-    private void agregarValoresTxtSpinners(){
+
+    private void modificarPanelDetallePorProducto() {
+    }
+
+    ;//Si no se usa directo en el switch
+    private void agregarValoresTxtSpinners() {
         this.spinnerBoba.setToolTipText("Boba");
         this.spinnerLecheAlmendras.setToolTipText("Leche almendras");
         this.spinnerLecheDeCoco.setToolTipText("Leche coco");
         this.spinnerShotExpreso.setToolTipText("Shot expreso");
     }
-    
+
     private void actualizarResumen() {
         // Nombre del producto
         if (producto != null) {
@@ -1241,7 +1243,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         // Actualiza los labels
 //        txtSubtotal.setText(String.valueOf(total));
 //        txtTotal.setText(String.valueOf(total));
-
         // Actualiza el resumen y la nota descriptiva
 //        actualizarNota();
 //        actualizarResumen();
@@ -1337,53 +1338,62 @@ public class DetallesProducto extends javax.swing.JFrame {
         }
 
         // --- LÓGICA DE EDICIÓN (CORREGIDA) ---
+        Detallecomanda detalleParaGuardar; // Objeto a guardar (sea nuevo o editado)
+
         if (this.detalle != null) {
+            System.out.println("Modo Editar: Actualizando ID: " + this.detalle.getIdDetalleComanda());
+            detalleParaGuardar = this.detalle; // Usar detalle existente
+
             try {
-                System.out.println("Modo Editar: Eliminando detalle antiguo ID: " + this.detalle.getIdDetalleComanda());
-
-                // --- PASO 1: Eliminar los 'ExtrasProductos' (hijos) PRIMERO ---
-                if (this.detalle.getExtrasProductosList() != null && !this.detalle.getExtrasProductosList().isEmpty()) {
+                // 1. Borrar solo los extras ANTIGUOS (hijos)
+                if (detalleParaGuardar.getExtrasProductosList() != null && !detalleParaGuardar.getExtrasProductosList().isEmpty()) {
                     System.out.println("Eliminando extras antiguos...");
-
-                    // Creamos una copia de la lista para evitar ConcurrentModificationException
-                    List<ExtrasProductos> extrasAntiguos = new ArrayList<>(this.detalle.getExtrasProductosList());
+                    // Crear una copia para evitar errores de modificación concurrente
+                    List<ExtrasProductos> extrasAntiguos = new ArrayList<>(detalleParaGuardar.getExtrasProductosList());
 
                     for (ExtrasProductos extraAntiguo : extrasAntiguos) {
-
-                        // ----- CORRECCIÓN -----
                         fExtras.eliminarExtrasProductos(extraAntiguo.getIdExtraProducto());
                     }
                 }
 
-                // --- PASO 2: Eliminar el 'Detallecomanda' (padre) ---
-                fDC.eliminarDetallesComandas(this.detalle.getIdDetalleComanda());
+                // 2. Actualizar los campos del padre (Detallecomanda)
+                detalleParaGuardar.setNotadetalleComanda(nota);
+                detalleParaGuardar.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+                detalleParaGuardar.setSubTotaldetalleComanda(total);
+
+                // 3. Editar
+                fDC.editarDetallesComandas(detalleParaGuardar);
 
             } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al eliminar detalle antiguo", ex);
-                // Si falla aquí, no continuamos para no duplicar
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al ACTUALIZAR el detalle", ex);
+                return; // Salir si hay un error
+            }
+
+        } else {
+            // --- MODO NUEVO: USAR EL MÉTODO GuardarDetalleComanda ---
+            System.out.println("Modo Nuevo: Creando nuevo detalle");
+            detalleParaGuardar = new Detallecomanda(); // Creamos un detalle nuevo
+
+            detalleParaGuardar.setIdProducto(producto);
+            detalleParaGuardar.setNotadetalleComanda(nota);
+            detalleParaGuardar.setSubTotaldetalleComanda(total);
+            detalleParaGuardar.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
+            detalleParaGuardar.setIdComanda(comandaEditar);
+
+            try {
+                // Guardar el nuevo detalle en la BD (usando la fachada de Comandas, como lo tenías)
+                FComandas.GuardarDetalleComanda(detalleParaGuardar);
+            } catch (Exception ex) {
+                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al GUARDAR nuevo detalle", ex);
                 return;
             }
         }
 
-        // --- LÓGICA DE GUARDADO (PARA NUEVO O EDITADO) ---
-        detalleCo = new Detallecomanda();
-        detalleCo.setIdProducto(producto);
-        detalleCo.setNotadetalleComanda(nota);
-        detalleCo.setSubTotaldetalleComanda(total);
-        detalleCo.setCaintidaddetalleComanda((Integer) spinnerCantidadProducto.getValue());
-        detalleCo.setIdComanda(comandaEditar);
-
-        try {
-            System.out.println("Guardando nuevo detalle...");
-            FComandas.GuardarDetalleComanda(detalleCo);
-        } catch (Exception ex) {
-            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al guardar nuevo detalle", ex);
-        }
-
-        //Manejo de extras (asociado al *nuevo* detalleCo)
+        // --- LÓGICA DE EXTRAS (Se ejecuta para ambos modos) ---
+        // Ahora creamos los nuevos extras y los asociamos al 'detalleParaGuardar'
         ExtrasProductos extra = new ExtrasProductos();
         Leche leche = null;
-        boolean hayExtras = false;
+        boolean hayExtras = false; // Bandera para saber si guardar
 
         if (jrbLecheSi.isSelected()) {
             hayExtras = true;
@@ -1418,14 +1428,13 @@ public class DetallesProducto extends javax.swing.JFrame {
             }
         }
 
-        // (Lógica de spinners de extras)
         if (hayExtras) {
             try {
                 extra.setIdProducto(producto);
-                extra.setIdDetalleComanda(detalleCo);
+                extra.setIdDetalleComanda(detalleParaGuardar); // Se asocia al detalle (nuevo O editado)
 
                 System.out.println("Guardando extras...");
-                fExtras.agregarExtrasProductos(extra);
+                fExtras.agregarExtrasProductos(extra); //
             } catch (Exception ex) {
                 Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al guardar extras", ex);
             }

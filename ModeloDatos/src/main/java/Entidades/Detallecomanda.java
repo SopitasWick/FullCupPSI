@@ -7,6 +7,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,7 +58,7 @@ public class Detallecomanda implements Serializable {
     @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
     @ManyToOne
     private Producto idProducto;
-@OneToMany(mappedBy = "idDetalleComanda")
+@OneToMany(mappedBy = "idDetalleComanda", cascade = CascadeType.REMOVE)
 private List<ExtrasProductos> extrasProductosList;
     public Detallecomanda() {
     }
