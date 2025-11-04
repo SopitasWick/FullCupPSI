@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -163,8 +164,11 @@ public class FrmListaProductos extends javax.swing.JFrame {
         }
         
         int margenY = 68;
+        float subTota = 0;
         
         for (int i = 0; i < detalleComanda.size(); i++){
+            
+            subTota = subTota + detalleComanda.get(i).getSubTotaldetalleComanda();
             
             //SubPanel
             JPanel subPanel = new JPanel();
@@ -188,10 +192,18 @@ public class FrmListaProductos extends javax.swing.JFrame {
             
             //Detalles del producto
             JLabel jlabelDetalleProducto = new JLabel();
-            jlabelDetalleProducto.setBounds(10, 30, 300, 20);
+            jlabelDetalleProducto.setBounds(10, 45, 300, 20);
             jlabelDetalleProducto.setFont(new java.awt.Font("Segoe UI", 0, 10));
             jlabelDetalleProducto.setText(detalleComanda.get(i).getNotadetalleComanda());
             subPanel.add(jlabelDetalleProducto);
+            
+            
+            //Precio del producto
+            JLabel jlabelPrecio = new JLabel();
+            jlabelPrecio.setBounds(subPanel.getWidth()-130, 8, 80, 20);
+            jlabelPrecio.setHorizontalAlignment(SwingConstants.RIGHT);
+            jlabelPrecio.setText(detalleComanda.get(i).getSubTotaldetalleComanda().toString());
+            subPanel.add(jlabelPrecio);
             
             
             //boton Eliminar
@@ -250,6 +262,9 @@ public class FrmListaProductos extends javax.swing.JFrame {
             
             
         }
+        
+        txtSubtotal.setText(String.valueOf(subTota));
+        txtTotal.setText(String.valueOf(subTota));
         
     }
 
