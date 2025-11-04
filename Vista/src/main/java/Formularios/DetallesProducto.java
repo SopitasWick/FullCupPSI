@@ -45,7 +45,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     Producto producto;
     Comanda comandaEditar;
     Detallecomanda detalle;
-    ListaProductos listaProductos;
+    FrmListaProductos listaProductos;
     public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
 
     float precioTamano;
@@ -60,7 +60,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     /**
      * Creates new form DetallesProducto
      */
-    public DetallesProducto(ListaProductos listaProducto, Producto producto, Comanda comandaEditar, Detallecomanda detalle) {
+    public DetallesProducto(FrmListaProductos listaProducto, Producto producto, Comanda comandaEditar, Detallecomanda detalle) {
         initComponents();
 
         ButtonGroup grupoTamaño = new ButtonGroup();
@@ -489,7 +489,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -564,7 +564,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addComponent(radioMediano3)
-                        .addContainerGap(88, Short.MAX_VALUE))
+                        .addContainerGap(87, Short.MAX_VALUE))
                     .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jrbTamañoNo)

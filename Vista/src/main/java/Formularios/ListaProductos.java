@@ -46,7 +46,6 @@ public class ListaProductos extends javax.swing.JFrame {
     
     static Integer idComanda;
 
-    Comandas comand;
 
     /**
      * Creates new form frmListaProductos
@@ -55,7 +54,7 @@ public class ListaProductos extends javax.swing.JFrame {
     public ListaProductos(Comandas comand, Integer idComanda) throws Exception {
         initComponents();
 
-        this.comand = comand;
+        //this.comand = comand;
         this.idComanda = idComanda;
 
         buscarProductos();
@@ -255,19 +254,19 @@ public class ListaProductos extends javax.swing.JFrame {
                         //RIFARSELA AQUI PARA QUE ANTES DE QUE HABRA LA PANTALLA DETALLES
                         //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
-                        
-                        if (idComanda != null){
-                        
-                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda, null);
-                        }
-                        else{
-                            detalle = new DetallesProducto(ListaProductos.this, producto, null, null);
-                        }
-                        
-
-                        detalle.setVisible(true);
-                        
-                        ListaProductos.this.setVisible(false);
+//                        
+//                        if (idComanda != null){
+//                        
+//                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda, null);
+//                        }
+//                        else{
+//                            detalle = new DetallesProducto(ListaProductos.this, producto, null, null);
+//                        }
+//                        
+//
+//                        detalle.setVisible(true);
+//                        
+//                        ListaProductos.this.setVisible(false);
 
                     }
                 }

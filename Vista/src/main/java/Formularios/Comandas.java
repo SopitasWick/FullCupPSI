@@ -20,7 +20,7 @@ public class Comandas extends javax.swing.JFrame {
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     
     
-    ListaProductos listaProductos;
+    FrmListaProductos listaProductos;
     
 
     /**
@@ -137,7 +137,7 @@ public class Comandas extends javax.swing.JFrame {
                 try {
                     
                    
-                   listaProductos = new ListaProductos(this, id);
+                   listaProductos = new FrmListaProductos(this, id);
                    listaProductos.setVisible(true);
                    Comandas.this.setVisible(false);
 
@@ -441,7 +441,7 @@ public class Comandas extends javax.swing.JFrame {
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
         try {
-            listaProductos = new ListaProductos(this, null);
+            listaProductos = new FrmListaProductos(this, null);
             listaProductos.setVisible(true);
             this.setVisible(false);
         } catch (Exception ex) {
