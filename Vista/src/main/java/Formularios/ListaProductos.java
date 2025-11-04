@@ -29,11 +29,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class ListaProductos extends javax.swing.JFrame {
 
+    
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
 
     List<Producto> todosLosProductos;
-
+    
+    
     Dimension dimension = null;
     String rutaBtnEliminar = "src/main/java/iconos/BotonEliminar.png";
 
@@ -41,130 +43,112 @@ public class ListaProductos extends javax.swing.JFrame {
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
 
     DetallesProducto detalle;
-
+    
     static Integer idComanda;
 
-    Comandas comand;
 
     /**
      * Creates new form frmListaProductos
-     *
-     * @param comandaEditar utilizada para editar, null en caso de ser nueva
-     * comanda
+     * @param comandaEditar utilizada para editar, null en caso de ser nueva comanda
      */
     public ListaProductos(Comandas comand, Integer idComanda) throws Exception {
         initComponents();
 
-        this.comand = comand;
+        //this.comand = comand;
         this.idComanda = idComanda;
 
         buscarProductos();
         configurarPopupTablaActivas();
-
+        
+        
         cargarPanelComanda();
-
+        
     }
 
-    public void cargarPanelComanda() {
-
+    
+    
+    public void cargarPanelComanda(){
+        
         jPanelItems.removeAll();
-
+        
         try {
-            // Asegurarse de que la comanda no sea nula antes de buscar detalles
-            if (comanda != null) {
-                detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
-            } else {
-                detalleComanda = new ArrayList<>(); // Inicializar lista vacía si la comanda es nula
-            }
-
+            detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
             Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-            detalleComanda = new ArrayList<>(); // En caso de error, usar lista vacía
         }
-
+        
         int margenY = 70;
-
-        for (int i = 0; i < detalleComanda.size(); i++) {
-
+        
+        for (int i = 0; i < detalleComanda.size(); i++){
+            
             //SubPanel
             JPanel subPanel = new JPanel();
             subPanel.setBackground(Color.WHITE);
             subPanel.setOpaque(false);
             subPanel.setBorder(new LineBorder(Color.BLACK));
-            subPanel.setBounds(0, margenY * i, jPanelItems.getWidth() - 10, 70);
+            subPanel.setBounds(0, margenY * i, jPanelItems.getWidth()-10, 70);
             subPanel.setLayout(null);
             subPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+            
+            
+            
             //Nombre del producto
             JLabel jlabelNombreProducto = new JLabel();
             jlabelNombreProducto.setBounds(10, 8, 300, 20);
             jlabelNombreProducto.setFont(new java.awt.Font("Segoe UI", 1, 16));
             jlabelNombreProducto.setText(detalleComanda.get(i).getIdProducto().getNombreProducto());
             subPanel.add(jlabelNombreProducto);
-
+            
+            
+            
             //Detalles del producto
             JLabel jlabelDetalleProducto = new JLabel();
             jlabelDetalleProducto.setBounds(10, 30, 300, 20);
             jlabelDetalleProducto.setFont(new java.awt.Font("Segoe UI", 0, 10));
             jlabelDetalleProducto.setText(detalleComanda.get(i).getNotadetalleComanda());
             subPanel.add(jlabelDetalleProducto);
-
+            
+            
             //boton Eliminar
             JLabel jlabelBotonEliminar = new JLabel();
-            jlabelBotonEliminar.setBounds(subPanel.getWidth() - 30, 8, 20, 20);
-            // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
+            jlabelBotonEliminar.setBounds(subPanel.getWidth()-30, 8, 20, 20);
+           // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
             setImagenLabel(jlabelBotonEliminar, rutaBtnEliminar);
             subPanel.add(jlabelBotonEliminar);
-
+            
             int id = i;
-
-            jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    int confirm = JOptionPane.showConfirmDialog(ListaProductos.this, "¿Seguro que deseas eliminar este item?",
-                            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        try {
-                            fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
-                            cargarPanelComanda();
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
-                            ex.printStackTrace();
+            
+             jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            int confirm = JOptionPane.showConfirmDialog(ListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            try {
+                                fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+                                cargarPanelComanda();
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                                ex.printStackTrace();
+                            }
                         }
-                    }
-                }
-            });
-
-            // --- Cambioss ---
-            // Este es el listener para editar el ítem al hacer clic en el panel
-            subPanel.addMouseListener(new MouseAdapter() {
+                            
+                        }
+                        
+             });
+            
+            
+            subPanel.addMouseListener(new MouseAdapter(){
                 @Override
-                public void mouseClicked(MouseEvent e) {
-                    // 1. Obtenemos el Detallecomanda específico usando el índice 'id'
-                    Detallecomanda detalleParaEditar = detalleComanda.get(id);
-
-                    // 2. Obtenemos el Producto de ese detalle
-                    Producto productoParaEditar = detalleParaEditar.getIdProducto();
-
-                    // 3. Obtenemos la comanda actual (que es estática en esta clase)
-                    Comanda comandaActual = ListaProductos.comanda;
-
-                    // 4. Creamos la nueva ventana de Detalles, pasando los objetos correctos
-                    // El constructor es: (ListaProductos, Producto, Comanda, Detallecomanda)
-                    detalle = new DetallesProducto(
-                            ListaProductos.this, // La instancia de esta ventana
-                            productoParaEditar, // El producto del ítem
-                            comandaActual, // La comanda que se está editando
-                            detalleParaEditar // El detalle específico para editar
-                    );
-
-                    // 5. Mostrar la ventana de detalles y ocultamos la actual
-                    detalle.setVisible(true);
-                    ListaProductos.this.setVisible(false);
+                public void mouseClicked(MouseEvent e){
+                    JOptionPane.showMessageDialog(ListaProductos.this, "No programado aun, pero seria editar cuando se haga");
                 }
-
+            
+            
             });
-
+            
+            
+            
             if (jPanelItems.getPreferredSize().height < margenY * (i + 1)) {
                 if (dimension == null) {
                     dimension = new Dimension();
@@ -172,42 +156,50 @@ public class ListaProductos extends javax.swing.JFrame {
                 dimension.setSize(jPanelItems.getPreferredSize().width, margenY * (i + 1));
                 jPanelItems.setPreferredSize(dimension);
             }
-
+            
+            
+            
             jPanelItems.add(subPanel);
             jPanelItems.revalidate();
             jPanelItems.repaint();
-
+            
+            
         }
-
+        
     }
 
+    
     public void setImagenLabel(JLabel label, String rutaImagen) {
         try {
             ImageIcon icon = new ImageIcon(rutaImagen);
 
             Image img = icon.getImage().getScaledInstance(
-                    label.getWidth(),
-                    label.getHeight(),
-                    Image.SCALE_SMOOTH
+                label.getWidth(), 
+                label.getHeight(), 
+                Image.SCALE_SMOOTH
             );
 
             label.setIcon(new ImageIcon(img));
-            label.setText(null);
+            label.setText(null); 
 
         } catch (Exception e) {
             System.err.println("Error al cargar la imagen: " + e.getMessage());
-        }
+        }   
     }
-
+    
+    
+    
+    
     public void buscarProductos() {
+
 
         try {
             todosLosProductos = FComandas.ObtenerListaProductos();
-
-            if (idComanda != null) {
+            
+            if(idComanda != null){
                 comanda = FComandas.obtenerComanda(idComanda);
             }
-
+            
         } catch (Exception ex) {
             Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -217,11 +209,11 @@ public class ListaProductos extends javax.swing.JFrame {
         llenarTablaProductos();
 
     }
-
-    public void buscarProductosPorCategoria(int idCategoria) throws Exception {
-        todosLosProductos = FComandas.ObtenerListaProductosCategoria(idCategoria);
-        System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
-        llenarTablaProductos();
+    
+    public void buscarProductosPorCategoria(int idCategoria)throws Exception{
+         todosLosProductos = FComandas.ObtenerListaProductosCategoria(idCategoria);
+         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
+         llenarTablaProductos();
     }
 
     public void llenarTablaProductos() {
@@ -232,8 +224,8 @@ public class ListaProductos extends javax.swing.JFrame {
 
         for (Producto p : todosLosProductos) {
             Object[] fila = {
-                p.getNombreProducto(), // o p.getNombreProducto()
-                "No Programado", // o p.getDescripcionProducto() AQUI VACIAR LO QUE SE TENGA DE LA
+                p.getNombreProducto(),          // o p.getNombreProducto()
+                "No Programado",     // o p.getDescripcionProducto() AQUI VACIAR LO QUE SE TENGA DE LA
                 p.getPrecioProducto()// o p.getPrecioProducto()
             };
             modelo.addRow(fila);
@@ -262,37 +254,43 @@ public class ListaProductos extends javax.swing.JFrame {
                         //RIFARSELA AQUI PARA QUE ANTES DE QUE HABRA LA PANTALLA DETALLES
                         //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
-
-                        if (idComanda != null) {
-
-                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda, null);
-                        } else {
-                            detalle = new DetallesProducto(ListaProductos.this, producto, null, null);
-                        }
-
-                        detalle.setVisible(true);
-
-                        ListaProductos.this.setVisible(false);
+//                        
+//                        if (idComanda != null){
+//                        
+//                            detalle = new DetallesProducto(ListaProductos.this, producto, comanda, null);
+//                        }
+//                        else{
+//                            detalle = new DetallesProducto(ListaProductos.this, producto, null, null);
+//                        }
+//                        
+//
+//                        detalle.setVisible(true);
+//                        
+//                        ListaProductos.this.setVisible(false);
 
                     }
                 }
             }
         });
 
+        
         llenarItemsComanda();
-
+        
     }
 
     public void llenarItemsComanda() {
 
-        // DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
-        //  modelo.setRowCount(0);
+       // DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
+
+      //  modelo.setRowCount(0);
+        
+        
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
             Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
 //        if(idComanda != 0){
 //            
 //            detalleComanda = comandaEditar.getDetallecomandaList();
@@ -301,19 +299,24 @@ public class ListaProductos extends javax.swing.JFrame {
 //        else{
 //            System.out.println("Es nula");
 //        }
-        for (int i = 0; i < detalleComanda.size(); i++) {
+        
+        
+            for (int i = 0; i < detalleComanda.size(); i++) {
 
-            Object[] fila = {
-                detalleComanda.get(i).getIdProducto().getNombreProducto(),
-                detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
-                detalleComanda.get(i).getCaintidaddetalleComanda(),
-                detalleComanda.get(i).getSubTotaldetalleComanda()
-            };
+                Object[] fila = {
+                    detalleComanda.get(i).getIdProducto().getNombreProducto(),
+                    detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
+                    detalleComanda.get(i).getCaintidaddetalleComanda(),
+                    detalleComanda.get(i).getSubTotaldetalleComanda()
+                };
             //    modelo.addRow(fila);
 
-        }
+            }
+        
+        
 
-        // calcularTotal();
+       // calcularTotal();
+
     }
 
 //    private void calcularTotal() {
@@ -350,14 +353,20 @@ public class ListaProductos extends javax.swing.JFrame {
 //        txtSubtotal.setText(String.valueOf(total));
 //        txtTotal.setText(String.valueOf(total));
 //    }
+
+    
+    
     private void configurarPopupTablaActivas() {
         JPopupMenu popup = new JPopupMenu();
 
-        JMenuItem itemEliminar = new JMenuItem("Eliminar item");
+        JMenuItem itemEliminar = new JMenuItem("Eliminar item");        
         JMenuItem itemEditar = new JMenuItem("Editar item");
 
         popup.add(itemEditar);
         popup.add(itemEliminar);
+        
+
+
 
         // Listener para eliminar
 //        itemEliminar.addActionListener(e -> {
@@ -376,6 +385,8 @@ public class ListaProductos extends javax.swing.JFrame {
 //                }
 //            }
 //        });
+        
+        
 //      //  Listener para editar
 //        itemEditar.addActionListener(e -> {
 //            Integer id = obtenerIdSeleccionado(tblitems);
@@ -418,6 +429,7 @@ public class ListaProductos extends javax.swing.JFrame {
 //        });
     }
 
+
     /**
      * Obtiene el ID (columna 0) de la fila seleccionada en una tabla
      */
@@ -433,7 +445,21 @@ public class ListaProductos extends javax.swing.JFrame {
         }
         return fila;
     }
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
