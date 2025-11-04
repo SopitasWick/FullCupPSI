@@ -8,6 +8,7 @@ import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
 import Entidades.Producto;
+import Entidades.Valoropcion;
 import Facades.IFachadaComandasModel;
 import JPA.ComandaJpaController;
 import JPA.DetallecomandaJpaController;
@@ -123,6 +124,8 @@ DetallecomandaJpaController jpaDetalleComanda;
     }
 
 
-  
+  public List<Valoropcion> obtenerOpcionesDetalle(Integer idDetalleComanda) throws Exception {
+    return jpaDetalleComanda.obtenerOpcionesPorDetalle(idDetalleComanda);
+}
     
 }
