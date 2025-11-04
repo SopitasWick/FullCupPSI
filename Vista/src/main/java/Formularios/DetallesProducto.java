@@ -1302,20 +1302,20 @@ public class DetallesProducto extends javax.swing.JFrame {
         Detallecomanda detalleCo = new Detallecomanda();
 
         if (comandaEditar == null) { // Es una comanda nueva
-            if (ListaProductos.comanda == null || ListaProductos.comanda.getIdComanda() == null) {
+            if (FrmListaProductos.comanda == null || FrmListaProductos.comanda.getIdComanda() == null) {
                 try {
-                    ListaProductos.comanda.setEstadoComanda("Abierta");
-                    ListaProductos.comanda.setFechaHoracomanda(new Date());
-                    ListaProductos.comanda.setTotalComanda(total);
-                    FComandas.GuardarComanda(ListaProductos.comanda);
-                    ListaProductos.idComanda = ListaProductos.comanda.getIdComanda();
-                    comandaEditar = ListaProductos.comanda;
+                    FrmListaProductos.comanda.setEstadoComanda("Abierta");
+                    FrmListaProductos.comanda.setFechaHoracomanda(new Date());
+                    FrmListaProductos.comanda.setTotalComanda(total);
+                    FComandas.GuardarComanda(FrmListaProductos.comanda);
+                    FrmListaProductos.idComanda = FrmListaProductos.comanda.getIdComanda();
+                    comandaEditar = FrmListaProductos.comanda;
                 } catch (Exception ex) {
                     Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
             } else {
-                comandaEditar = ListaProductos.comanda;
+                comandaEditar = FrmListaProductos.comanda;
             }
         }
 

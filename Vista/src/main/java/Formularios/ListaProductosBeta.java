@@ -27,7 +27,7 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class ListaProductos extends javax.swing.JFrame {
+public class ListaProductosBeta extends javax.swing.JFrame {
 
     
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
@@ -51,7 +51,7 @@ public class ListaProductos extends javax.swing.JFrame {
      * Creates new form frmListaProductos
      * @param comandaEditar utilizada para editar, null en caso de ser nueva comanda
      */
-    public ListaProductos(Comandas comand, Integer idComanda) throws Exception {
+    public ListaProductosBeta(Comandas comand, Integer idComanda) throws Exception {
         initComponents();
 
         //this.comand = comand;
@@ -121,14 +121,14 @@ public class ListaProductos extends javax.swing.JFrame {
              jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            int confirm = JOptionPane.showConfirmDialog(ListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                            int confirm = JOptionPane.showConfirmDialog(ListaProductosBeta.this, "¿Seguro que deseas eliminar este item?",
                                 "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
                         if (confirm == JOptionPane.YES_OPTION) {
                             try {
                                 fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
                                 cargarPanelComanda();
                             } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(ListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                                JOptionPane.showMessageDialog(ListaProductosBeta.this, "Error al eliminar: " + ex.getMessage());
                                 ex.printStackTrace();
                             }
                         }
@@ -141,7 +141,7 @@ public class ListaProductos extends javax.swing.JFrame {
             subPanel.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mouseClicked(MouseEvent e){
-                    JOptionPane.showMessageDialog(ListaProductos.this, "No programado aun, pero seria editar cuando se haga");
+                    JOptionPane.showMessageDialog(ListaProductosBeta.this, "No programado aun, pero seria editar cuando se haga");
                 }
             
             

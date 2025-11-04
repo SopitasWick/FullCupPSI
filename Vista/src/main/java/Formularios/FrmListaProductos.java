@@ -49,6 +49,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     private final IFachadaCategoriaControlador fC = new GestionarCategoriaControlador();
 
     List<Producto> todosLosProductos;
+    List<Producto> todosLosProductosSinModificar;
     List<Categoria> categorias;
     
     
@@ -160,7 +161,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         int margenY = 68;
@@ -296,13 +297,14 @@ public class FrmListaProductos extends javax.swing.JFrame {
         try {
             
             todosLosProductos = FComandas.ObtenerListaProductos();
+            todosLosProductosSinModificar = List.copyOf(todosLosProductos);
             
             if(idComanda != null){
                 comanda = FComandas.obtenerComanda(idComanda);
             }
             
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
@@ -408,93 +410,15 @@ public class FrmListaProductos extends javax.swing.JFrame {
     }
     
 
-//    public void llenarTablaProductos() {
-//
-//        DefaultTableModel modelo = (DefaultTableModel) tblProductos.getModel();
-//
-//        modelo.setRowCount(0);
-//
-//        for (Producto p : todosLosProductos) {
-//            Object[] fila = {
-//                p.getNombreProducto(),          // o p.getNombreProducto()
-//                p.getPrecioProducto()// o p.getPrecioProducto()
-//            };
-//            modelo.addRow(fila);
-//        }
-//        
-//        
-//        for (MouseListener ml : tblProductos.getMouseListeners()) {
-//            tblProductos.removeMouseListener(ml);
-//        }
-//        
-//
-//        tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
-//
-//            @Override
-//            public void mouseClicked(java.awt.event.MouseEvent evt) {
-//                if (evt.getClickCount() == 1) {
-//                    JTable target = (JTable) evt.getSource();
-//                    int filaSeleccionada = target.getSelectedRow();
-//
-//                    if (filaSeleccionada != -1) {
-//                        String nombre = target.getValueAt(filaSeleccionada, 0).toString();
-//                        float precio = Float.parseFloat(target.getValueAt(filaSeleccionada, 1).toString());
-//
-//                        Producto producto = new Producto();
-//
-//                        for (Producto p : todosLosProductos) {
-//                            if (p.getNombreProducto().equals(nombre) && p.getPrecioProducto() == precio) {
-//                                producto = p;
-//                            }
-//                        }
-//                        //RIFARSELA AQUI PARA QUE ANTES DE QUE HABRA LA PANTALLA DETALLES
-//                        //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
-//                        //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
-//                        
-////                        if (idComanda != null){
-////                        
-////                            detalle = new DetallesProducto(FrmListaProductos.this, producto, comanda, null);
-////                        }
-////                        else{
-////                            detalle = new DetallesProducto(ListaProductos.this, producto, null, null);
-////                        }
-////                        
-////
-////                        detalle.setVisible(true);
-////                        
-////                        ListaProductos.this.setVisible(false);
-//
-//                    }
-//                }
-//            }
-//        });
-//
-//        
-//        llenarItemsComanda();
-//        
-//    }
 
     public void llenarItemsComanda() {
-
-       // DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
-
-      //  modelo.setRowCount(0);
         
         
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-//        if(idComanda != 0){
-//            
-//            detalleComanda = comandaEditar.getDetallecomandaList();
-//        }
-//
-//        else{
-//            System.out.println("Es nula");
-//        }
         
         
             for (int i = 0; i < detalleComanda.size(); i++) {
@@ -505,50 +429,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
                     detalleComanda.get(i).getCaintidaddetalleComanda(),
                     detalleComanda.get(i).getSubTotaldetalleComanda()
                 };
-            //    modelo.addRow(fila);
 
             }
         
-        
-
-       // calcularTotal();
-
+  
     }
 
-//    private void calcularTotal() {
-//        float total = 0;
-//       // DefaultTableModel modelo = (DefaultTableModel) tblitems.getModel();
-//
-//        for (int i = 0; i < modelo.getRowCount(); i++) {
-//            Object cantidadObj = modelo.getValueAt(i, 2);
-//            Object precioObj = modelo.getValueAt(i, 3);
-//
-//            if (cantidadObj == null || precioObj == null) {
-//                System.out.println("Fila " + i + " tiene valores nulos: cantidad=" + cantidadObj + ", precio=" + precioObj);
-//                continue;
-//            }
-//
-//            int cantidad;
-//            float precio;
-//
-//            if (cantidadObj instanceof Integer) {
-//                cantidad = (Integer) cantidadObj;
-//            } else {
-//                cantidad = Integer.parseInt(cantidadObj.toString());
-//            }
-//
-//            if (precioObj instanceof Float) {
-//                precio = (Float) precioObj;
-//            } else {
-//                precio = Float.parseFloat(precioObj.toString());
-//            }
-//
-//            total += cantidad * precio;
-//        }
-//
-//        txtSubtotal.setText(String.valueOf(total));
-//        txtTotal.setText(String.valueOf(total));
-//    }
 
     
     
@@ -561,68 +447,6 @@ public class FrmListaProductos extends javax.swing.JFrame {
         popup.add(itemEditar);
         popup.add(itemEliminar);
         
-
-
-
-        // Listener para eliminar
-//        itemEliminar.addActionListener(e -> {
-//            Integer id = obtenerIdSeleccionado(tblitems);
-//            if (id != null) {
-//                int confirm = JOptionPane.showConfirmDialog(this,
-//                        "¿Seguro que deseas eliminar este item?",
-//                        "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-//                if (confirm == JOptionPane.YES_OPTION) {
-//                    try {
-//                        fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
-//                        llenarItemsComanda();
-//                    } catch (Exception ex) {
-//                        JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
-//                    }
-//                }
-//            }
-//        });
-        
-        
-//      //  Listener para editar
-//        itemEditar.addActionListener(e -> {
-//            Integer id = obtenerIdSeleccionado(tblitems);
-//            if (id != null) {
-//                try {
-//                    
-//                   Comanda comandaEditar = FComandas.obtenerComanda(idComanda);
-//                   
-//                   System.out.println("idd" + id);
-//                    System.out.println("detalle size" + detalleComanda.size());
-//                   detalle = new DetallesProducto(this, detalleComanda.get(id).getIdProducto(), comandaEditar, detalleComanda.get(1));
-//                   detalle.setVisible(true);
-//                   System.out.println("idd" + id);
-//                   ListaProductos.this.setVisible(false);
-//
-//                } catch (Exception ex) {
-//                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
-//                }
-//            }
-//        });
-//        
-//
-//        // Mostrar popup al hacer clic derecho
-//        tblitems.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                mostrarPopup(e);
-//            }
-//
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                mostrarPopup(e);
-//            }
-//
-//            private void mostrarPopup(MouseEvent e) {
-//                if (e.isPopupTrigger() && tblitems.getSelectedRow() >= 0) {
-//                    popup.show(e.getComponent(), e.getX(), e.getY());
-//                }
-//            }
-//        });
     }
 
 
@@ -980,26 +804,30 @@ public class FrmListaProductos extends javax.swing.JFrame {
     private void cbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriasActionPerformed
         // TODO add your handling code here:}
         
+        String seleccion = cbCategorias.getSelectedItem().toString();
+        int idCategoria = 0;
+        
+        
+        
         if (cbCategorias.getSelectedIndex() != -1) { 
             
-            int idCategoria = 0;
             
             try{
-                String seleccion = cbCategorias.getSelectedItem().toString();
-            
+                
                 if(seleccion.equalsIgnoreCase("Todos")){
                     buscarProductosPorCategoria(idCategoria);
                 }
                 else{
                     
 
-                    for (int i = 0; i < todosLosProductos.size(); i++){
-                        if(todosLosProductos.get(i).getIdCategoria().getNombre().equalsIgnoreCase(seleccion)){
-                            idCategoria = todosLosProductos.get(i).getIdCategoria().getIdCategoria();
+                    for (int i = 0; i < todosLosProductosSinModificar.size(); i++){
+                        if(todosLosProductosSinModificar.get(i).getIdCategoria().getNombre().equalsIgnoreCase(seleccion)){
+                            idCategoria = todosLosProductosSinModificar.get(i).getIdCategoria().getIdCategoria();
                         }
                     }
 
-
+                    System.out.println("Seleccion ="+ seleccion);
+                    System.out.println(idCategoria);
                     buscarProductosPorCategoria(idCategoria);
 
                 }
