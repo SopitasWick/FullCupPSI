@@ -1209,13 +1209,16 @@ public class DetallesProducto extends javax.swing.JFrame {
         tipoLeche = "";
         txtLeche.setText("");
         actualizarNota();
+
     }
 
     private void recalcularTotal() {
         cantidad = (int) spinnerCantidadProducto.getValue();
-        total = ((producto.getPrecioProducto() + precioTamano + precioLeche + precioExtra) * cantidad);
+        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + (precioLeche * cantidad) + (precioExtra * cantidad);
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
+        actualizarNota();
+        actualizarResumen();
     }
 
     private void calcularExtrasYTotal() {
