@@ -121,71 +121,67 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     public void cargarDatosEditar() {
-        // La comprobación real es si 'detalle' existe
         if (detalle != null) {
-
             System.out.println("--- MODO EDICIÓN DETECTADO ---");
 
-            // --- CAMBIOS ---
-            // Cargar cantidad y nota guardadas
+            // Cargar cantidad y nota
             spinnerCantidadProducto.setValue(detalle.getCaintidaddetalleComanda());
             txtDescripcion.setText(detalle.getNotadetalleComanda());
-            // Asignar la cantidad a la variable de clase
-            cantidad = detalle.getCaintidaddetalleComanda();
 
-            // cargar extras
-            List<ExtrasProductos> extrasEditar = detalle.getExtrasProductosList();
+            // Resetear spinners a 0 por si no hay extras
+            spinnerBoba.setValue(0);
+            spinnerShotExpreso.setValue(0);
+            spinnerLecheAlmendras.setValue(0);
+            spinnerLecheDeCoco.setValue(0);
 
-            if (extrasEditar != null && !extrasEditar.isEmpty()) {
-                ExtrasProductos extras = extrasEditar.get(0); // Más seguro
+            // Resetear radios
+            jrbExtrasSi.setSelected(false);
+            jrbExtrasNo.setSelected(true);
 
-                //Tamaño Vaso
-                if (extras.getIdTamanoVaso() != null) {
-                    jrbTamañoSi.setSelected(true);
-                    radioMediano2.setEnabled(true);
-                    radioMediano3.setEnabled(true);
-                    TamanoVaso vaso = extras.getIdTamanoVaso();
-                    // Precios de los vasos
-                    if (vaso.getIdTamanoVaso() == 1) {
-                        radioMediano2.setSelected(true);
-                        precioTamano = vaso.getPrecio();
+            jrbLecheSi.setSelected(false);
+            jrbLecheNo.setSelected(true);
+
+            jrbTamañoSi.setSelected(false);
+            jrbTamañoNo.setSelected(true);
+
+            // Iterar sobre los extras guardados
+            List<ExtrasProductos> extras = detalle.getExtrasProductosList();
+            if (extras != null && !extras.isEmpty()) {
+                for (ExtrasProductos extra : extras) {
+
+                    // Cargar cantidades según el nombre del extra
+                    if (extra.getNombreExtra() != null) {
+                        switch (extra.getNombreExtra().toLowerCase()) {
+                            case "boba":
+                                spinnerBoba.setValue(extra.getCantidad());
+                                break;
+                            case "shot expreso":
+                                spinnerShotExpreso.setValue(extra.getCantidad());
+                                break;
+                            case "leche de almendras":
+                                spinnerLecheAlmendras.setValue(extra.getCantidad());
+                                jrbLecheSi.setSelected(true);
+                                jrbLecheNo.setSelected(false);
+                                break;
+                            case "leche de coco":
+                                spinnerLecheDeCoco.setValue(extra.getCantidad());
+                                jrbLecheSi.setSelected(true);
+                                jrbLecheNo.setSelected(false);
+                                break;
+                            case "mediano": 
+                                radioMediano2.setSelected(true);
+                                jrbTamañoSi.setSelected(true);
+                                jrbTamañoNo.setSelected(false);
+                                break;
+                            default:
+                                
+                                jrbExtrasSi.setSelected(true);
+                                jrbExtrasNo.setSelected(false);
+                                break;
+                        }
                     }
-                    if (vaso.getIdTamanoVaso() == 2) {
-                        radioMediano3.setSelected(true);
-                        precioTamano = vaso.getPrecio();
-                    }
-                } else {
-                    jrbTamañoNo.setSelected(true);
-                    radioMediano2.setEnabled(false);
-                    radioMediano3.setEnabled(false);
-                }
-
-                //Leche
-                if (extras.getIdLeche() != null) {
-                    jrbLecheSi.setSelected(true);
-                    toggleEntera.setEnabled(true);
-                    toggleDeslactosada.setEnabled(true);
-                    toggleAvena.setEnabled(true);
-                    toggleAlmendras.setEnabled(true);
-                    Leche leche = extras.getIdLeche();
-
-                    if (leche.getNombre().equalsIgnoreCase("Leche entera")) {
-                        tipoLeche = "Leche entera";
-                        precioLeche = 0;
-                        toggleEntera.setSelected(true);
-                    }
-
-                } else {
-                    jrbLecheNo.setSelected(true);
-                    toggleEntera.setEnabled(false);
-                    toggleDeslactosada.setEnabled(false);
-                    toggleAvena.setEnabled(false);
-                    toggleAlmendras.setEnabled(false);
                 }
             }
-
-            // Al final recalcular todo con los datos cargados
-            recalcularTotal();
         }
     }
 
