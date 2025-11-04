@@ -60,6 +60,8 @@ public class DetallesProducto extends javax.swing.JFrame {
     int cantidad;
     String nota;
     String tipoLeche;
+    
+    //Precio extras
 
     /**
      * Creates new form DetallesProducto
@@ -92,6 +94,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             cargarDatosEditar();
         }
         this.agregarValoresTxtSpinners();
+        this.modificarPanelDetallePorProducto();
         mostrarOpcionesSegunCategoria(producto);
     }
 
@@ -231,8 +234,12 @@ public class DetallesProducto extends javax.swing.JFrame {
                     panelExtras.setVisible(true);
                     //Modificar contenido del panel en base al producto -- Faltan mejoras
                     this.txtExtraShot.setText("Jamon");
-                    //Modificar valor spinner
+                    this.txtCremaExtra.setText("Philadelphia");
+                    //Modificar valor spinners
                     this.spinnerLecheDeCoco.setToolTipText("Jamon");
+                    this.spinnerLecheAlmendras.setToolTipText("Philadelphia");
+                    this.jPanel10.setVisible(false);
+                    this.jPanel11.setVisible(false);
                 }
                 case 5 -> {
                     System.out.println("Producto unitario - sin detalles");
@@ -250,6 +257,10 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void modificarPanelDetallePorProducto() {
+        this.jPanel8.setVisible(true);
+        this.jPanel9.setVisible(true);
+        this.jPanel10.setVisible(true);
+        this.jPanel11.setVisible(true);
     }
 
     ;//Si no se usa directo en el switch
@@ -579,6 +590,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         jLabel5.setAlignmentY(0.0F);
 
         jrbTamañoNo.setText("No");
+        jrbTamañoNo.setEnabled(false);
         jrbTamañoNo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrbTamañoNoActionPerformed(evt);
@@ -586,6 +598,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         });
 
         jrbTamañoSi.setText("Si");
+        jrbTamañoSi.setEnabled(false);
         jrbTamañoSi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrbTamañoSiActionPerformed(evt);
@@ -684,6 +697,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         });
 
         jrbLecheSi.setText("Si");
+        jrbLecheSi.setEnabled(false);
         jrbLecheSi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrbLecheSiActionPerformed(evt);
@@ -691,6 +705,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         });
 
         jrbLecheNo.setText("No");
+        jrbLecheNo.setEnabled(false);
         jrbLecheNo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrbLecheNoActionPerformed(evt);
@@ -894,6 +909,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         );
 
         jrbExtrasNo.setText("No");
+        jrbExtrasNo.setEnabled(false);
         jrbExtrasNo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrbExtrasNoActionPerformed(evt);
@@ -901,6 +917,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         });
 
         jrbExtrasSi.setText("Si");
+        jrbExtrasSi.setEnabled(false);
         jrbExtrasSi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrbExtrasSiActionPerformed(evt);
@@ -1263,7 +1280,6 @@ public class DetallesProducto extends javax.swing.JFrame {
             sb.append("Leche: ").append(tipoLeche).append(". ");
         }
 
-        // Extras ACTUALIZAR ESTO COMO ARRIBA
         int extras = 0;
         if ((int) spinnerLecheDeCoco.getValue() > 0) {
             sb.append(spinnerLecheDeCoco.getToolTipText()).append(" x").append(spinnerLecheDeCoco.getValue()).append(". ");
@@ -1535,6 +1551,27 @@ public class DetallesProducto extends javax.swing.JFrame {
         recalcularTotal();
     }//GEN-LAST:event_toggleAlmendrasActionPerformed
 
+    private void jrbExtrasSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbExtrasSiActionPerformed
+        spinnerLecheDeCoco.setEnabled(true);
+        spinnerLecheAlmendras.setEnabled(true);
+        spinnerShotExpreso.setEnabled(true);
+        spinnerBoba.setEnabled(true);
+    }//GEN-LAST:event_jrbExtrasSiActionPerformed
+
+    private void jrbExtrasNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbExtrasNoActionPerformed
+        spinnerLecheDeCoco.setEnabled(false);
+        spinnerLecheAlmendras.setEnabled(false);
+        spinnerShotExpreso.setEnabled(false);
+        spinnerBoba.setEnabled(false);
+        precioExtra = 0;
+        recalcularTotal();
+    }//GEN-LAST:event_jrbExtrasNoActionPerformed
+
+    private void jrbTamañoSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbTamañoSiActionPerformed
+        radioMediano2.setEnabled(true);
+        radioMediano3.setEnabled(true);
+    }//GEN-LAST:event_jrbTamañoSiActionPerformed
+
     private void jrbTamañoNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbTamañoNoActionPerformed
 
         radioMediano2.setEnabled(false);
@@ -1542,11 +1579,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         precioTamano = 0;
         recalcularTotal();
     }//GEN-LAST:event_jrbTamañoNoActionPerformed
-
-    private void jrbTamañoSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbTamañoSiActionPerformed
-        radioMediano2.setEnabled(true);
-        radioMediano3.setEnabled(true);
-    }//GEN-LAST:event_jrbTamañoSiActionPerformed
 
     private void jrbLecheSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbLecheSiActionPerformed
         toggleEntera.setEnabled(true);
@@ -1564,22 +1596,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         precioLeche = 0;
         recalcularTotal();
     }//GEN-LAST:event_jrbLecheNoActionPerformed
-
-    private void jrbExtrasSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbExtrasSiActionPerformed
-        spinnerLecheDeCoco.setEnabled(true);
-        spinnerLecheAlmendras.setEnabled(true);
-        spinnerShotExpreso.setEnabled(true);
-        spinnerBoba.setEnabled(true);
-    }//GEN-LAST:event_jrbExtrasSiActionPerformed
-
-    private void jrbExtrasNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbExtrasNoActionPerformed
-        spinnerLecheDeCoco.setEnabled(false);
-        spinnerLecheAlmendras.setEnabled(false);
-        spinnerShotExpreso.setEnabled(false);
-        spinnerBoba.setEnabled(false);
-        precioExtra = 0;
-        recalcularTotal();
-    }//GEN-LAST:event_jrbExtrasNoActionPerformed
 
     /**
      * @param args the command line arguments

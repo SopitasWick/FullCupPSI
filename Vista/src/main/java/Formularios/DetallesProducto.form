@@ -462,6 +462,7 @@
                 <Component class="javax.swing.JRadioButton" name="jrbTama&#xf1;oNo">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="No"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrbTama&#xf1;oNoActionPerformed"/>
@@ -470,6 +471,7 @@
                 <Component class="javax.swing.JRadioButton" name="jrbTama&#xf1;oSi">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Si"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrbTama&#xf1;oSiActionPerformed"/>
@@ -644,6 +646,7 @@
                 <Component class="javax.swing.JRadioButton" name="jrbLecheSi">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Si"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrbLecheSiActionPerformed"/>
@@ -652,6 +655,7 @@
                 <Component class="javax.swing.JRadioButton" name="jrbLecheNo">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="No"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrbLecheNoActionPerformed"/>
@@ -997,6 +1001,7 @@
                 <Component class="javax.swing.JRadioButton" name="jrbExtrasNo">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="No"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrbExtrasNoActionPerformed"/>
@@ -1005,6 +1010,7 @@
                 <Component class="javax.swing.JRadioButton" name="jrbExtrasSi">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Si"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jrbExtrasSiActionPerformed"/>
