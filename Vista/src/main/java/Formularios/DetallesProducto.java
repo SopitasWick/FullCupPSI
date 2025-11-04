@@ -27,14 +27,11 @@ import JPA.ComandaJpaController;
 import JPA.DetallecomandaJpaController;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
 
 public class DetallesProducto extends javax.swing.JFrame {
 
@@ -81,44 +78,43 @@ public class DetallesProducto extends javax.swing.JFrame {
         ButtonGroup grupoExtras = new ButtonGroup();
         grupoExtras.add(jrbExtrasSi);
         grupoExtras.add(jrbExtrasNo);
-
         this.producto = producto;
         this.listaProductos = listaProducto;
         this.comandaEditar = comandaEditar;
         this.detalle = detalle;
 
-        // Primero cargamos los datos base
         this.cargarDatos();
 
-        // Luego cargamos datos si es edición
         if (detalle != null) {
             cargarDatosEditar();
         }
-
-        // ⚠️ mover esto al final
-        mostrarOpcionesSegunCategoria(producto);
-
-        // Y dejar los valores de los spinners al final
-        // para que no sobreescriban lo cargado de 'detalle'
         this.agregarValoresTxtSpinners();
+        mostrarOpcionesSegunCategoria(producto);
     }
 
     private void cargarDatos() {
         precioTamano = 0;
-        precioLeche = 0;
-        precioExtra = 0;
-
         txtNombreProducto.setText(producto.getNombreProducto());
         txtPrecioBase.setText(producto.getPrecioProducto().toString());
-        txtPrecioLeche.setText("0");
-        txtPrecioExtra.setText("0");
+
+        txtPrecioLeche.setText(String.valueOf(0));
+        txtPrecioExtra.setText(String.valueOf(0));
         txtPrecioProductoResumen.setText(producto.getPrecioProducto().toString());
 
+        if (txtProductoResumen.getText().isEmpty()) {
+            txtProductoResumen.setText(producto.getNombreProducto());
+        }
+
         spinnerCantidadProducto.setValue(1);
-        cantidad = 1;
+
+        cantidad = (int) spinnerCantidadProducto.getValue();
 
         recalcularTotal();
-        actualizarResumen();
+//
+//        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
+//
+//        txtSubtotal.setText(String.valueOf(total));
+//        txtTotal.setText(String.valueOf(total));
     }
 
     public void cargarDatosEditar() {
@@ -169,13 +165,13 @@ public class DetallesProducto extends javax.swing.JFrame {
                                 jrbLecheSi.setSelected(true);
                                 jrbLecheNo.setSelected(false);
                                 break;
-                            case "mediano": // si guardaste tamaño como extra
+                            case "mediano": 
                                 radioMediano2.setSelected(true);
                                 jrbTamañoSi.setSelected(true);
                                 jrbTamañoNo.setSelected(false);
                                 break;
                             default:
-                                // cualquier otro extra que tengas
+                                
                                 jrbExtrasSi.setSelected(true);
                                 jrbExtrasNo.setSelected(false);
                                 break;
@@ -1222,47 +1218,61 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void calcularExtrasYTotal() {
-        precioExtra = (int) spinnerLecheDeCoco.getValue() * 5
-                + (int) spinnerLecheAlmendras.getValue() * 5
-                + (int) spinnerShotExpreso.getValue() * 10
-                + (int) spinnerBoba.getValue() * 7;
+        // Calcula el precio de los extras según la cantidad de cada spinner
+        precioExtra = ((int) spinnerLecheDeCoco.getValue() * 5)
+                + ((int) spinnerLecheAlmendras.getValue() * 5)
+                + ((int) spinnerShotExpreso.getValue() * 10)
+                + ((int) spinnerBoba.getValue() * 7);
 
+        // Actualiza el label de precio de extras
         txtPrecioExtra.setText(String.valueOf(precioExtra));
+
+        // --- CORRECCIÓN ---
         recalcularTotal();
+
+        // Actualiza los labels
+//        txtSubtotal.setText(String.valueOf(total));
+//        txtTotal.setText(String.valueOf(total));
+        // Actualiza el resumen y la nota descriptiva
+//        actualizarNota();
+//        actualizarResumen();
     }
 
     private void actualizarNota() {
         StringBuilder sb = new StringBuilder();
-        int cantidadExtras = 0;
 
+        // Tamaño del vaso
         if (precioTamano == 10) {
             sb.append("Tamaño: Mediano. ");
         } else if (precioTamano == 20) {
             sb.append("Tamaño: Grande. ");
         }
 
+        // Tipo de leche
         if (tipoLeche != null && !tipoLeche.isEmpty()) {
             sb.append("Leche: ").append(tipoLeche).append(". ");
         }
 
+        // Extras ACTUALIZAR ESTO COMO ARRIBA
+        int extras = 0;
         if ((int) spinnerLecheDeCoco.getValue() > 0) {
-            sb.append("Leche de coco x").append(spinnerLecheDeCoco.getValue()).append(". ");
-            cantidadExtras += (int) spinnerLecheDeCoco.getValue();
+            sb.append(spinnerLecheDeCoco.getToolTipText()).append(" x").append(spinnerLecheDeCoco.getValue()).append(". ");
+            extras += (int) spinnerLecheDeCoco.getValue();
         }
         if ((int) spinnerLecheAlmendras.getValue() > 0) {
-            sb.append("Leche de almendras x").append(spinnerLecheAlmendras.getValue()).append(". ");
-            cantidadExtras += (int) spinnerLecheAlmendras.getValue();
+            sb.append(spinnerLecheAlmendras.getToolTipText()).append(" x").append(spinnerLecheAlmendras.getValue()).append(". ");
+            extras += (int) spinnerLecheAlmendras.getValue();
         }
         if ((int) spinnerShotExpreso.getValue() > 0) {
-            sb.append("Shot expreso x").append(spinnerShotExpreso.getValue()).append(". ");
-            cantidadExtras += (int) spinnerShotExpreso.getValue();
+            sb.append(spinnerShotExpreso.getToolTipText()).append(" x").append(spinnerShotExpreso.getValue()).append(". ");
+            extras += (int) spinnerShotExpreso.getValue();
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            sb.append("Boba x").append(spinnerBoba.getValue()).append(". ");
-            cantidadExtras += (int) spinnerBoba.getValue();
+            sb.append(spinnerBoba.getToolTipText()).append(spinnerBoba.getValue()).append(". ");
+            extras += (int) spinnerBoba.getValue();
         }
 
-        sb.append("Cantidad de extras: ").append(cantidadExtras).append(". ");
+        sb.append("Cantidad de extras: ").append(extras).append(". ");
 
         nota = sb.toString();
         txtDescripcion.setText(nota);

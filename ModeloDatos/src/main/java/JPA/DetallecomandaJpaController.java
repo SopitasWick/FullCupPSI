@@ -12,7 +12,6 @@ import javax.persistence.criteria.Root;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.Producto;
-import Entidades.Valoropcion;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
 import java.util.List;
@@ -70,21 +69,7 @@ public class DetallecomandaJpaController implements Serializable {
             }
         }
     }
-  public List<Valoropcion> obtenerOpcionesPorDetalle(Integer idDetalleComanda) {
-    EntityManager em = getEntityManager();
-    try {
-        Query query = em.createQuery(
-            "SELECT do.idValorOpcion FROM Detalleopcion do WHERE do.idDetalleComanda.idDetalleComanda = :idDetalle"
-        );
-        query.setParameter("idDetalle", idDetalleComanda);
-        return query.getResultList();
-    } catch (Exception e) {
-        System.out.println("Error al obtener opciones del detalle: " + e.getMessage());
-        return null;
-    } finally {
-        em.close();
-    }
-}
+
     public void edit(Detallecomanda detallecomanda) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {

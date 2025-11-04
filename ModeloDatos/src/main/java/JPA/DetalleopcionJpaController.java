@@ -157,9 +157,6 @@ public class DetalleopcionJpaController implements Serializable {
         }
     }
 
-  
-
-    
     public int getDetalleopcionCount() {
         EntityManager em = getEntityManager();
         try {
