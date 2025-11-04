@@ -84,10 +84,7 @@ public class DetallesProducto extends javax.swing.JFrame {
         this.detalle = detalle;
 
         this.cargarDatos();
-        // this.cargarDatosDetalles();
 
-        //cargarDatos();
-        // La comprobación correcta es sobre 'detalle'
         if (detalle != null) {
             cargarDatosEditar();
         }
@@ -96,7 +93,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void cargarDatos() {
-
+        precioTamano = 0;
         txtNombreProducto.setText(producto.getNombreProducto());
         txtPrecioBase.setText(producto.getPrecioProducto().toString());
 
@@ -104,7 +101,9 @@ public class DetallesProducto extends javax.swing.JFrame {
         txtPrecioExtra.setText(String.valueOf(0));
         txtPrecioProductoResumen.setText(producto.getPrecioProducto().toString());
 
-        txtProductoResumen.setText(producto.getNombreProducto());
+        if (txtProductoResumen.getText().isEmpty()) {
+            txtProductoResumen.setText(producto.getNombreProducto());
+        }
 
         spinnerCantidadProducto.setValue(1);
 
@@ -1213,18 +1212,10 @@ public class DetallesProducto extends javax.swing.JFrame {
     }
 
     private void recalcularTotal() {
-        // --- CAMBIO ---
-        // 1. Siempre obtener la cantidad ACTUAL del spinner
         cantidad = (int) spinnerCantidadProducto.getValue();
-
-        // --- CAMBIO ---
-        // 2. El total es (base + tamaño) * cant + (leche * cant) + (extra * cant)
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + (precioLeche * cantidad) + (precioExtra * cantidad);
-
+        total = ((producto.getPrecioProducto() + precioTamano + precioLeche + precioExtra) * cantidad);
         txtSubtotal.setText(String.valueOf(total));
         txtTotal.setText(String.valueOf(total));
-        actualizarNota();
-        actualizarResumen(); // 'actualizarResumen' también debe ser corregido
     }
 
     private void calcularExtrasYTotal() {
@@ -1294,11 +1285,7 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         precioTamano = 0;
 
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
-
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
-
+        recalcularTotal();
 
     }//GEN-LAST:event_radioChico1ActionPerformed
 
@@ -1457,10 +1444,6 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         precioTamano = 10;
 
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
-
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
         recalcularTotal();
     }//GEN-LAST:event_radioMediano2ActionPerformed
 
@@ -1468,10 +1451,6 @@ public class DetallesProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
         precioTamano = 20;
 
-        total = ((producto.getPrecioProducto() + precioTamano) * cantidad) + precioLeche + precioExtra;
-
-        txtSubtotal.setText(String.valueOf(total));
-        txtTotal.setText(String.valueOf(total));
         recalcularTotal();
     }//GEN-LAST:event_radioMediano3ActionPerformed
 
