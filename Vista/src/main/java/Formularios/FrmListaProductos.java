@@ -59,9 +59,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
     public static Comanda comanda = new Comanda();
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
 
+    private Comandas comandas;
     DetallesProducto detalle;
     
     static Integer idComanda;
+    
+    float total = 0;
     
     
     
@@ -86,6 +89,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     public FrmListaProductos(Comandas comand, Integer idComanda) {
         initComponents();
         
+        this.comandas = comand;
         this.idComanda = idComanda;
         
         cargarDiseno();
@@ -408,8 +412,6 @@ public class FrmListaProductos extends javax.swing.JFrame {
     tblProductos.setBackground(Color.WHITE);
         
     }
-    
-
 
     public void llenarItemsComanda() {
         
@@ -434,8 +436,44 @@ public class FrmListaProductos extends javax.swing.JFrame {
         
   
     }
+    
+    public void refrescarPantalla() {
+    try {
+        // 1️⃣ Refrescar la lista completa de productos desde la BD
+        buscarProductos();
+
+        // 2️⃣ Refrescar categorías (ComboBox)
+        cargarCategorias();
+
+        // 3️⃣ Refrescar los detalles de la comanda (panel derecho)
+        cargarPanelComanda();
+
+        // 4️⃣ Revalidar y repintar toda la interfaz
+        this.revalidate();
+        this.repaint();
+
+        System.out.println("Pantalla actualizada correctamente.");
+    } catch (Exception ex) {
+        Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        JOptionPane.showMessageDialog(this, 
+            "Error al refrescar la pantalla: " + ex.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
 
+  private void configurarTotal (){
+      for (int i = 0; i < detalleComanda.size(); i++) {
+
+                Object[] fila = {
+                    detalleComanda.get(i).getIdProducto().getNombreProducto(),
+                    detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
+                    detalleComanda.get(i).getCaintidaddetalleComanda(),
+                    detalleComanda.get(i).getSubTotaldetalleComanda()
+                };
+
+            }
+  }
     
     
     private void configurarPopupTablaActivas() {
@@ -650,6 +688,11 @@ public class FrmListaProductos extends javax.swing.JFrame {
         btnCancelar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnCancelar.setMaximumSize(new java.awt.Dimension(180, 40));
         btnCancelar.setPreferredSize(new java.awt.Dimension(180, 40));
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
         jPanelTotal.add(btnCancelar);
         btnCancelar.setBounds(220, 190, 150, 40);
 
@@ -679,6 +722,11 @@ public class FrmListaProductos extends javax.swing.JFrame {
         btnGuardar2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnGuardar2.setMaximumSize(new java.awt.Dimension(180, 40));
         btnGuardar2.setPreferredSize(new java.awt.Dimension(180, 40));
+        btnGuardar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardar2ActionPerformed(evt);
+            }
+        });
         jPanelTotal.add(btnGuardar2);
         btnGuardar2.setBounds(30, 190, 150, 40);
 
@@ -842,40 +890,49 @@ public class FrmListaProductos extends javax.swing.JFrame {
         
     }//GEN-LAST:event_cbCategoriasActionPerformed
 
+    private void btnGuardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar2ActionPerformed
+        if (FrmListaProductos.comanda != null) {
+        try {
+            // Reiniciar el total para evitar acumulación en múltiples clics
+            this.total = 0f;
+
+            // Calcular el total de la comanda sumando subtotales
+            for (Detallecomanda detalle2 : detalleComanda) {
+                if (detalle2.getSubTotaldetalleComanda() != null) {
+                    this.total += detalle2.getSubTotaldetalleComanda();
+                }
+            }
+
+            // Actualizar el total en la base de datos
+            FComandas.EditarTotalComanda(FrmListaProductos.idComanda, this.total);
+
+            // Cerrar ventana actual y volver a la lista de comandas
+            this.comandas.initCustom();//Actualiza tablas
+            this.comandas.setVisible(true);   // muestra Comandas
+            this.dispose();
+
+        } catch (Exception ex) {
+            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, 
+                "Error al guardar los cambios en la comanda: " + ex.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, 
+            "No hay una comanda activa para guardar.",
+            "Advertencia", JOptionPane.WARNING_MESSAGE);
+      }
+    }//GEN-LAST:event_btnGuardar2ActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+            this.comandas.setVisible(true);   // muestra Comandas
+            this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmListaProductos().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;

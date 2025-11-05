@@ -122,6 +122,11 @@ DetallecomandaJpaController jpaDetalleComanda;
       return jpaProducto.findProductosByIdCategoria(idCategoria);
     }
 
+    @Override
+    public void EditarTotalComanda(Integer idComanda, float nuevoTotal) throws Exception {
+             jpaComanda.actualizarTotalComanda(idComanda, nuevoTotal);
+    }
+
 
   
     

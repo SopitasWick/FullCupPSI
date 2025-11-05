@@ -32,7 +32,7 @@ public class Comandas extends javax.swing.JFrame {
     }
 // Método de inicialización personalizado
 
-    private void initCustom() {
+    public void initCustom() {
         cargarTablas();
         configurarPopupTablaActivas();
     }
@@ -440,13 +440,15 @@ public class Comandas extends javax.swing.JFrame {
 
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
-        try {
-            listaProductos = new FrmListaProductos(this, null);
-            listaProductos.setVisible(true);
-            this.setVisible(false);
-        } catch (Exception ex) {
-            Logger.getLogger(Comandas.class.getName()).log(Level.SEVERE, null, ex);
-        }
+         // Limpiar la sesión anterior
+    FrmListaProductos.comanda = new Comanda();
+    FrmListaProductos.detalleComanda.clear();
+    FrmListaProductos.idComanda = null;
+
+    // Abrir nueva ventana
+    listaProductos = new FrmListaProductos(this, null);
+    listaProductos.setVisible(true);
+    this.setVisible(false);
         
     }//GEN-LAST:event_btnNuevaComandaActionPerformed
 

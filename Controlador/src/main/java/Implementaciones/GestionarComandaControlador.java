@@ -91,5 +91,10 @@ IFachadaComandasModel FModel;
     public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception {
      return FModel.ObtenerListaProductosCategoria(idCategoria);
     }
+
+    @Override
+    public void EditarTotalComanda(Integer idComanda, float nuevoTotal) throws Exception {
+       FModel.EditarTotalComanda(idComanda, nuevoTotal);
+    }
     
 }

@@ -62,10 +62,11 @@ public class Comanda implements Serializable {
     public Comanda() {
     }
 
-    public Comanda(Integer idComanda) {
+    public Comanda(Integer idComanda, Float totalComanda) {
         this.idComanda = idComanda;
+        this.totalComanda = totalComanda;
     }
-
+         
     public Comanda(Integer idComanda, Date fechaHoracomanda, String estadoComanda, Float totalComanda) {
         this.idComanda = idComanda;
         this.fechaHoracomanda = fechaHoracomanda;
