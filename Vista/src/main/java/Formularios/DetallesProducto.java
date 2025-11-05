@@ -165,13 +165,16 @@ public class DetallesProducto extends javax.swing.JFrame {
                                 jrbLecheSi.setSelected(true);
                                 jrbLecheNo.setSelected(false);
                                 break;
-                            case "mediano": 
+                            case "mediano":
                                 radioMediano2.setSelected(true);
                                 jrbTamañoSi.setSelected(true);
                                 jrbTamañoNo.setSelected(false);
+
+                                precioTamano = 10;
+                                recalcularTotal();
                                 break;
                             default:
-                                
+
                                 jrbExtrasSi.setSelected(true);
                                 jrbExtrasNo.setSelected(false);
                                 break;
@@ -281,7 +284,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             extras.append(this.spinnerShotExpreso.getToolTipText()).append(" x").append(spinnerShotExpreso.getValue()).append("  ");
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            extras.append(this.spinnerCantidadProducto.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append("  ");
+            extras.append(this.spinnerBoba.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append("  ");
         }
 
         if (extras.length() == 0) {
@@ -1268,7 +1271,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             extras += (int) spinnerShotExpreso.getValue();
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            sb.append(spinnerBoba.getToolTipText()).append(spinnerBoba.getValue()).append(". ");
+            sb.append(spinnerBoba.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append(". ");
             extras += (int) spinnerBoba.getValue();
         }
 
