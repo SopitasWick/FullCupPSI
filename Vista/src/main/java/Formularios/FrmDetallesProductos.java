@@ -224,6 +224,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                             panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
                             vaso = vasos.get(idVaso);
                             calcularTotal();
+                            actualizarNota();
                         }
                     });
 
@@ -296,6 +297,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                             panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
                             leche = leches.get(idLeche);
                             calcularTotal();
+                            actualizarNota();
                         }
                     });
 
@@ -391,6 +393,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                             }
                             
                             calcularTotal(); // recalcula el precio total
+                            actualizarNota();
                         });
                             
 
@@ -618,6 +621,53 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     }
     
     
+    
+    private void actualizarNota(){
+        
+        String nota;
+        StringBuilder sb = new StringBuilder();
+        
+        // Tipo de Vaso
+        if (vaso != null) {
+            sb.append("Vaso: ").append(vaso.getNombre()).append(". ");
+        }
+        
+        
+        // Tipo de leche
+        if (leche != null) {
+            sb.append("Leche: ").append(leche.getNombre()).append(". ");
+        }
+        
+        
+        // Extras
+        int extras = 0;
+        
+        if (!extrasSeleccionados.isEmpty()) {
+            for (Map.Entry<Valoropcion, Integer> entry : extrasSeleccionados.entrySet()) {
+                Valoropcion extra = entry.getKey();
+                int cantidad = entry.getValue();
+
+                if (cantidad > 0) {
+                    sb.append(extra.getNombreValor())
+                      .append(" x").append(cantidad)
+                      .append(". ");
+
+                    extras += cantidad;
+                }
+            }
+        }
+        
+
+        sb.append("Cantidad de extras: ").append(extras).append(". ");
+
+        nota = sb.toString();
+        txtDescripcion.setText(nota);
+        
+        
+    }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -737,7 +787,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtDescripcion);
 
         jPanel4.add(jScrollPane1);
-        jScrollPane1.setBounds(13, 48, 450, 20);
+        jScrollPane1.setBounds(13, 48, 850, 40);
 
         txtPrecioBase.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         txtPrecioBase.setForeground(new java.awt.Color(17, 24, 39));
@@ -790,19 +840,19 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         txtExtra.setBounds(30, 140, 60, 19);
 
         txtPrecioLeche.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtPrecioLeche.setText("Precio");
+        txtPrecioLeche.setText("0");
         jPanel12.add(txtPrecioLeche);
-        txtPrecioLeche.setBounds(200, 100, 45, 19);
+        txtPrecioLeche.setBounds(200, 100, 8, 19);
 
         txtPrecioProductoResumen.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtPrecioProductoResumen.setText("Precio");
+        txtPrecioProductoResumen.setText("0");
         jPanel12.add(txtPrecioProductoResumen);
-        txtPrecioProductoResumen.setBounds(200, 60, 45, 19);
+        txtPrecioProductoResumen.setBounds(200, 60, 8, 19);
 
         txtPrecioExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        txtPrecioExtra.setText("Precio");
+        txtPrecioExtra.setText("0");
         jPanel12.add(txtPrecioExtra);
-        txtPrecioExtra.setBounds(200, 140, 45, 19);
+        txtPrecioExtra.setBounds(200, 140, 8, 19);
 
         jLabel10.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(17, 24, 39));
