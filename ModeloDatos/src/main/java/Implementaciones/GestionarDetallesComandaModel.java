@@ -25,8 +25,8 @@ public class GestionarDetallesComandaModel implements IFachadaDetalleComandasMod
     
     
     @Override
-    public void agregarDetallesComandas(Detallecomanda detallecomanda) throws Exception {
-        jpaDetalleComanda.create(detallecomanda);
+    public Detallecomanda agregarDetallesComandas(Detallecomanda detallecomanda) throws Exception {
+        return jpaDetalleComanda.create(detallecomanda);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 public interface IFachadaDetallesComandaControlador {
     
     
-    public void agregarDetallesComandas(Detallecomanda detallecomanda) throws Exception;
+    public Detallecomanda agregarDetallesComandas(Detallecomanda detallecomanda) throws Exception;
     
     public void editarDetallesComandas(Detallecomanda detallecomanda) throws Exception;
     

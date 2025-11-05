@@ -33,31 +33,46 @@ public class DetallecomandaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Detallecomanda detallecomanda) throws PreexistingEntityException, Exception {
+    public Detallecomanda create(Detallecomanda detallecomanda) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+
             Comanda idComanda = detallecomanda.getIdComanda();
             if (idComanda != null) {
                 idComanda = em.getReference(idComanda.getClass(), idComanda.getIdComanda());
                 detallecomanda.setIdComanda(idComanda);
             }
+
             Producto idProducto = detallecomanda.getIdProducto();
             if (idProducto != null) {
                 idProducto = em.getReference(idProducto.getClass(), idProducto.getIdProducto());
                 detallecomanda.setIdProducto(idProducto);
             }
+
+            // 🔹 Persiste el objeto
             em.persist(detallecomanda);
+
+            // 🔹 Forzamos sincronización para asegurar que se genere el ID
+            em.flush();
+
+            // 🔹 Actualiza las listas en las entidades relacionadas
             if (idComanda != null) {
                 idComanda.getDetallecomandaList().add(detallecomanda);
-                idComanda = em.merge(idComanda);
+                em.merge(idComanda);
             }
+
             if (idProducto != null) {
                 idProducto.getDetallecomandaList().add(detallecomanda);
-                idProducto = em.merge(idProducto);
+                em.merge(idProducto);
             }
+
             em.getTransaction().commit();
+
+            // 🔹 Devuelve el objeto con el ID generado
+            return detallecomanda;
+
         } catch (Exception ex) {
             if (findDetallecomanda(detallecomanda.getIdDetalleComanda()) != null) {
                 throw new PreexistingEntityException("Detallecomanda " + detallecomanda + " already exists.", ex);
