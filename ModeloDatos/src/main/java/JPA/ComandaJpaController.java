@@ -188,6 +188,37 @@ public class ComandaJpaController implements Serializable {
             }
         }
     }
+public void actualizarTotalComanda(Integer idComanda, float nuevoTotal) throws Exception {
+    EntityManager em = getEntityManager();
+    try {
+        em.getTransaction().begin();
+
+        // Buscamos la comanda existente
+        Comanda comanda = em.find(Comanda.class, idComanda);
+        if (comanda == null) {
+            throw new NonexistentEntityException("La comanda con ID " + idComanda + " no existe.");
+        }
+
+        // Actualizamos solo los campos necesarios
+        comanda.setTotalComanda(nuevoTotal);
+        comanda.setEstadoComanda("Abierta"); // si quieres actualizar el estado
+        comanda.setFechaHoracomanda(new java.util.Date()); // opcional, si quieres registrar el último cambio
+
+        // Guardamos cambios
+        em.merge(comanda);
+
+        em.getTransaction().commit();
+    } catch (Exception ex) {
+        if (em.getTransaction().isActive()) {
+            em.getTransaction().rollback();
+        }
+        throw ex;
+    } finally {
+        if (em != null) {
+            em.close();
+        }
+    }
+}
 
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;

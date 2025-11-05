@@ -22,6 +22,7 @@ public interface IFachadaComandasModel{
     public void GuardarComanda(Comanda comanda)throws Exception;
     public void GuardarDetalleComanda(Detallecomanda detComanda) throws Exception;
     public void EditarComanda(Comanda comanda) throws Exception;
+    public void EditarTotalComanda(Integer idComanda, float nuevoTotal)throws Exception;
     public void comandaCompletada (Integer idComanda)throws Exception;
     public Comanda obtenerComanda (Integer idComanda) throws Exception;
     public List<Comanda> obtenerComandasActivas()throws Exception;
@@ -29,4 +30,5 @@ public interface IFachadaComandasModel{
     public void comandaEliminada (Integer idComanda)throws Exception;
     public int totalProductoDetalles() throws Exception;
     public int totalComandas()throws Exception;
+    void EditarDescripcionComanda(Integer idComanda, String descripcion) throws Exception;
 }

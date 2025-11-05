@@ -36,6 +36,9 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Comanda.findByTotalComanda", query = "SELECT c FROM Comanda c WHERE c.totalComanda = :totalComanda")})
 public class Comanda implements Serializable {
 
+    @Column(name = "comandacol")
+    private String comandacol;
+
     private static final long serialVersionUID = 1L;
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +54,9 @@ public class Comanda implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "total_comanda")
     private Float totalComanda;
+    @Column(name = "descripcion_general")
+    private String descripcionGeneral;
+
     @OneToMany(mappedBy = "idComanda")
     private List<Venta> ventaList;
     @OneToMany(mappedBy = "idComanda")
@@ -62,10 +68,11 @@ public class Comanda implements Serializable {
     public Comanda() {
     }
 
-    public Comanda(Integer idComanda) {
+    public Comanda(Integer idComanda, Float totalComanda) {
         this.idComanda = idComanda;
+        this.totalComanda = totalComanda;
     }
-
+         
     public Comanda(Integer idComanda, Date fechaHoracomanda, String estadoComanda, Float totalComanda) {
         this.idComanda = idComanda;
         this.fechaHoracomanda = fechaHoracomanda;
@@ -83,6 +90,14 @@ public class Comanda implements Serializable {
 
     public Date getFechaHoracomanda() {
         return fechaHoracomanda;
+    }
+
+    public String getDescripcionGeneral() {
+        return descripcionGeneral;
+    }
+
+    public void setDescripcionGeneral(String descripcionGeneral) {
+        this.descripcionGeneral = descripcionGeneral;
     }
 
     public void setFechaHoracomanda(Date fechaHoracomanda) {
@@ -152,6 +167,14 @@ public class Comanda implements Serializable {
     @Override
     public String toString() {
         return "Comanda{" + "idComanda=" + idComanda + ", fechaHoracomanda=" + fechaHoracomanda + ", estadoComanda=" + estadoComanda + ", totalComanda=" + totalComanda + ", ventaList=" + ventaList + ", detallecomandaList=" + detallecomandaList + ", idUsuario=" + idUsuario + '}';
+    }
+
+    public String getComandacol() {
+        return comandacol;
+    }
+
+    public void setComandacol(String comandacol) {
+        this.comandacol = comandacol;
     }
 
     
