@@ -41,9 +41,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Sergio Arturo
  */
 public class FrmListaProductos extends javax.swing.JFrame {
-    
-    
-    
+
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
     private final IFachadaCategoriaControlador fC = new GestionarCategoriaControlador();
@@ -51,8 +49,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     List<Producto> todosLosProductos;
     List<Producto> todosLosProductosSinModificar;
     List<Categoria> categorias;
-    
-    
+
     Dimension dimension = null;
     String rutaBtnEliminar = "src/main/java/iconos/BotonEliminar.png";
 
@@ -61,196 +58,159 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     private Comandas comandas;
     DetallesProducto detalle;
-    
+
     static Integer idComanda;
-    
+
     float total = 0;
-    
-    
-    
 
     /**
      * Creates new form FrmListaProductos
      */
     public FrmListaProductos() {
         initComponents();
-        
-        
-        
+
         buscarProductos();
-        cargarDiseno();
+        
         
         cargarPanelComanda();
-        
+        cargarDiseno();
+
+        cargarPanelComanda();
+
     }
-    
-    
-    
+
     public FrmListaProductos(Comandas comand, Integer idComanda) {
         initComponents();
-        
+
         this.comandas = comand;
         this.idComanda = idComanda;
-        
+
         cargarDiseno();
-        
-        
 
         buscarProductos();
         configurarPopupTablaActivas();
-        
-        
+
         cargarPanelComanda();
-        
-        
-        
+
         cargarDiseno();
-        
+
         cargarCategorias();
-    }    
-    
-    
-    
-    
-    
-    private void cargarDiseno(){
-        
-        
-        //PlaceHolderToJTextField hintBuscar = new PlaceHolderToJTextField("Buscar producto...", txtBuscar);
-        
-        
-    
-        
-    
     }
-    
-    
-    private void cargarCategorias(){
-    
+
+    private void cargarDiseno() {
+
+        //PlaceHolderToJTextField hintBuscar = new PlaceHolderToJTextField("Buscar producto...", txtBuscar);
+    }
+
+    private void cargarCategorias() {
+
         List<String> listaCate = new ArrayList<>();
         listaCate.add("Todos");
-        
+
         try {
             categorias = fC.obtenerTodasLasCategorias();
-            
-            for (int i = 0; i < categorias.size(); i++){
+
+            for (int i = 0; i < categorias.size(); i++) {
                 listaCate.add(categorias.get(i).getNombre());
             }
-            
+
             DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-            
+
             for (String nombre : listaCate) {
                 modelo.addElement(nombre);
             }
-            
 
             cbCategorias.setModel(modelo);
-            
-            
-            
+
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-           
-        
+
     }
-    
-    
-    
-    
-    public void cargarPanelComanda(){
-        
+
+    public void cargarPanelComanda() {
+
         jPanelItems.removeAll();
-        
+
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         int margenY = 68;
         float subTota = 0;
-        
-        for (int i = 0; i < detalleComanda.size(); i++){
-            
+
+        for (int i = 0; i < detalleComanda.size(); i++) {
+
             subTota = subTota + detalleComanda.get(i).getSubTotaldetalleComanda();
-            
+
             //SubPanel
             JPanel subPanel = new JPanel();
             subPanel.setBackground(Color.WHITE);
             subPanel.setOpaque(false);
             subPanel.setBorder(new LineBorder(Color.GRAY));
-            subPanel.setBounds(0, margenY * i, jPanelItems.getWidth()-5, 68);
+            subPanel.setBounds(0, margenY * i, jPanelItems.getWidth() - 5, 68);
             subPanel.setLayout(null);
             subPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            
-            
-            
+
             //Nombre del producto
             JLabel jlabelNombreProducto = new JLabel();
             jlabelNombreProducto.setBounds(10, 8, 300, 20);
             jlabelNombreProducto.setFont(new java.awt.Font("Segoe UI", 1, 16));
             jlabelNombreProducto.setText(detalleComanda.get(i).getIdProducto().getNombreProducto());
             subPanel.add(jlabelNombreProducto);
-            
-            
-            
+
             //Detalles del producto
             JLabel jlabelDetalleProducto = new JLabel();
             jlabelDetalleProducto.setBounds(10, 45, 300, 20);
             jlabelDetalleProducto.setFont(new java.awt.Font("Segoe UI", 0, 10));
             jlabelDetalleProducto.setText(detalleComanda.get(i).getNotadetalleComanda());
             subPanel.add(jlabelDetalleProducto);
-            
-            
+
             //Precio del producto
             JLabel jlabelPrecio = new JLabel();
-            jlabelPrecio.setBounds(subPanel.getWidth()-130, 8, 80, 20);
+            jlabelPrecio.setBounds(subPanel.getWidth() - 130, 8, 80, 20);
             jlabelPrecio.setHorizontalAlignment(SwingConstants.RIGHT);
             jlabelPrecio.setText(detalleComanda.get(i).getSubTotaldetalleComanda().toString());
             subPanel.add(jlabelPrecio);
-            
-            
+
             //boton Eliminar
             JLabel jlabelBotonEliminar = new JLabel();
-            jlabelBotonEliminar.setBounds(subPanel.getWidth()-30, 8, 20, 20);
-           // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
+            jlabelBotonEliminar.setBounds(subPanel.getWidth() - 30, 8, 20, 20);
+            // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
             setImagenLabel(jlabelBotonEliminar, rutaBtnEliminar);
             subPanel.add(jlabelBotonEliminar);
-            
+
             int id = i;
-            
-             jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            int confirm = JOptionPane.showConfirmDialog(FrmListaProductos.this, "¿Seguro que deseas eliminar este item?",
-                                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                        if (confirm == JOptionPane.YES_OPTION) {
-                            try {
-                                fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
-                                cargarPanelComanda();
-                            } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(FrmListaProductos.this, "Error al eliminar: " + ex.getMessage());
-                                ex.printStackTrace();
-                            }
-                        }
-                            
-                        }
-                        
-             });
-            
-            
-            subPanel.addMouseListener(new MouseAdapter(){
+
+            jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseClicked(MouseEvent e){
+                public void mouseClicked(MouseEvent e) {
+                    int confirm = JOptionPane.showConfirmDialog(FrmListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        try {
+                            fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+                            cargarPanelComanda();
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(FrmListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    }
+
+                }
+
+            });
+
+            subPanel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
                     JOptionPane.showMessageDialog(FrmListaProductos.this, "No programado aun, pero seria editar cuando se haga");
                 }
-            
-            
+
             });
-            
-            
-            
+
             if (jPanelItems.getPreferredSize().height < margenY * (i + 1)) {
                 if (dimension == null) {
                     dimension = new Dimension();
@@ -258,55 +218,47 @@ public class FrmListaProductos extends javax.swing.JFrame {
                 dimension.setSize(jPanelItems.getPreferredSize().width, margenY * (i + 1));
                 jPanelItems.setPreferredSize(dimension);
             }
-            
-            
-            
+
             jPanelItems.add(subPanel);
             jPanelItems.revalidate();
             jPanelItems.repaint();
-            
-            
+
         }
-        
+
         txtSubtotal.setText(String.valueOf(subTota));
         txtTotal.setText(String.valueOf(subTota));
-        
+
     }
 
-    
     public void setImagenLabel(JLabel label, String rutaImagen) {
         try {
             ImageIcon icon = new ImageIcon(rutaImagen);
 
             Image img = icon.getImage().getScaledInstance(
-                label.getWidth(), 
-                label.getHeight(), 
-                Image.SCALE_SMOOTH
+                    label.getWidth(),
+                    label.getHeight(),
+                    Image.SCALE_SMOOTH
             );
 
             label.setIcon(new ImageIcon(img));
-            label.setText(null); 
+            label.setText(null);
 
         } catch (Exception e) {
             System.err.println("Error al cargar la imagen: " + e.getMessage());
-        }   
+        }
     }
-    
-    
-    
-    
+
     public void buscarProductos() {
 
-
         try {
-            
+
             todosLosProductos = FComandas.ObtenerListaProductos();
             todosLosProductosSinModificar = List.copyOf(todosLosProductos);
-            
-            if(idComanda != null){
+
+            if (idComanda != null) {
                 comanda = FComandas.obtenerComanda(idComanda);
             }
-            
+
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -316,25 +268,23 @@ public class FrmListaProductos extends javax.swing.JFrame {
         llenarTablaProductos();
 
     }
-    
-    public void buscarProductosPorCategoria(int idCategoria)throws Exception{
-        
-        if(todosLosProductos != null){
-                todosLosProductos.clear();
-            }
-        
-        if(idCategoria == 0){
-            buscarProductos();
+
+    public void buscarProductosPorCategoria(int idCategoria) throws Exception {
+
+        if (todosLosProductos != null) {
+            todosLosProductos.clear();
         }
-        else{
+
+        if (idCategoria == 0) {
+            buscarProductos();
+        } else {
             todosLosProductos = FComandas.ObtenerListaProductosCategoria(idCategoria);
             System.out.println("idCategoria" + idCategoria);
             System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
             llenarTablaProductos();
         }
     }
-    
-    
+
     public void llenarTablaProductos() {
 
         DefaultTableModel modelo = (DefaultTableModel) tblProductos.getModel();
@@ -343,21 +293,17 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
         for (Producto p : todosLosProductos) {
             Object[] fila = {
-                p.getNombreProducto(),          // o p.getNombreProducto()
+                p.getNombreProducto(), // o p.getNombreProducto()
                 p.getPrecioProducto()// o p.getPrecioProducto()
             };
             modelo.addRow(fila);
         }
-        
-        
+
 //        if(tblProductos.getMouseListeners().length > 0){
 //            for (MouseListener ml : tblProductos.getMouseListeners()) {
 //                tblProductos.removeMouseListener(ml);
 //            }
 //        }
-        
-        
-
         tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
 
             @Override
@@ -380,18 +326,16 @@ public class FrmListaProductos extends javax.swing.JFrame {
                         //RIFARSELA AQUI PARA QUE ANTES DE QUE HABRA LA PANTALLA DETALLES
                         //YA SE CARGUE TODO TAL CUAL DE ESE PRODUCTO HACERLO DESDE EL CONSTRUCTOR
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
-                        
-                        if (idComanda != null){
-                        
+
+                        if (idComanda != null) {
+
                             detalle = new DetallesProducto(FrmListaProductos.this, producto, comanda, null);
-                        }
-                        else{
+                        } else {
                             detalle = new DetallesProducto(FrmListaProductos.this, producto, null, null);
                         }
-                        
 
                         detalle.setVisible(true);
-                        
+
                         FrmListaProductos.this.setVisible(false);
 
                     }
@@ -399,94 +343,87 @@ public class FrmListaProductos extends javax.swing.JFrame {
             }
         });
 
-        
         llenarItemsComanda();
-                // 🔹 Forzar refresco
-    modelo.fireTableDataChanged();
-    tblProductos.revalidate();
-    tblProductos.repaint();
+        // 🔹 Forzar refresco
+        modelo.fireTableDataChanged();
+        tblProductos.revalidate();
+        tblProductos.repaint();
 
-    // 🔹 Asegurar que es visible
-    tblProductos.setVisible(true);
-    tblProductos.setForeground(Color.BLACK);
-    tblProductos.setBackground(Color.WHITE);
-        
+        // 🔹 Asegurar que es visible
+        tblProductos.setVisible(true);
+        tblProductos.setForeground(Color.BLACK);
+        tblProductos.setBackground(Color.WHITE);
+
     }
 
     public void llenarItemsComanda() {
-        
-        
+
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-            for (int i = 0; i < detalleComanda.size(); i++) {
 
-                Object[] fila = {
-                    detalleComanda.get(i).getIdProducto().getNombreProducto(),
-                    detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
-                    detalleComanda.get(i).getCaintidaddetalleComanda(),
-                    detalleComanda.get(i).getSubTotaldetalleComanda()
-                };
+        for (int i = 0; i < detalleComanda.size(); i++) {
 
-            }
-        
-  
+            Object[] fila = {
+                detalleComanda.get(i).getIdProducto().getNombreProducto(),
+                detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
+                detalleComanda.get(i).getCaintidaddetalleComanda(),
+                detalleComanda.get(i).getSubTotaldetalleComanda()
+            };
+
+        }
+
     }
-    
+
     public void refrescarPantalla() {
-    try {
-        // 1️⃣ Refrescar la lista completa de productos desde la BD
-        buscarProductos();
+        try {
+            // 1️⃣ Refrescar la lista completa de productos desde la BD
+            buscarProductos();
 
-        // 2️⃣ Refrescar categorías (ComboBox)
-        cargarCategorias();
+            // 2️⃣ Refrescar categorías (ComboBox)
+            cargarCategorias();
 
-        // 3️⃣ Refrescar los detalles de la comanda (panel derecho)
-        cargarPanelComanda();
+            // 3️⃣ Refrescar los detalles de la comanda (panel derecho)
+            cargarPanelComanda();
 
-        // 4️⃣ Revalidar y repintar toda la interfaz
-        this.revalidate();
-        this.repaint();
+            // 4️⃣ Revalidar y repintar toda la interfaz
+            this.revalidate();
+            this.repaint();
 
-        System.out.println("Pantalla actualizada correctamente.");
-    } catch (Exception ex) {
-        Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(this, 
-            "Error al refrescar la pantalla: " + ex.getMessage(), 
-            "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Pantalla actualizada correctamente.");
+        } catch (Exception ex) {
+            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,
+                    "Error al refrescar la pantalla: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
 
+    private void configurarTotal() {
+        for (int i = 0; i < detalleComanda.size(); i++) {
 
-  private void configurarTotal (){
-      for (int i = 0; i < detalleComanda.size(); i++) {
+            Object[] fila = {
+                detalleComanda.get(i).getIdProducto().getNombreProducto(),
+                detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
+                detalleComanda.get(i).getCaintidaddetalleComanda(),
+                detalleComanda.get(i).getSubTotaldetalleComanda()
+            };
 
-                Object[] fila = {
-                    detalleComanda.get(i).getIdProducto().getNombreProducto(),
-                    detalleComanda.get(i).getNotadetalleComanda(), // o p.getDescripcionProducto()
-                    detalleComanda.get(i).getCaintidaddetalleComanda(),
-                    detalleComanda.get(i).getSubTotaldetalleComanda()
-                };
+        }
+    }
 
-            }
-  }
-    
-    
     private void configurarPopupTablaActivas() {
         JPopupMenu popup = new JPopupMenu();
 
-        JMenuItem itemEliminar = new JMenuItem("Eliminar item");        
+        JMenuItem itemEliminar = new JMenuItem("Eliminar item");
         JMenuItem itemEditar = new JMenuItem("Editar item");
 
         popup.add(itemEditar);
         popup.add(itemEliminar);
-        
-    }
 
+    }
 
     /**
      * Obtiene el ID (columna 0) de la fila seleccionada en una tabla
@@ -503,13 +440,6 @@ public class FrmListaProductos extends javax.swing.JFrame {
         }
         return fila;
     }
-    
-    
-    
-    
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -528,8 +458,8 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jPaneParaLlevar = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        txtNombreCliente = new javax.swing.JTextField();
+        rbParaLlevar = new javax.swing.JRadioButton();
         jPanelItemComanda = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanelItems = new javax.swing.JPanel();
@@ -571,7 +501,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel1.setAlignmentX(16.0F);
         jLabel1.setAlignmentY(0.0F);
         jPanelEncabezado.add(jLabel1);
-        jLabel1.setBounds(50, 15, 160, 24);
+        jLabel1.setBounds(50, 15, 157, 23);
 
         jPanel3.setBackground(new java.awt.Color(31, 41, 55));
         jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -613,20 +543,20 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(107, 114, 128));
         jLabel3.setText("Cliente");
         jPaneParaLlevar.add(jLabel3);
-        jLabel3.setBounds(20, 35, 120, 16);
+        jLabel3.setBounds(20, 35, 120, 17);
 
-        jTextField1.setText("Nombre del cliente");
-        jTextField1.setMaximumSize(new java.awt.Dimension(430, 40));
-        jTextField1.setMinimumSize(new java.awt.Dimension(0, 0));
-        jTextField1.setPreferredSize(new java.awt.Dimension(430, 40));
-        jPaneParaLlevar.add(jTextField1);
-        jTextField1.setBounds(20, 60, 220, 30);
+        txtNombreCliente.setText("Nombre del cliente");
+        txtNombreCliente.setMaximumSize(new java.awt.Dimension(430, 40));
+        txtNombreCliente.setMinimumSize(new java.awt.Dimension(0, 0));
+        txtNombreCliente.setPreferredSize(new java.awt.Dimension(430, 40));
+        jPaneParaLlevar.add(txtNombreCliente);
+        txtNombreCliente.setBounds(20, 60, 220, 30);
 
-        jRadioButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jRadioButton1.setText("Para Llevar");
-        jRadioButton1.setOpaque(true);
-        jPaneParaLlevar.add(jRadioButton1);
-        jRadioButton1.setBounds(290, 65, 98, 21);
+        rbParaLlevar.setBackground(new java.awt.Color(255, 255, 255));
+        rbParaLlevar.setText("Para Llevar");
+        rbParaLlevar.setOpaque(true);
+        jPaneParaLlevar.add(rbParaLlevar);
+        rbParaLlevar.setBounds(290, 65, 98, 21);
 
         jPanelResumenComanda.add(jPaneParaLlevar);
         jPaneParaLlevar.setBounds(0, 0, 410, 100);
@@ -662,7 +592,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel4.setAlignmentX(16.0F);
         jLabel4.setAlignmentY(0.0F);
         jPanelItemComanda.add(jLabel4);
-        jLabel4.setBounds(10, 10, 184, 24);
+        jLabel4.setBounds(10, 10, 184, 23);
 
         jPanelResumenComanda.add(jPanelItemComanda);
         jPanelItemComanda.setBounds(0, 100, 410, 320);
@@ -699,22 +629,22 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(75, 85, 99));
         jLabel5.setText("Subtotal:");
         jPanelTotal.add(jLabel5);
-        jLabel5.setBounds(30, 50, 80, 16);
+        jLabel5.setBounds(30, 50, 80, 17);
 
         jLabel6.setForeground(new java.awt.Color(75, 85, 99));
         jLabel6.setText("Impuestos:");
         jPanelTotal.add(jLabel6);
-        jLabel6.setBounds(30, 20, 90, 16);
+        jLabel6.setBounds(30, 20, 90, 17);
 
         txtimpuestos.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtimpuestos.setText("$0.00");
         jPanelTotal.add(txtimpuestos);
-        txtimpuestos.setBounds(300, 30, 60, 16);
+        txtimpuestos.setBounds(300, 30, 60, 17);
 
         txtSubtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtSubtotal.setText("$7.75");
         jPanelTotal.add(txtSubtotal);
-        txtSubtotal.setBounds(300, 50, 60, 16);
+        txtSubtotal.setBounds(300, 50, 60, 17);
 
         btnGuardar2.setBackground(new java.awt.Color(242, 243, 245));
         btnGuardar2.setForeground(new java.awt.Color(55, 65, 81));
@@ -733,13 +663,13 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Helvetica Neue", 1, 17)); // NOI18N
         jLabel8.setText("Total:");
         jPanelTotal.add(jLabel8);
-        jLabel8.setBounds(30, 100, 100, 23);
+        jLabel8.setBounds(30, 100, 100, 22);
 
         txtTotal.setFont(new java.awt.Font("Helvetica Neue", 1, 15)); // NOI18N
         txtTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtTotal.setText("$8.53");
         jPanelTotal.add(txtTotal);
-        txtTotal.setBounds(280, 100, 90, 20);
+        txtTotal.setBounds(280, 100, 90, 19);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 3));
 
@@ -786,7 +716,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
             }
         });
         jPanelBuscador.add(cbCategorias);
-        cbCategorias.setBounds(110, 70, 150, 22);
+        cbCategorias.setBounds(110, 70, 150, 23);
 
         jPanelFondo.add(jPanelBuscador);
         jPanelBuscador.setBounds(0, 50, 820, 100);
@@ -845,89 +775,106 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
         // TODO add your handling code here:
-        
-        
+
+
     }//GEN-LAST:event_btnRegistrarVentaActionPerformed
 
     private void cbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriasActionPerformed
         // TODO add your handling code here:}
-        
+
         String seleccion = cbCategorias.getSelectedItem().toString();
         int idCategoria = 0;
-        
-        
-        
-        if (cbCategorias.getSelectedIndex() != -1) { 
-            
-            
-            try{
-                
-                if(seleccion.equalsIgnoreCase("Todos")){
-                    buscarProductosPorCategoria(idCategoria);
-                }
-                else{
-                    
 
-                    for (int i = 0; i < todosLosProductosSinModificar.size(); i++){
-                        if(todosLosProductosSinModificar.get(i).getIdCategoria().getNombre().equalsIgnoreCase(seleccion)){
+        if (cbCategorias.getSelectedIndex() != -1) {
+
+            try {
+
+                if (seleccion.equalsIgnoreCase("Todos")) {
+                    buscarProductosPorCategoria(idCategoria);
+                } else {
+
+                    for (int i = 0; i < todosLosProductosSinModificar.size(); i++) {
+                        if (todosLosProductosSinModificar.get(i).getIdCategoria().getNombre().equalsIgnoreCase(seleccion)) {
                             idCategoria = todosLosProductosSinModificar.get(i).getIdCategoria().getIdCategoria();
                         }
                     }
 
-                    System.out.println("Seleccion ="+ seleccion);
+                    System.out.println("Seleccion =" + seleccion);
                     System.out.println(idCategoria);
                     buscarProductosPorCategoria(idCategoria);
 
                 }
-            
-            }
-            
-            catch(Exception e){
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
-        
+
+
     }//GEN-LAST:event_cbCategoriasActionPerformed
 
     private void btnGuardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar2ActionPerformed
         if (FrmListaProductos.comanda != null) {
-        try {
-            // Reiniciar el total para evitar acumulación en múltiples clics
-            this.total = 0f;
+            try {
+                // Reiniciar el total para evitar acumulación en múltiples clics
+                this.total = 0f;
 
-            // Calcular el total de la comanda sumando subtotales
-            for (Detallecomanda detalle2 : detalleComanda) {
-                if (detalle2.getSubTotaldetalleComanda() != null) {
-                    this.total += detalle2.getSubTotaldetalleComanda();
+                // Calcular el total de la comanda sumando subtotales
+                for (Detallecomanda detalle2 : detalleComanda) {
+                    if (detalle2.getSubTotaldetalleComanda() != null) {
+                        this.total += detalle2.getSubTotaldetalleComanda();
+                    }
                 }
+
+                //Guardar nombre del cliente y si es para llevar
+                String nombre = txtNombreCliente.getText().trim();
+                if (nombre.equals("Nombre del cliente") || nombre.isEmpty()) {
+                    nombre = "Cliente General"; // Asignar un valor por defecto
+                }
+
+                // El texto debe ser "Para llevar: Si"
+                String paraLlevar = rbParaLlevar.isSelected() ? "Llevar: Si" : "Llevar: No";
+
+                // El texto debe incluir "Cliente: "
+                String descripcion = nombre + ", " + paraLlevar;
+
+                FrmListaProductos.comanda.setDescripcionGeneral(descripcion);
+
+                // Actualizar el total en la base de datos
+                FComandas.EditarTotalComanda(FrmListaProductos.idComanda, this.total);
+
+                //FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
+                if (FrmListaProductos.idComanda != null) {
+
+                    // --- MODO EDITAR ---
+                    // La comanda ya existe, solo actualizamos la descripción.
+                    System.out.println("Guardando descripción en comanda existente ID: " + idComanda);
+                    FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
+
+                } 
+
+                // Cerrar ventana actual y volver a la lista de comandas
+                this.comandas.initCustom();//Actualiza tablas
+                this.comandas.setVisible(true);   // muestra Comandas
+                this.dispose();
+
+            } catch (Exception ex) {
+                Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,
+                        "Error al guardar los cambios en la comanda: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            // Actualizar el total en la base de datos
-            FComandas.EditarTotalComanda(FrmListaProductos.idComanda, this.total);
-
-            // Cerrar ventana actual y volver a la lista de comandas
-            this.comandas.initCustom();//Actualiza tablas
-            this.comandas.setVisible(true);   // muestra Comandas
-            this.dispose();
-
-        } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, 
-                "Error al guardar los cambios en la comanda: " + ex.getMessage(),
-                "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No hay una comanda activa para guardar.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-    } else {
-        JOptionPane.showMessageDialog(this, 
-            "No hay una comanda activa para guardar.",
-            "Advertencia", JOptionPane.WARNING_MESSAGE);
-      }
     }//GEN-LAST:event_btnGuardar2ActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-            this.comandas.setVisible(true);   // muestra Comandas
-            this.dispose();
+        this.comandas.setVisible(true);   // muestra Comandas
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
@@ -958,12 +905,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelListaProductos;
     private javax.swing.JPanel jPanelResumenComanda;
     private javax.swing.JPanel jPanelTotal;
-    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JRadioButton rbParaLlevar;
     private javax.swing.JTable tblProductos;
     private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JLabel txtSubtotal;
     private javax.swing.JLabel txtTotal;
     private javax.swing.JLabel txtimpuestos;

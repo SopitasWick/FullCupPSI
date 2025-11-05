@@ -30,4 +30,5 @@ public interface IFachadaComandasModel{
     public void comandaEliminada (Integer idComanda)throws Exception;
     public int totalProductoDetalles() throws Exception;
     public int totalComandas()throws Exception;
+    void EditarDescripcionComanda(Integer idComanda, String descripcion) throws Exception;
 }

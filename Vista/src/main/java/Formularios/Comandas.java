@@ -44,7 +44,7 @@ public class Comandas extends javax.swing.JFrame {
     }
 
     private void cargarComandasActivas() {
-        DefaultTableModel modelo = new DefaultTableModel(new String[]{"ID", "Productos", "Fecha", "Total"}, 0) {
+        DefaultTableModel modelo = new DefaultTableModel(new String[]{"ID", "Productos", "Fecha", "Total", "Descripción"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -56,14 +56,17 @@ public class Comandas extends javax.swing.JFrame {
                 String fecha = c.getFechaHoracomanda() != null ? sdf.format(c.getFechaHoracomanda()) : "";
            
                 String productos = c.getDetallecomandaList() != null ? String.valueOf(c.getDetallecomandaList().size()) + " Productos" : "0 Productos";
-                modelo.addRow(new Object[]{c.getIdComanda(), productos, fecha, c.getTotalComanda()});
+                
+                String descripcion = (c.getDescripcionGeneral() != null) ? c.getDescripcionGeneral() : "";
+                modelo.addRow(new Object[]{c.getIdComanda(), productos, fecha, c.getTotalComanda(), descripcion});
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error cargando comandas activas: " + ex.getMessage());
         }
         tblComandasActivas.setModel(modelo);
       
-        tblComandasActivas.getColumnModel().getColumn(0).setMaxWidth(80);
+        tblComandasActivas.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblComandasActivas.getColumnModel().getColumn(3).setMaxWidth(300);
     }
 
     private void cargarComandasCompletadas() {
@@ -238,13 +241,13 @@ public class Comandas extends javax.swing.JFrame {
 
         tblComandasActivas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Comanda", "Productos", "Fecha", "Total"
+                "Comanda", "Productos", "Fecha", "Total", "Descripcion"
             }
         ));
         tblComandasActivas.setGridColor(new java.awt.Color(255, 255, 255));
