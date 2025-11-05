@@ -85,16 +85,18 @@ public class DetallecomandaJpaController implements Serializable {
         }
     }
 
-    public void edit(Detallecomanda detallecomanda) throws NonexistentEntityException, Exception {
+    public Detallecomanda edit(Detallecomanda detallecomanda) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+
             Detallecomanda persistentDetallecomanda = em.find(Detallecomanda.class, detallecomanda.getIdDetalleComanda());
             Comanda idComandaOld = persistentDetallecomanda.getIdComanda();
             Comanda idComandaNew = detallecomanda.getIdComanda();
             Producto idProductoOld = persistentDetallecomanda.getIdProducto();
             Producto idProductoNew = detallecomanda.getIdProducto();
+
             if (idComandaNew != null) {
                 idComandaNew = em.getReference(idComandaNew.getClass(), idComandaNew.getIdComanda());
                 detallecomanda.setIdComanda(idComandaNew);
@@ -103,7 +105,10 @@ public class DetallecomandaJpaController implements Serializable {
                 idProductoNew = em.getReference(idProductoNew.getClass(), idProductoNew.getIdProducto());
                 detallecomanda.setIdProducto(idProductoNew);
             }
+
+            // 🔹 Aquí merge devuelve la entidad administrada y sincronizada
             detallecomanda = em.merge(detallecomanda);
+
             if (idComandaOld != null && !idComandaOld.equals(idComandaNew)) {
                 idComandaOld.getDetallecomandaList().remove(detallecomanda);
                 idComandaOld = em.merge(idComandaOld);
@@ -120,7 +125,12 @@ public class DetallecomandaJpaController implements Serializable {
                 idProductoNew.getDetallecomandaList().add(detallecomanda);
                 idProductoNew = em.merge(idProductoNew);
             }
+
             em.getTransaction().commit();
+
+            // ✅ Devolver el detalle actualizado
+            return detallecomanda;
+
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -136,6 +146,7 @@ public class DetallecomandaJpaController implements Serializable {
             }
         }
     }
+
 
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;

@@ -17,7 +17,7 @@ public interface IFachadaDetallesComandaControlador {
     
     public Detallecomanda agregarDetallesComandas(Detallecomanda detallecomanda) throws Exception;
     
-    public void editarDetallesComandas(Detallecomanda detallecomanda) throws Exception;
+    public Detallecomanda editarDetallesComandas(Detallecomanda detallecomanda) throws Exception;
     
     public void eliminarDetallesComandas(Integer id) throws Exception;    
     

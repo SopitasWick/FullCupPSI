@@ -32,8 +32,8 @@ public class GestionarDetallesComandaControlador implements IFachadaDetallesComa
     }
 
     @Override
-    public void editarDetallesComandas(Detallecomanda detallecomanda) throws Exception {
-        dCModel.editarDetallesComandas(detallecomanda);
+    public Detallecomanda editarDetallesComandas(Detallecomanda detallecomanda) throws Exception {
+        return dCModel.editarDetallesComandas(detallecomanda);
     }
 
     @Override

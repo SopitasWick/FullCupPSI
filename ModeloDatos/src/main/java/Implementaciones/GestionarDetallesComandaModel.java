@@ -30,8 +30,8 @@ public class GestionarDetallesComandaModel implements IFachadaDetalleComandasMod
     }
 
     @Override
-    public void editarDetallesComandas(Detallecomanda detallecomanda) throws Exception {
-        jpaDetalleComanda.edit(detallecomanda);
+    public Detallecomanda editarDetallesComandas(Detallecomanda detallecomanda) throws Exception {
+        return jpaDetalleComanda.edit(detallecomanda);
     }
 
     @Override
