@@ -14,16 +14,21 @@ import Facades.IFachadaDetallesComandaControlador;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarDetallesComandaControlador;
+import Impresion.TicketPrinter;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -853,7 +858,19 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
                 } 
                  //IMPRIMIR**********************************************
-                 Impresion.TicketPrinter.imprimirComanda(FrmListaProductos.comanda);
+                // Imprimir ticket
+                FrmListaProductos.comanda.setDetallecomandaList(fDC.obtenerDetallesComandasPorComanda(FrmListaProductos.comanda));
+                System.out.println("Imprimir lista datalles comanda: " + detalleComanda);
+PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
+    if (defaultPrinter != null) {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintService(defaultPrinter);
+        job.setPrintable(new TicketPrinter(FrmListaProductos.comanda));//Agregar aqui lo de la descripcion general
+        job.print();
+    } else {
+        System.err.println("⚠️ No se encontró una impresora predeterminada.");
+    }
+
                  //IMPRIMIR*************************************************
                 // Cerrar ventana actual y volver a la lista de comandas
                 this.comandas.initCustom();//Actualiza tablas
