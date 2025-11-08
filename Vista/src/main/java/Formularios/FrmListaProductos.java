@@ -62,7 +62,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
 
     private Comandas comandas;
-    DetallesProducto detalle;
+    FrmDetallesProductos detalle;
 
     static Integer idComanda;
 
@@ -211,7 +211,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
             subPanel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    JOptionPane.showMessageDialog(FrmListaProductos.this, "No programado aun, pero seria editar cuando se haga");
+                                        
+                    FrmDetallesProductos pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto());
+                    pantallaDetalles.setVisible(true);
+                    FrmListaProductos.this.setVisible(false);
+     
+                    
                 }
 
             });
@@ -333,10 +338,10 @@ public class FrmListaProductos extends javax.swing.JFrame {
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
 
                         if (idComanda != null) {
-
-                            detalle = new DetallesProducto(FrmListaProductos.this, producto, comanda, null);
+                            
+                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto);
                         } else {
-                            detalle = new DetallesProducto(FrmListaProductos.this, producto, null, null);
+                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto);
                         }
 
                         detalle.setVisible(true);
