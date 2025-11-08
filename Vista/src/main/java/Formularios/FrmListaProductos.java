@@ -852,7 +852,9 @@ public class FrmListaProductos extends javax.swing.JFrame {
                     FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
 
                 } 
-
+                 //IMPRIMIR**********************************************
+                 Impresion.TicketPrinter.imprimirComanda(FrmListaProductos.comanda);
+                 //IMPRIMIR*************************************************
                 // Cerrar ventana actual y volver a la lista de comandas
                 this.comandas.initCustom();//Actualiza tablas
                 this.comandas.setVisible(true);   // muestra Comandas
