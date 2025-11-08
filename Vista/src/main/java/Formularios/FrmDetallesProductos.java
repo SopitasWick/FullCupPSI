@@ -980,6 +980,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
                     if(vaso != null){
                         extra.setIdTamanoVaso(vaso);
+                        System.out.println("va: " + vaso.getNombre());
                     }
 
                     if(leche != null){
@@ -988,12 +989,13 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
                     listaExtr.add(extra);
                 }
-                
+                System.out.println("hay extras");
             
             }
             
             else{
             
+                System.out.println("no hay extras");
                 extraDefecto.setIdDetalleComanda(detalleCoEditada);
                 extraDefecto.setIdProducto(producto);
                 
@@ -1012,16 +1014,18 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
             if(vaso != null || leche != null || !extras.isEmpty()){
                 
                 //Editar: Se eliminan y se agregan los nuevos
-                if(detalle != null){
-                    listaExtr = fExtras.obtenerTodosLosExtrasPorComandas(detalleCoEditada);
-                    for(int i = 0; i < detalle.getExtrasProductosList().size(); i++){
-                        fExtras.eliminarExtrasProductos(listaExtr.get(i).getIdExtraProducto());
+                if (detalle != null) {
+                    List<ExtrasProductos> extrasViejos = fExtras.obtenerTodosLosExtrasPorComandas(detalleCoEditada);
+                    for (ExtrasProductos e : extrasViejos) {
+                        fExtras.eliminarExtrasProductos(e.getIdExtraProducto());
                     }
                 }
-                for(int i = 0; i < listaExtr.size(); i++){
-                        fExtras.agregarExtrasProductos(listaExtr.get(i));
-                    
-                }
+                
+                
+                for (ExtrasProductos e : listaExtr) {
+                        fExtras.agregarExtrasProductos(e);
+                }  
+                
                 
                 List<ExtrasProductos> nuevaListaExtra = fExtras.obtenerTodosLosExtrasPorComandas(detalleCoEditada);
                 
@@ -1037,7 +1041,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                   listaTotal = fDC.obtenerDetallesComandasPorComanda(comanda);
                 }
                 else{
-                    listaTotal = fDC.obtenerDetallesComandasPorComanda(detalleCoEditada.getIdComanda());
+                  listaTotal = fDC.obtenerDetallesComandasPorComanda(detalleCoEditada.getIdComanda());
                 }
                 
                 for (int i = 0; i < listaTotal.size(); i++){
