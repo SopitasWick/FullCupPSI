@@ -165,13 +165,16 @@ public class DetallesProducto extends javax.swing.JFrame {
                                 jrbLecheSi.setSelected(true);
                                 jrbLecheNo.setSelected(false);
                                 break;
-                            case "mediano": 
+                            case "mediano":
                                 radioMediano2.setSelected(true);
                                 jrbTamañoSi.setSelected(true);
                                 jrbTamañoNo.setSelected(false);
+
+                                precioTamano = 10;
+                                recalcularTotal();
                                 break;
                             default:
-                                
+
                                 jrbExtrasSi.setSelected(true);
                                 jrbExtrasNo.setSelected(false);
                                 break;
@@ -281,7 +284,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             extras.append(this.spinnerShotExpreso.getToolTipText()).append(" x").append(spinnerShotExpreso.getValue()).append("  ");
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            extras.append(this.spinnerCantidadProducto.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append("  ");
+            extras.append(this.spinnerBoba.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append("  ");
         }
 
         if (extras.length() == 0) {
@@ -527,7 +530,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -602,7 +605,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addComponent(radioMediano3)
-                        .addContainerGap(87, Short.MAX_VALUE))
+                        .addContainerGap(88, Short.MAX_VALUE))
                     .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jrbTamañoNo)
@@ -1268,7 +1271,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             extras += (int) spinnerShotExpreso.getValue();
         }
         if ((int) spinnerBoba.getValue() > 0) {
-            sb.append(spinnerBoba.getToolTipText()).append(spinnerBoba.getValue()).append(". ");
+            sb.append(spinnerBoba.getToolTipText()).append(" x").append(spinnerBoba.getValue()).append(". ");
             extras += (int) spinnerBoba.getValue();
         }
 

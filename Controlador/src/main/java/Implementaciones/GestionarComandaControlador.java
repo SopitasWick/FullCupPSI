@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Implementaciones;
+
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.ExtrasProductos;
@@ -10,12 +11,14 @@ import Entidades.Producto;
 import Facades.IFachadaComandasControlador;
 import Facades.IFachadaComandasModel;
 import java.util.List;
+
 /**
  *
  * @author usuario
  */
-public class GestionarComandaControlador implements IFachadaComandasControlador{
-IFachadaComandasModel FModel;
+public class GestionarComandaControlador implements IFachadaComandasControlador {
+
+    IFachadaComandasModel FModel;
 
     public GestionarComandaControlador() {
         this.FModel = new GestionarComandaModel();
@@ -28,7 +31,7 @@ IFachadaComandasModel FModel;
 
     @Override
     public List<ExtrasProductos> ObtenerDetallesProductos(Integer idProducto) throws Exception {
-           return FModel.ObtenerDetallesProductos(idProducto);
+        return FModel.ObtenerDetallesProductos(idProducto);
     }
 
     @Override
@@ -38,38 +41,37 @@ IFachadaComandasModel FModel;
 
     @Override
     public List<Comanda> ObtenerListaComandas() throws Exception {
-       return FModel.ObtenerListaComandas();
+        return FModel.ObtenerListaComandas();
     }
 
     @Override
     public void comandaCompletada(Integer idComanda) throws Exception {
         FModel.comandaCompletada(idComanda);
     }
-    
+
     @Override
-    public Comanda obtenerComanda (Integer idComanda) throws Exception{
+    public Comanda obtenerComanda(Integer idComanda) throws Exception {
         return FModel.obtenerComanda(idComanda);
     }
-    
 
     @Override
     public List<Comanda> obtenerComandasActivas() throws Exception {
-       return FModel.obtenerComandasActivas();
+        return FModel.obtenerComandasActivas();
     }
 
     @Override
     public List<Comanda> obtenerComandasCompletadas() throws Exception {
-     return FModel.obtenerComandasCompletadas();
+        return FModel.obtenerComandasCompletadas();
     }
 
     @Override
     public void comandaEliminada(Integer idComanda) throws Exception {
-         FModel.comandaEliminada(idComanda);
+        FModel.comandaEliminada(idComanda);
     }
 
     @Override
     public int totalProductoDetalles() throws Exception {
-       return FModel.totalProductoDetalles();
+        return FModel.totalProductoDetalles();
     }
 
     @Override
@@ -79,17 +81,27 @@ IFachadaComandasModel FModel;
 
     @Override
     public void GuardarDetalleComanda(Detallecomanda detComanda) throws Exception {
-               FModel.GuardarDetalleComanda(detComanda);
+        FModel.GuardarDetalleComanda(detComanda);
     }
 
     @Override
     public void EditarComanda(Comanda comanda) throws Exception {
-         FModel.EditarComanda(comanda);
+        FModel.EditarComanda(comanda);
     }
 
     @Override
     public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception {
-     return FModel.ObtenerListaProductosCategoria(idCategoria);
+        return FModel.ObtenerListaProductosCategoria(idCategoria);
     }
-    
+
+    @Override
+    public void EditarTotalComanda(Integer idComanda, float nuevoTotal) throws Exception {
+        FModel.EditarTotalComanda(idComanda, nuevoTotal);
+    }
+
+    @Override
+    public void EditarDescripcionComanda(Integer idComanda, String descripcion) throws Exception {
+        FModel.EditarDescripcionComanda(idComanda, descripcion);
+    }
+
 }

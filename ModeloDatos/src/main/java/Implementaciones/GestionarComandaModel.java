@@ -20,31 +20,33 @@ import java.util.stream.Collectors;
  *
  * @author usuario
  */
-public class GestionarComandaModel implements IFachadaComandasModel{
-ProductoJpaController jpaProducto;
-ExtraProductosJpaController jpaExtras;
-ComandaJpaController jpaComanda;
-DetallecomandaJpaController jpaDetalleComanda;
+public class GestionarComandaModel implements IFachadaComandasModel {
+
+    ProductoJpaController jpaProducto;
+    ExtraProductosJpaController jpaExtras;
+    ComandaJpaController jpaComanda;
+    DetallecomandaJpaController jpaDetalleComanda;
+
     public GestionarComandaModel() {
         this.jpaProducto = new ProductoJpaController();
         this.jpaExtras = new ExtraProductosJpaController();
         this.jpaComanda = new ComandaJpaController();
-        this.jpaDetalleComanda = new DetallecomandaJpaController ();
+        this.jpaDetalleComanda = new DetallecomandaJpaController();
     }
-    
+
     @Override
     public List<Comanda> ObtenerListaComandas() throws Exception {
         return jpaComanda.findComandaEntities();
     }
-   
+
     @Override
-    public List <Producto> ObtenerListaProductos() throws Exception {  
+    public List<Producto> ObtenerListaProductos() throws Exception {
         return jpaProducto.findProductoEntities();
     }
-    
+
     @Override
-    public List <ExtrasProductos> ObtenerDetallesProductos(Integer idProducto) throws Exception {
-       return jpaExtras.findExtrasByProducto(idProducto);
+    public List<ExtrasProductos> ObtenerDetallesProductos(Integer idProducto) throws Exception {
+        return jpaExtras.findExtrasByProducto(idProducto);
     }
 
     @Override
@@ -54,7 +56,7 @@ DetallecomandaJpaController jpaDetalleComanda;
 
     @Override
     public void comandaCompletada(Integer idComanda) throws Exception {
-         if (idComanda == null || idComanda <= 0) {
+        if (idComanda == null || idComanda <= 0) {
             throw new Exception("ID de comanda inválido");
         }
         Comanda c = jpaComanda.findComanda(idComanda);
@@ -64,29 +66,29 @@ DetallecomandaJpaController jpaDetalleComanda;
         c.setEstadoComanda("Cerrada");
         jpaComanda.edit(c);
     }
-    
+
     @Override
-    public Comanda obtenerComanda (Integer idComanda) throws Exception{
+    public Comanda obtenerComanda(Integer idComanda) throws Exception {
         return jpaComanda.findComanda(idComanda);
     }
 
     @Override
     public List<Comanda> obtenerComandasActivas() throws Exception {
-                return jpaComanda.findComandaEntities().stream()
+        return jpaComanda.findComandaEntities().stream()
                 .filter(c -> c.getEstadoComanda() != null && c.getEstadoComanda().equalsIgnoreCase("Abierta"))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Comanda> obtenerComandasCompletadas() throws Exception {
-                return jpaComanda.findComandaEntities().stream()
+        return jpaComanda.findComandaEntities().stream()
                 .filter(c -> c.getEstadoComanda() != null && c.getEstadoComanda().equalsIgnoreCase("Cerrada"))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void comandaEliminada(Integer idComanda) throws Exception {
-      if (idComanda == null || idComanda <= 0) {
+        if (idComanda == null || idComanda <= 0) {
             throw new Exception("ID de comanda inválido");
         }
         Comanda c = jpaComanda.findComanda(idComanda);
@@ -99,30 +101,51 @@ DetallecomandaJpaController jpaDetalleComanda;
 
     @Override
     public int totalProductoDetalles() throws Exception {
-         return jpaDetalleComanda.getDetallecomandaCount();
+        return jpaDetalleComanda.getDetallecomandaCount();
     }
 
     @Override
     public int totalComandas() throws Exception {
-         return jpaComanda.getComandaCount();
+        return jpaComanda.getComandaCount();
     }
 
     @Override
     public void GuardarDetalleComanda(Detallecomanda detComanda) throws Exception {
-          jpaDetalleComanda.create(detComanda);
+        jpaDetalleComanda.create(detComanda);
     }
 
     @Override
     public void EditarComanda(Comanda comanda) throws Exception {
-      jpaComanda.edit(comanda);
+        jpaComanda.edit(comanda);
     }
 
     @Override
     public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception {
-      return jpaProducto.findProductosByIdCategoria(idCategoria);
+        return jpaProducto.findProductosByIdCategoria(idCategoria);
     }
 
+    @Override
+    public void EditarTotalComanda(Integer idComanda, float nuevoTotal) throws Exception {
+        jpaComanda.actualizarTotalComanda(idComanda, nuevoTotal);
+    }
 
-  
-    
+    @Override
+    public void EditarDescripcionComanda(Integer idComanda, String descripcion) throws Exception {
+        if (idComanda == null || idComanda <= 0) {
+            throw new Exception("ID de comanda inválido");
+        }
+
+        Comanda comanda = jpaComanda.findComanda(idComanda);
+
+        if (comanda == null) {
+            throw new Exception("Comanda no encontrada con ID: " + idComanda);
+        }
+
+        // Actualizar la descripción
+        comanda.setDescripcionGeneral(descripcion);
+
+        // Guardar los cambios en la base de datos
+        jpaComanda.edit(comanda);
+    }
+
 }
