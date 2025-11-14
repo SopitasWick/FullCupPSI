@@ -35,6 +35,7 @@ public class Comandas extends javax.swing.JFrame {
     public void initCustom() {
         cargarTablas();
         configurarPopupTablaActivas();
+        configurarPopupTablaComandasCompletadas();
     }
 
 // Carga los datos en ambas tablas
@@ -140,7 +141,7 @@ public class Comandas extends javax.swing.JFrame {
                 try {
                     
                    
-                   listaProductos = new FrmListaProductos(this, id);
+                   listaProductos = new FrmListaProductos(this, id, false);
                    listaProductos.setVisible(true);
                    Comandas.this.setVisible(false);
 
@@ -165,6 +166,55 @@ public class Comandas extends javax.swing.JFrame {
 
             private void mostrarPopup(MouseEvent e) {
                 if (e.isPopupTrigger() && tblComandasActivas.getSelectedRow() >= 0) {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+    }
+    
+    
+    
+    private void configurarPopupTablaComandasCompletadas() {
+        JPopupMenu popup = new JPopupMenu();
+       
+        JMenuItem itemVer = new JMenuItem("Ver comanda");
+
+        popup.add(itemVer);
+
+        
+        
+        //Listener para ver
+        itemVer.addActionListener(e -> {
+            Integer id = obtenerIdSeleccionado(tblComandasCompletadas);
+            if (id != null) {
+                try {
+                    
+                   
+                   listaProductos = new FrmListaProductos(this, id, true);
+                   listaProductos.setVisible(true);
+                   Comandas.this.setVisible(false);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
+                }
+            }
+        });
+        
+
+        // Mostrar popup al hacer clic derecho
+        tblComandasCompletadas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mostrarPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                mostrarPopup(e);
+            }
+
+            private void mostrarPopup(MouseEvent e) {
+                if (e.isPopupTrigger() && tblComandasCompletadas.getSelectedRow() >= 0) {
                     popup.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -449,7 +499,7 @@ public class Comandas extends javax.swing.JFrame {
     FrmListaProductos.idComanda = null;
 
     // Abrir nueva ventana
-    listaProductos = new FrmListaProductos(this, null);
+    listaProductos = new FrmListaProductos(this, null, false);
     listaProductos.setVisible(true);
     this.setVisible(false);
         

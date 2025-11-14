@@ -50,6 +50,13 @@ public class GestionarProductoControlador implements IFachadaProductoControlador
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception {
         return productoModel.obtenerProductosPorCategoria(idCategoria);
     }
+    
+    @Override
+    public List<Producto> obtenerProductosPorNombre(String nombreProducto) throws Exception{
+        return productoModel.obtenerProductosPorNombre(nombreProducto);
+    }
+    
+    
 
     @Override
     public List<Valoropcion> obtenerDetallesPorProducto(Integer idProducto) throws Exception {

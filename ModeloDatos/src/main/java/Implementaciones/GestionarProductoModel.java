@@ -56,6 +56,12 @@ public class GestionarProductoModel implements IFachadaProductoModel {
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception {
         return productoJPA.findProductosByIdCategoria(idCategoria);
     }
+    
+    
+    @Override
+    public List<Producto> obtenerProductosPorNombre(String nombreProducto) throws Exception {
+        return productoJPA.findProductosByNombreProducto(nombreProducto);
+    }
 
     @Override
     public List<Valoropcion> obtenerDetallesPorProducto(Integer idProducto) throws Exception {

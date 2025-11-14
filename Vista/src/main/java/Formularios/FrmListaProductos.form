@@ -72,7 +72,7 @@
             <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="jblSoloLectura">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Helvetica Neue" size="18" style="1"/>
@@ -80,13 +80,13 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="11" green="18" red="27" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Caf&#xe9; Express POS"/>
+                <Property name="text" type="java.lang.String" value="Solo Visualizacion"/>
                 <Property name="alignmentX" type="float" value="16.0"/>
                 <Property name="alignmentY" type="float" value="0.0"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="50" y="15" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="350" y="15" width="310" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -123,6 +123,24 @@
                 </DimensionLayout>
               </Layout>
             </Container>
+            <Component class="javax.swing.JLabel" name="jLabel7">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Helvetica Neue" size="18" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="11" green="18" red="27" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Caf&#xe9; Express POS"/>
+                <Property name="alignmentX" type="float" value="16.0"/>
+                <Property name="alignmentY" type="float" value="0.0"/>
+              </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="50" y="15" width="310" height="-1"/>
+                </Constraint>
+              </Constraints>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanelResumenComanda">
@@ -200,7 +218,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNombreCliente">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Nombre del cliente"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[430, 40]"/>
                     </Property>
@@ -541,9 +558,9 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JTextField" name="txtBuscar">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Buscar Producto..."/>
-              </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBuscarKeyTyped"/>
+              </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                   <AbsoluteConstraints x="18" y="16" width="785" height="42"/>
@@ -571,11 +588,8 @@
             <Component class="javax.swing.JComboBox" name="cbCategorias">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="Deshabilitado"/>
                   </StringArray>
                 </Property>
               </Properties>

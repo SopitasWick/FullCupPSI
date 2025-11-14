@@ -11,14 +11,17 @@ import Entidades.Producto;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaComandasControlador;
 import Facades.IFachadaDetallesComandaControlador;
+import Facades.IFachadaProductoControlador;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarDetallesComandaControlador;
+import Implementaciones.GestionarProductoControlador;
 import Impresion.TicketPrinter;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.print.PrinterException;
@@ -40,6 +43,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import utilerias.HintToTextField;
 
 /**
  *
@@ -48,6 +52,7 @@ import javax.swing.table.DefaultTableModel;
 public class FrmListaProductos extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
+    private final IFachadaProductoControlador fProducto = new GestionarProductoControlador();
     private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
     private final IFachadaCategoriaControlador fC = new GestionarCategoriaControlador();
 
@@ -68,43 +73,89 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     float total = 0;
 
+    boolean soloLectura;
+    
+    
     /**
      * Creates new form FrmListaProductos
      */
     public FrmListaProductos() {
         initComponents();
 
-        buscarProductos();
-        
-        
-        cargarPanelComanda();
-        cargarDiseno();
-
-        cargarPanelComanda();
+//        buscarProductos();
+//        
+//        
+//        cargarPanelComanda();
+//        cargarDiseno();
+//
+//        cargarPanelComanda();
 
     }
 
-    public FrmListaProductos(Comandas comand, Integer idComanda) {
+    public FrmListaProductos(Comandas comand, Integer idComanda, boolean soloLectura) {
         initComponents();
 
         this.comandas = comand;
         this.idComanda = idComanda;
+        this.soloLectura = soloLectura;
+        
+        
+        if (soloLectura){
+            soloLectura();
+            
+        }
+        
+        else{
+            jblSoloLectura.setVisible(false);
+            cargarDiseno();
 
-        cargarDiseno();
+            buscarProductos();
+            configurarPopupTablaActivas();
 
-        buscarProductos();
-        configurarPopupTablaActivas();
+            cargarPanelComanda();
 
-        cargarPanelComanda();
+            cargarDiseno();
 
-        cargarDiseno();
+            cargarCategorias();
+        
+        }
 
-        cargarCategorias();
+
     }
+    
+    private void soloLectura(){
+    
+        cargarPanelComanda();
+        
+        
+        
+        txtBuscar.setEnabled(false);
+        txtNombreCliente.setEnabled(false);
+        
+        btnGuardar2.setEnabled(false);
+        btnGuardar2.setVisible(false);
+        
+        btnRegistrarVenta.setEnabled(false);
+        btnRegistrarVenta.setVisible(false);
+        
+        cbCategorias.setEnabled(false);
+        cbCategorias.setVisible(false);
+        rbParaLlevar.setEnabled(false);
+        rbParaLlevar.setVisible(false);
+        
+        
+        tblProductos.setEnabled(false);
+        
+        jblSoloLectura.setVisible(true);
+        
+    
+    }
+    
 
     private void cargarDiseno() {
 
-        //PlaceHolderToJTextField hintBuscar = new PlaceHolderToJTextField("Buscar producto...", txtBuscar);
+       HintToTextField.addHint(txtNombreCliente, "Nombre del cliente");
+       HintToTextField.addHint(txtBuscar, "Buscas Producto");
     }
 
     private void cargarCategorias() {
@@ -136,8 +187,14 @@ public class FrmListaProductos extends javax.swing.JFrame {
     public void cargarPanelComanda() {
 
         jPanelItems.removeAll();
+        
+        
 
         try {
+            if (idComanda != null) {
+                comanda = FComandas.obtenerComanda(idComanda);
+            }
+            
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
@@ -181,38 +238,50 @@ public class FrmListaProductos extends javax.swing.JFrame {
             subPanel.add(jlabelPrecio);
 
             //boton Eliminar
+            
             JLabel jlabelBotonEliminar = new JLabel();
             jlabelBotonEliminar.setBounds(subPanel.getWidth() - 30, 8, 20, 20);
             // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
-            setImagenLabel(jlabelBotonEliminar, rutaBtnEliminar);
-            subPanel.add(jlabelBotonEliminar);
+            if(!soloLectura){
+                setImagenLabel(jlabelBotonEliminar, rutaBtnEliminar);
+                subPanel.add(jlabelBotonEliminar);
+            }
 
             int id = i;
 
-            jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    int confirm = JOptionPane.showConfirmDialog(FrmListaProductos.this, "¿Seguro que deseas eliminar este item?",
-                            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        try {
-                            fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
-                            cargarPanelComanda();
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(FrmListaProductos.this, "Error al eliminar: " + ex.getMessage());
-                            ex.printStackTrace();
+            if(!soloLectura){
+                jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        int confirm = JOptionPane.showConfirmDialog(FrmListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            try {
+                                fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
+                                cargarPanelComanda();
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(FrmListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                                ex.printStackTrace();
+                            }
                         }
+
                     }
 
-                }
-
-            });
+                });
+            }
 
             subPanel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                                        
-                    FrmDetallesProductos pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto());
+                    FrmDetallesProductos pantallaDetalles;
+                    if(soloLectura){
+                        pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), true);
+
+                    }
+                    else{
+                        pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), false);
+
+                    }
                     pantallaDetalles.setVisible(true);
                     FrmListaProductos.this.setVisible(false);
      
@@ -230,10 +299,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
             }
 
             jPanelItems.add(subPanel);
-            jPanelItems.revalidate();
-            jPanelItems.repaint();
+
 
         }
+        
+        jPanelItems.revalidate();
+        jPanelItems.repaint();
 
         txtSubtotal.setText(String.valueOf(subTota));
         txtTotal.setText(String.valueOf(subTota));
@@ -279,20 +350,46 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     }
 
-    public void buscarProductosPorCategoria(int idCategoria) throws Exception {
+    public void buscarProductosPorCategoria() throws Exception {
 
-        if (todosLosProductos != null) {
-            todosLosProductos.clear();
-        }
+        String seleccion = cbCategorias.getSelectedItem() != null
+                ? cbCategorias.getSelectedItem().toString()
+                : "";
+        String textoBusqueda = txtBuscar.getText().trim();
+        int idCategoria = 0;
 
-        if (idCategoria == 0) {
-            buscarProductos();
-        } else {
-            todosLosProductos = FComandas.ObtenerListaProductosCategoria(idCategoria);
-            System.out.println("idCategoria" + idCategoria);
-            System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
+        try {
+            // 1️⃣ Determinar categoría seleccionada
+            if (!seleccion.equalsIgnoreCase("Todos")) {
+                idCategoria = todosLosProductosSinModificar.stream()
+                        .filter(p -> p.getIdCategoria().getNombre().equalsIgnoreCase(seleccion))
+                        .map(p -> p.getIdCategoria().getIdCategoria())
+                        .findFirst()
+                        .orElse(0);
+            }
+
+            // 2️⃣ Obtener productos base según categoría
+            if (idCategoria == 0) {
+                todosLosProductos = FComandas.ObtenerListaProductos();
+            } else {
+                todosLosProductos = FComandas.ObtenerListaProductosCategoria(idCategoria);
+            }
+
+            // 3️⃣ Filtrar por texto (si hay búsqueda)
+            if (!textoBusqueda.isBlank()) {
+                final String nombreBuscado = textoBusqueda.toLowerCase();
+                todosLosProductos.removeIf(p ->
+                    !p.getNombreProducto().toLowerCase().contains(nombreBuscado)
+                );
+            }
+
+            // 4️⃣ Refrescar tabla
             llenarTablaProductos();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        
     }
 
     public void llenarTablaProductos() {
@@ -339,9 +436,9 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
                         if (idComanda != null) {
                             
-                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto);
+                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto, soloLectura);
                         } else {
-                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto);
+                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto, soloLectura);
                         }
 
                         detalle.setVisible(true);
@@ -462,8 +559,9 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
         jPanelFondo = new javax.swing.JPanel();
         jPanelEncabezado = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jblSoloLectura = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
         jPanelResumenComanda = new javax.swing.JPanel();
         jPaneParaLlevar = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -505,13 +603,13 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jPanelEncabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelEncabezado.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(39, 24, 17));
-        jLabel1.setText("Café Express POS");
-        jLabel1.setAlignmentX(16.0F);
-        jLabel1.setAlignmentY(0.0F);
-        jPanelEncabezado.add(jLabel1);
-        jLabel1.setBounds(50, 15, 157, 23);
+        jblSoloLectura.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jblSoloLectura.setForeground(new java.awt.Color(39, 24, 17));
+        jblSoloLectura.setText("Solo Visualizacion");
+        jblSoloLectura.setAlignmentX(16.0F);
+        jblSoloLectura.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jblSoloLectura);
+        jblSoloLectura.setBounds(350, 15, 310, 24);
 
         jPanel3.setBackground(new java.awt.Color(31, 41, 55));
         jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -530,6 +628,14 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
         jPanelEncabezado.add(jPanel3);
         jPanel3.setBounds(10, 10, 32, 32);
+
+        jLabel7.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(39, 24, 17));
+        jLabel7.setText("Café Express POS");
+        jLabel7.setAlignmentX(16.0F);
+        jLabel7.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jLabel7);
+        jLabel7.setBounds(50, 15, 310, 24);
 
         jPanelFondo.add(jPanelEncabezado);
         jPanelEncabezado.setBounds(0, 0, 1230, 50);
@@ -553,9 +659,8 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(107, 114, 128));
         jLabel3.setText("Cliente");
         jPaneParaLlevar.add(jLabel3);
-        jLabel3.setBounds(20, 35, 120, 17);
+        jLabel3.setBounds(20, 35, 120, 16);
 
-        txtNombreCliente.setText("Nombre del cliente");
         txtNombreCliente.setMaximumSize(new java.awt.Dimension(430, 40));
         txtNombreCliente.setMinimumSize(new java.awt.Dimension(0, 0));
         txtNombreCliente.setPreferredSize(new java.awt.Dimension(430, 40));
@@ -602,7 +707,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel4.setAlignmentX(16.0F);
         jLabel4.setAlignmentY(0.0F);
         jPanelItemComanda.add(jLabel4);
-        jLabel4.setBounds(10, 10, 184, 23);
+        jLabel4.setBounds(10, 10, 184, 24);
 
         jPanelResumenComanda.add(jPanelItemComanda);
         jPanelItemComanda.setBounds(0, 100, 410, 320);
@@ -639,22 +744,22 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(75, 85, 99));
         jLabel5.setText("Subtotal:");
         jPanelTotal.add(jLabel5);
-        jLabel5.setBounds(30, 50, 80, 17);
+        jLabel5.setBounds(30, 50, 80, 16);
 
         jLabel6.setForeground(new java.awt.Color(75, 85, 99));
         jLabel6.setText("Impuestos:");
         jPanelTotal.add(jLabel6);
-        jLabel6.setBounds(30, 20, 90, 17);
+        jLabel6.setBounds(30, 20, 90, 16);
 
         txtimpuestos.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtimpuestos.setText("$0.00");
         jPanelTotal.add(txtimpuestos);
-        txtimpuestos.setBounds(300, 30, 60, 17);
+        txtimpuestos.setBounds(300, 30, 60, 16);
 
         txtSubtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtSubtotal.setText("$7.75");
         jPanelTotal.add(txtSubtotal);
-        txtSubtotal.setBounds(300, 50, 60, 17);
+        txtSubtotal.setBounds(300, 50, 60, 16);
 
         btnGuardar2.setBackground(new java.awt.Color(242, 243, 245));
         btnGuardar2.setForeground(new java.awt.Color(55, 65, 81));
@@ -673,13 +778,13 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Helvetica Neue", 1, 17)); // NOI18N
         jLabel8.setText("Total:");
         jPanelTotal.add(jLabel8);
-        jLabel8.setBounds(30, 100, 100, 22);
+        jLabel8.setBounds(30, 100, 100, 23);
 
         txtTotal.setFont(new java.awt.Font("Helvetica Neue", 1, 15)); // NOI18N
         txtTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         txtTotal.setText("$8.53");
         jPanelTotal.add(txtTotal);
-        txtTotal.setBounds(280, 100, 90, 19);
+        txtTotal.setBounds(280, 100, 90, 20);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 3));
 
@@ -707,7 +812,11 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jPanelBuscador.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelBuscador.setLayout(null);
 
-        txtBuscar.setText("Buscar Producto...");
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
+            }
+        });
         jPanelBuscador.add(txtBuscar);
         txtBuscar.setBounds(18, 16, 785, 42);
 
@@ -719,14 +828,14 @@ public class FrmListaProductos extends javax.swing.JFrame {
         jPanelBuscador.add(jLabelCategorias);
         jLabelCategorias.setBounds(20, 70, 90, 20);
 
-        cbCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deshabilitado" }));
         cbCategorias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbCategoriasActionPerformed(evt);
             }
         });
         jPanelBuscador.add(cbCategorias);
-        cbCategorias.setBounds(110, 70, 150, 23);
+        cbCategorias.setBounds(110, 70, 150, 22);
 
         jPanelFondo.add(jPanelBuscador);
         jPanelBuscador.setBounds(0, 50, 820, 100);
@@ -791,33 +900,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     private void cbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriasActionPerformed
         // TODO add your handling code here:}
-
-        String seleccion = cbCategorias.getSelectedItem().toString();
-        int idCategoria = 0;
-
-        if (cbCategorias.getSelectedIndex() != -1) {
-
-            try {
-
-                if (seleccion.equalsIgnoreCase("Todos")) {
-                    buscarProductosPorCategoria(idCategoria);
-                } else {
-
-                    for (int i = 0; i < todosLosProductosSinModificar.size(); i++) {
-                        if (todosLosProductosSinModificar.get(i).getIdCategoria().getNombre().equalsIgnoreCase(seleccion)) {
-                            idCategoria = todosLosProductosSinModificar.get(i).getIdCategoria().getIdCategoria();
-                        }
-                    }
-
-                    System.out.println("Seleccion =" + seleccion);
-                    System.out.println(idCategoria);
-                    buscarProductosPorCategoria(idCategoria);
-
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        
+        try{
+            buscarProductosPorCategoria();
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
 
 
@@ -901,6 +989,23 @@ PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        // TODO add your handling code here:
+        
+        
+        if(txtBuscar.isFocusOwner() && evt.getKeyChar() == '\n'){
+            
+            try{
+                buscarProductosPorCategoria();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        
+        
+    }//GEN-LAST:event_txtBuscarKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -910,12 +1015,12 @@ PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
     private javax.swing.JButton btnGuardar2;
     private javax.swing.JButton btnRegistrarVenta;
     private javax.swing.JComboBox<String> cbCategorias;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelCategorias;
     private javax.swing.JPanel jPaneParaLlevar;
@@ -931,6 +1036,7 @@ PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
     private javax.swing.JPanel jPanelTotal;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel jblSoloLectura;
     private javax.swing.JRadioButton rbParaLlevar;
     private javax.swing.JTable tblProductos;
     private javax.swing.JTextField txtBuscar;

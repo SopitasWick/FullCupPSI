@@ -53,6 +53,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 /**
@@ -90,6 +93,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     Detallecomanda detalle;
     Producto producto;
     Comanda comanda;
+    boolean soloLectura;
     
     
     TamanoVaso vaso = null;
@@ -105,18 +109,19 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     }
     
     
-    public FrmDetallesProductos(FrmListaProductos pantallaProductos, Detallecomanda detalle, Producto producto) {
+    public FrmDetallesProductos(FrmListaProductos pantallaProductos, Detallecomanda detalle, Producto producto, boolean soloLectura) {
         initComponents();
         
         
         this.pantallaProductos = pantallaProductos;
         this.detalle = detalle;
         this.producto = producto;
+        this.soloLectura = soloLectura;
         
-        
-        
-        
-        
+        jPanel13.setVisible(false);
+        if(soloLectura){
+            soloLectura();
+        }
         
         if(detalle != null){
             System.out.println("detalle no es nulo");
@@ -131,12 +136,13 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
             System.out.println("detalle es nulo");
             cargarDatos();
         }
+        
         calcularTotal();
         
     }
     
     
-    public FrmDetallesProductos(FrmListaProductos pantallaProductos, Comanda comanda, Detallecomanda detalle, Producto producto) {
+    public FrmDetallesProductos(FrmListaProductos pantallaProductos, Comanda comanda, Detallecomanda detalle, Producto producto, boolean soloLectura) {
         initComponents();
         
         
@@ -144,6 +150,16 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         this.detalle = detalle;
         this.producto = producto;
         this.comanda = comanda;
+        this.soloLectura = soloLectura;
+        
+        
+        
+        
+        jblSoloLectura.setVisible(false);
+        if(soloLectura){
+           soloLectura();
+        }
+        
         
         
         if(detalle != null){
@@ -155,9 +171,23 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
             cargarDatos();
         }
         calcularTotal();
+        jPanel13.setVisible(false);
         
     }
     
+    
+    
+    private void soloLectura(){
+        btnGuardarCambios.setEnabled(false);
+        btnGuardarCambios.setVisible(false);
+        
+        txtDescripcion.setEditable(false);
+        
+        jblSoloLectura.setVisible(true);
+        
+        
+        
+    }
     
     
     
@@ -353,97 +383,103 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                 contenedorExtras.setLayout(new BoxLayout(contenedorExtras, BoxLayout.Y_AXIS));
                 contenedorExtras.setBackground(Color.WHITE);
 
-                // Muy importante: tamaño preferido más grande que el área visible
-                contenedorExtras.setPreferredSize(new Dimension(300, 800));
-
-                // --- Scroll que contiene el panel ---
-                JScrollPane scrollExtras = new JScrollPane();
-                scrollExtras.setViewportView(contenedorExtras); // <--- CLAVE
+                // --- Scroll ---
+                JScrollPane scrollExtras = new JScrollPane(contenedorExtras);
                 scrollExtras.setBounds(10, 40, subPanelExtras.getWidth() - 20, subPanelExtras.getHeight() - 50);
                 scrollExtras.setBorder(null);
-                scrollExtras.getVerticalScrollBar().setUnitIncrement(16); // desplazamiento suave
+                scrollExtras.getVerticalScrollBar().setUnitIncrement(16);
                 scrollExtras.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                 scrollExtras.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
                 subPanelExtras.add(scrollExtras);
 
-                //List<Leche> leches = fLeche.obtenerTodasLasLeches();
                 List<JPanel> listaSubPanelesExtras = new ArrayList<>();
 
                 for (int j = 0; j < opciones.size(); j++) {
+
                     if (opciones.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")) {
 
-                        System.out.println(opciones.get(j).getNombreValor());
-                        
                         Valoropcion extra = opciones.get(j);
 
+                        // PANEL CONTENEDOR PRINCIPAL
                         JPanel panel = new JPanel();
                         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                        panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+                        panel.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
+                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+                        ));
                         panel.setBackground(Color.WHITE);
-                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // cada panel ocupa su fila
-                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
-                        JLabel lbl1 = new JLabel(opciones.get(j).getNombreValor(), SwingConstants.CENTER);
-                        JLabel lbl3 = new JLabel("$" + opciones.get(j).getCosteAdicional().toString(), SwingConstants.CENTER);
-                        JSpinner spiner = new JSpinner();
+                        // ---------- Fila 1: Nombre + Precio ----------
+                        JPanel fila1 = new JPanel(new BorderLayout());
+                        fila1.setOpaque(false);
 
-                        lbl1.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        lbl3.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        spiner.setAlignmentX(Component.RIGHT_ALIGNMENT);
+                        JLabel lblNombre = new JLabel(extra.getNombreValor());
+                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
 
-                        panel.add(Box.createVerticalStrut(10));
-                        panel.add(lbl1);
-                        panel.add(lbl3);
-                        panel.add(spiner);
-                        panel.add(Box.createVerticalGlue());
-                        
-                        
-                                // --- Detectar cambios en el spinner ---
-                        spiner.addChangeListener(e -> {
-                            int cantidad = (int) spiner.getValue();
+                        fila1.add(lblNombre, BorderLayout.WEST);
+                        fila1.add(lblPrecio, BorderLayout.EAST);
 
-                            if (cantidad > 0) {
-                                extrasSeleccionados.put(extra, cantidad); // agrega o actualiza
-                            } else {
-                                extrasSeleccionados.remove(extra); // elimina si vuelve a 0
-                            }
+                        panel.add(fila1);
+                        panel.add(Box.createVerticalStrut(6));
 
-                            if (cantidad < 0){
-                                spiner.setValue(0);
-                            }
-                            
-                            calcularTotal(); // recalcula el precio total
-                            actualizarNota();
-                        });
-                            
+                        // ---------- Fila 2: Cantidad y Spinner ----------
+                        JPanel fila2 = new JPanel(new BorderLayout());
+                        fila2.setOpaque(false);
 
-                    
+                        JLabel lblCantidad = new JLabel("Cantidad:");
+
+                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+                        spiner.setPreferredSize(new Dimension(60, 26));
+                        spiner.setMaximumSize(new Dimension(60, 26));
+
+                        fila2.add(lblCantidad, BorderLayout.WEST);
+                        fila2.add(spiner, BorderLayout.EAST);
+
+                        panel.add(fila2);
+                        panel.add(Box.createVerticalStrut(4));
+
+
+                        if (!soloLectura) {
+                            spiner.addChangeListener(e -> {
+                                int cantidad = (int) spiner.getValue();
+
+                                if (cantidad > 0) {
+                                    extrasSeleccionados.put(extra, cantidad);
+                                } else {
+                                    extrasSeleccionados.remove(extra);
+                                }
+
+                                calcularTotal();
+                                actualizarNota();
+                            });
+                        } else {
+                            spiner.setEnabled(false);
+                        }
 
                         listaSubPanelesExtras.add(panel);
                         contenedorExtras.add(panel);
                         contenedorExtras.add(Box.createVerticalStrut(10));
-                        
-                        
-                        // Calcular la altura total necesaria según la cantidad de paneles
-                        int alturaTotal = (listaSubPanelesExtras.size() * 70) + ((listaSubPanelesExtras.size() - 1) * 10);
 
-                        // Ajustar el tamaño preferido del contenedor para que el scroll funcione correctamente
+                        // AJUSTAR ALTURA DEL CONTENEDOR
+                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
+
                         contenedorExtras.setPreferredSize(new Dimension(
-                            scrollExtras.getWidth() - 20, // ancho similar al scroll
-                            Math.max(alturaTotal, scrollExtras.getHeight()) // mínimo el tamaño visible
+                                scrollExtras.getWidth() - 20,
+                                Math.max(alturaTotal, scrollExtras.getHeight())
                         ));
 
-                        // Refrescar visualmente el scroll y su contenido
                         contenedorExtras.revalidate();
                         contenedorExtras.repaint();
-                        
-                        
                     }
                 }
 
+                if (soloLectura) subPanelExtras.setEnabled(false);
+
                 jPanelExtras.add(subPanelExtras);
             }
+
 
 
 
@@ -475,6 +511,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         txtDescripcion.setText(detalle.getNotadetalleComanda());
         
         List <ExtrasProductos> extrasEncontrados = detalle.getExtrasProductosList();
+        System.out.println("extras en" + extrasEncontrados.size());
         
         
         extrasSeleccionados.clear(); // Limpia antes de cargar
@@ -499,7 +536,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                     }
                 }
             }
-}
+    }
         
         
         
@@ -518,8 +555,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
             }
         }
         
-        System.out.println("vASO" + vaso.getNombre());
-
         
         try {
             List<Valoropcion> opciones = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
@@ -537,7 +572,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
             for (Valoropcion vo : opciones) {
                 String nombreOpcion = vo.getIdOpcionProducto().getNombreOpcion().toLowerCase();
-                System.out.println(nombreOpcion);
                 if (nombreOpcion.contains("tipo vaso")) requiereVaso = true;
                 if (nombreOpcion.contains("tipo leche")) requiereLeche = true;
                 if (nombreOpcion.contains("extra bebidas")) requieresBebidas = true;
@@ -581,7 +615,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                     panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
                     panel.setBackground(Color.WHITE);
                     panel.setPreferredSize(new Dimension(120, 80));
-                    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
                     JLabel lbl1 = new JLabel(vasos.get(j).getNombre(), SwingConstants.CENTER);
                     JLabel lbl3 = new JLabel("$" + vasos.get(j).getPrecio(), SwingConstants.CENTER);
@@ -602,27 +635,31 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                         calcularTotal();
                     }
                     
-
-                    panel.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            for (JPanel p : listaSubPanelesVasos) {
-                                p.setBackground(Color.WHITE);
-                                p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+                    if(!soloLectura){
+                        
+                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        panel.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                for (JPanel p : listaSubPanelesVasos) {
+                                    p.setBackground(Color.WHITE);
+                                    p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+                                }
+                                panel.setBackground(new Color(173, 216, 230));
+                                panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+                                vaso = vasos.get(idVaso);
+                                System.out.println("Vaso: " + vaso.getNombre());
+                                calcularTotal();
+                                actualizarNota();
                             }
-                            panel.setBackground(new Color(173, 216, 230));
-                            panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-                            vaso = vasos.get(idVaso);
-                            System.out.println("Vaso: " + vaso.getNombre());
-                            calcularTotal();
-                            actualizarNota();
-                        }
-                    });
+                        });
+                }
 
                     listaSubPanelesVasos.add(panel);
                     jPanelElementosVasos.add(panel);
                 }
 
+                
                 subPanelVaso.add(jPanelElementosVasos);
                 jPanelExtras.add(subPanelVaso);
             }
@@ -664,7 +701,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                     panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
                     panel.setBackground(Color.WHITE);
                     panel.setPreferredSize(new Dimension(120, 40));
-                    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    
 
                     JLabel lbl1 = new JLabel(leches.get(j).getNombre(), SwingConstants.CENTER);
                     JLabel lbl3 = new JLabel("$" + leches.get(j).getPrecio(), SwingConstants.CENTER);
@@ -686,28 +723,38 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                     }
                     
                     
+                    if(!soloLectura){
+                        
+                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        
+                        panel.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                for (JPanel p : listaSubPanelesLeches) {
+                                    p.setBackground(Color.WHITE);
+                                    p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+                                }
+                                panel.setBackground(new Color(173, 216, 230));
+                                panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+                                leche = leches.get(idLeche);
 
-                    panel.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            for (JPanel p : listaSubPanelesLeches) {
-                                p.setBackground(Color.WHITE);
-                                p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+                                calcularTotal();
+                                actualizarNota();
                             }
-                            panel.setBackground(new Color(173, 216, 230));
-                            panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-                            leche = leches.get(idLeche);
-                            
-                            calcularTotal();
-                            actualizarNota();
-                        }
-                    });
+                        });
+                    }
+                    
 
                     listaSubPanelesLeches.add(panel);
                     jPanelElementosLeches.add(panel);
                 }
 
                 subPanelLeche.add(jPanelElementosLeches);
+                
+                if(soloLectura){
+                subPanelLeche.setEnabled(false);
+                }
+                
                 jPanelExtras.add(subPanelLeche);
             }
             
@@ -734,111 +781,113 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                 contenedorExtras.setLayout(new BoxLayout(contenedorExtras, BoxLayout.Y_AXIS));
                 contenedorExtras.setBackground(Color.WHITE);
 
-                // Muy importante: tamaño preferido más grande que el área visible
-                contenedorExtras.setPreferredSize(new Dimension(300, 800));
-
-                // --- Scroll que contiene el panel ---
-                JScrollPane scrollExtras = new JScrollPane();
-                scrollExtras.setViewportView(contenedorExtras); // <--- CLAVE
+                // --- Scroll ---
+                JScrollPane scrollExtras = new JScrollPane(contenedorExtras);
                 scrollExtras.setBounds(10, 40, subPanelExtras.getWidth() - 20, subPanelExtras.getHeight() - 50);
                 scrollExtras.setBorder(null);
-                scrollExtras.getVerticalScrollBar().setUnitIncrement(16); // desplazamiento suave
+                scrollExtras.getVerticalScrollBar().setUnitIncrement(16);
                 scrollExtras.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                 scrollExtras.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
                 subPanelExtras.add(scrollExtras);
 
-                //List<Leche> leches = fLeche.obtenerTodasLasLeches();
                 List<JPanel> listaSubPanelesExtras = new ArrayList<>();
 
                 for (int j = 0; j < opciones.size(); j++) {
+
                     if (opciones.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")) {
 
-                        System.out.println(opciones.get(j).getNombreValor());
-                        
                         Valoropcion extra = opciones.get(j);
 
+                        // PANEL CONTENEDOR PRINCIPAL
                         JPanel panel = new JPanel();
                         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                        panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+                        panel.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
+                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+                        ));
                         panel.setBackground(Color.WHITE);
-                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // cada panel ocupa su fila
-                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
-                        JLabel lbl1 = new JLabel(opciones.get(j).getNombreValor(), SwingConstants.CENTER);
-                        JLabel lbl3 = new JLabel("$" + opciones.get(j).getCosteAdicional().toString(), SwingConstants.CENTER);
-                        JSpinner spiner = new JSpinner();
+                        // ---------- Fila 1: Nombre + Precio ----------
+                        JPanel fila1 = new JPanel(new BorderLayout());
+                        fila1.setOpaque(false);
 
-                        lbl1.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        lbl3.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        spiner.setAlignmentX(Component.RIGHT_ALIGNMENT);
+                        JLabel lblNombre = new JLabel(extra.getNombreValor());
+                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
 
-                        panel.add(Box.createVerticalStrut(10));
-                        panel.add(lbl1);
-                        panel.add(lbl3);
-                        panel.add(spiner);
-                        panel.add(Box.createVerticalGlue());
-                        
-                        for(int i = 0; i <extrasEncontrados.size(); i++){
-                            if(opciones.get(j).getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())){
+                        fila1.add(lblNombre, BorderLayout.WEST);
+                        fila1.add(lblPrecio, BorderLayout.EAST);
+
+                        panel.add(fila1);
+                        panel.add(Box.createVerticalStrut(6));
+
+                        // ---------- Fila 2: Cantidad y Spinner ----------
+                        JPanel fila2 = new JPanel(new BorderLayout());
+                        fila2.setOpaque(false);
+
+                        JLabel lblCantidad = new JLabel("Cantidad:");
+
+                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+                        spiner.setPreferredSize(new Dimension(60, 26));
+                        spiner.setMaximumSize(new Dimension(60, 26));
+
+                        fila2.add(lblCantidad, BorderLayout.WEST);
+                        fila2.add(spiner, BorderLayout.EAST);
+
+                        panel.add(fila2);
+                        panel.add(Box.createVerticalStrut(4));
+
+                        // SI EXISTEN EXTRAS PRE-SELECCIONADOS
+                        for (int i = 0; i < extrasEncontrados.size(); i++) {
+                            if (extra.getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())) {
                                 spiner.setValue(extrasEncontrados.get(i).getCantidad());
                                 calcularTotal();
                             }
-                        
                         }
-                        
-                        // --- Detectar cambios en el spinner ---
-                        spiner.addChangeListener(e -> {
-                            int cantidad = (int) spiner.getValue();
 
-                            if (cantidad > 0) {
-                                extrasSeleccionados.put(extra, cantidad); // agrega o actualiza
-                            } else {
-                                extrasSeleccionados.remove(extra); // elimina si vuelve a 0
-                            }
+                        if (!soloLectura) {
+                            spiner.addChangeListener(e -> {
+                                int cantidad = (int) spiner.getValue();
 
-                            if (cantidad < 0){
-                                spiner.setValue(0);
-                            }
-                            
-                            calcularTotal(); // recalcula el precio total
-                            actualizarNota();
-                        });
-                            
+                                if (cantidad > 0) {
+                                    extrasSeleccionados.put(extra, cantidad);
+                                } else {
+                                    extrasSeleccionados.remove(extra);
+                                }
 
-                    
+                                calcularTotal();
+                                actualizarNota();
+                            });
+                        } else {
+                            spiner.setEnabled(false);
+                        }
 
                         listaSubPanelesExtras.add(panel);
                         contenedorExtras.add(panel);
                         contenedorExtras.add(Box.createVerticalStrut(10));
-                        
-                        
-                        // Calcular la altura total necesaria según la cantidad de paneles
-                        int alturaTotal = (listaSubPanelesExtras.size() * 70) + ((listaSubPanelesExtras.size() - 1) * 10);
 
-                        // Ajustar el tamaño preferido del contenedor para que el scroll funcione correctamente
+                        // AJUSTAR ALTURA DEL CONTENEDOR
+                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
+
                         contenedorExtras.setPreferredSize(new Dimension(
-                            scrollExtras.getWidth() - 20, // ancho similar al scroll
-                            Math.max(alturaTotal, scrollExtras.getHeight()) // mínimo el tamaño visible
+                                scrollExtras.getWidth() - 20,
+                                Math.max(alturaTotal, scrollExtras.getHeight())
                         ));
 
-                        // Refrescar visualmente el scroll y su contenido
                         contenedorExtras.revalidate();
                         contenedorExtras.repaint();
-                        
-                        
                     }
                 }
+
+                if (soloLectura) subPanelExtras.setEnabled(false);
 
                 jPanelExtras.add(subPanelExtras);
             }
 
 
 
-                
-                
-            
-            
+  
             
             
             
@@ -846,6 +895,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
             // ====== Refrescar vista ======
             jPanelExtras.revalidate();
             jPanelExtras.repaint();
+            
 
         } catch (Exception ex) {
             Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
@@ -853,13 +903,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     }
     
     
-    
-    
-    
-    
-    private void cargarPanelLeches(){
-    
-    }
     
     
     
@@ -896,6 +939,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         
         txtPrecioProductoResumen.setText(String.valueOf(producto.getPrecioProducto() + precioVaso + totalExtras));
         txtTotal.setText(String.valueOf(precioVaso + precioLeche + producto.getPrecioProducto() + totalExtras));
+        txtSubtotal.setText(txtTotal.getText());
         
         
     }
@@ -964,54 +1008,55 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
             
             System.out.println("Se guardo el detalle o se edito");
             List<ExtrasProductos> listaExtr = new ArrayList<>();
-            ExtrasProductos extraDefecto = new ExtrasProductos();
-            
-            if (!extrasSeleccionados.isEmpty()) {
-                for (Map.Entry<Valoropcion, Integer> entry : extrasSeleccionados.entrySet()) {
-                    Valoropcion valor = entry.getKey();
-                    int cantidad = entry.getValue();
 
-                    ExtrasProductos extra = new ExtrasProductos();
-                    extra.setIdDetalleComanda(detalleCoEditada);
-                    extra.setIdProducto(producto);
-                    extra.setNombreExtra(valor.getNombreValor()); // 👈 aquí usas el nombre del valor de la opción
-                    extra.setCantidad(cantidad);
+        // 🧩 1. Agregar los extras seleccionados (si existen)
+        if (extrasSeleccionados != null && !extrasSeleccionados.isEmpty()) {
+            for (Map.Entry<Valoropcion, Integer> entry : extrasSeleccionados.entrySet()) {
+                Valoropcion valor = entry.getKey();
+                int cantidad = entry.getValue();
 
+                ExtrasProductos extra = new ExtrasProductos();
+                extra.setIdDetalleComanda(detalleCoEditada);
+                extra.setIdProducto(producto);
+                extra.setNombreExtra(valor.getNombreValor());
+                extra.setCantidad(cantidad);
 
-                    if(vaso != null){
-                        extra.setIdTamanoVaso(vaso);
-                        System.out.println("va: " + vaso.getNombre());
-                    }
-
-                    if(leche != null){
-                        extra.setIdLeche(leche);
-                    }
-
-                    listaExtr.add(extra);
+                if (vaso != null) {
+                    extra.setIdTamanoVaso(vaso);
                 }
-                System.out.println("hay extras");
-            
+                if (leche != null) {
+                    extra.setIdLeche(leche);
+                }
+
+                listaExtr.add(extra);
             }
-            
-            else{
-            
-                System.out.println("no hay extras");
-                extraDefecto.setIdDetalleComanda(detalleCoEditada);
-                extraDefecto.setIdProducto(producto);
-                
-                if(vaso != null){
-                    extraDefecto.setIdTamanoVaso(vaso);
-                }
+        }
 
-                if(leche != null){
-                    extraDefecto.setIdLeche(leche);
-                }
-                
-                listaExtr.add(extraDefecto);
-            
+        // 🧩 2. Si no hubo extras seleccionados, pero sí vaso o leche, crear un registro base
+        if (listaExtr.isEmpty() && (vaso != null || leche != null)) {
+            ExtrasProductos extraSimple = new ExtrasProductos();
+            extraSimple.setIdDetalleComanda(detalleCoEditada);
+            extraSimple.setIdProducto(producto);
+
+            if (vaso != null) {
+                extraSimple.setIdTamanoVaso(vaso);
             }
+            if (leche != null) {
+                extraSimple.setIdLeche(leche);
+            }
+
+            listaExtr.add(extraSimple);
+        }
+
+        // 🧩 3. Si no hay nada en absoluto, agrega uno "vacío" (si es necesario)
+        if (listaExtr.isEmpty()) {
+            ExtrasProductos extraVacio = new ExtrasProductos();
+            extraVacio.setIdDetalleComanda(detalleCoEditada);
+            extraVacio.setIdProducto(producto);
+            listaExtr.add(extraVacio);
+        }
                   
-            if(vaso != null || leche != null || !extras.isEmpty()){
+            if (vaso != null || leche != null || (extrasSeleccionados != null && !extrasSeleccionados.isEmpty())) {
                 
                 //Editar: Se eliminan y se agregan los nuevos
                 if (detalle != null) {
@@ -1131,8 +1176,9 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
         jPanelFondo = new javax.swing.JPanel();
         jPanelEncabezado = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jblSoloLectura = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtNombreProducto = new javax.swing.JTextField();
@@ -1176,13 +1222,13 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanelEncabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelEncabezado.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(39, 24, 17));
-        jLabel1.setText("Café Express POS");
-        jLabel1.setAlignmentX(16.0F);
-        jLabel1.setAlignmentY(0.0F);
-        jPanelEncabezado.add(jLabel1);
-        jLabel1.setBounds(50, 15, 160, 24);
+        jblSoloLectura.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jblSoloLectura.setForeground(new java.awt.Color(39, 24, 17));
+        jblSoloLectura.setText("Solo Visualizacion");
+        jblSoloLectura.setAlignmentX(16.0F);
+        jblSoloLectura.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jblSoloLectura);
+        jblSoloLectura.setBounds(300, 15, 230, 24);
 
         jPanel3.setBackground(new java.awt.Color(31, 41, 55));
         jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -1201,6 +1247,14 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
         jPanelEncabezado.add(jPanel3);
         jPanel3.setBounds(10, 10, 32, 32);
+
+        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(39, 24, 17));
+        jLabel2.setText("Café Express POS");
+        jLabel2.setAlignmentX(16.0F);
+        jLabel2.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jLabel2);
+        jLabel2.setBounds(50, 15, 160, 24);
 
         jPanelFondo.add(jPanelEncabezado);
         jPanelEncabezado.setBounds(0, 0, 1230, 50);
@@ -1278,17 +1332,17 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         txtProductoResumen.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         txtProductoResumen.setText("Producto");
         jPanel12.add(txtProductoResumen);
-        txtProductoResumen.setBounds(30, 60, 130, 19);
+        txtProductoResumen.setBounds(30, 60, 140, 19);
 
         txtLeche.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         txtLeche.setText("Leche");
         jPanel12.add(txtLeche);
-        txtLeche.setBounds(30, 100, 70, 19);
+        txtLeche.setBounds(30, 100, 140, 19);
 
         txtExtra.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         txtExtra.setText("Extra");
         jPanel12.add(txtExtra);
-        txtExtra.setBounds(30, 140, 60, 19);
+        txtExtra.setBounds(30, 140, 140, 19);
 
         txtPrecioLeche.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         txtPrecioLeche.setText("0");
@@ -1378,7 +1432,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanel1.setBounds(30, 250, 211, 3);
 
         jPanelFondo.add(jPanel12);
-        jPanel12.setBounds(930, 210, 280, 400);
+        jPanel12.setBounds(930, 200, 280, 410);
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
         jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
@@ -1451,9 +1505,9 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardarCambios;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -1469,6 +1523,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     private javax.swing.JLabel jblCantidadMas;
     private javax.swing.JLabel jblCantidadMenos;
     private javax.swing.JLabel jblCantindadNumero;
+    private javax.swing.JLabel jblSoloLectura;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JLabel txtExtra;
     private javax.swing.JLabel txtLeche;

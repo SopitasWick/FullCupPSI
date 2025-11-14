@@ -25,6 +25,9 @@ public interface IFachadaProductoModel {
     
     public List<Producto> obtenerProductosPorCategoria(Integer idCategoria) throws Exception;
     
+    public List<Producto> obtenerProductosPorNombre(String nombreProducto) throws Exception;
+    
+    
     //INICIO BLOQUE PARA IDENTIFICAR LOS DETALLES DE CADA PRODUCTO****************************
     public List<Valoropcion> obtenerDetallesPorProducto (Integer idProducto) throws Exception;
     //FIN BLOQUE PARA IDENTIFICAR LOS DETALLES DE CADA PRODUCTO****************************

@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
     @NamedQuery(name = "Producto.findByIdProducto", query = "SELECT p FROM Producto p WHERE p.idProducto = :idProducto"),
-    @NamedQuery(name = "Producto.findByNombreProducto", query = "SELECT p FROM Producto p WHERE p.nombreProducto = :nombreProducto"),
+    @NamedQuery(name = "Producto.findByNombreProducto", query = "SELECT p FROM Producto p WHERE LOWER(p.nombreProducto) LIKE LOWER(CONCAT('%', :nombre_producto, '%'))"),
     @NamedQuery(name = "Producto.findByPrecioProducto", query = "SELECT p FROM Producto p WHERE p.precioProducto = :precioProducto"),
     @NamedQuery(name = "Producto.findByCantidadDisponibleproducto", query = "SELECT p FROM Producto p WHERE p.cantidadDisponibleproducto = :cantidadDisponibleproducto"),
     @NamedQuery(name = "Producto.findByUnidadMedidaproducto", query = "SELECT p FROM Producto p WHERE p.unidadMedidaproducto = :unidadMedidaproducto"),
