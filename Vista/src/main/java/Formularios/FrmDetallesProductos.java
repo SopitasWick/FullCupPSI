@@ -478,19 +478,125 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                 if (soloLectura) subPanelExtras.setEnabled(false);
 
                 jPanelExtras.add(subPanelExtras);
-            }
+            }else{
+                JPanel subPanelExtras = new JPanel();
+                subPanelExtras.setName("Tipo extra");
+                subPanelExtras.setBackground(Color.WHITE);
+                subPanelExtras.setOpaque(false);
+                subPanelExtras.setBorder(new LineBorder(Color.GRAY));
+                subPanelExtras.setLayout(null);
+                subPanelExtras.setBounds(500, 0, 350, jPanelExtras.getHeight() - 42);
+
+                // --- Título ---
+                JLabel jlabelTituloExtra = new JLabel("Tipo de extra", SwingConstants.CENTER);
+                jlabelTituloExtra.setBounds(0, 8, subPanelExtras.getWidth(), 20);
+                jlabelTituloExtra.setFont(new Font("Segoe UI", Font.BOLD, 18));
+                subPanelExtras.add(jlabelTituloExtra);
+
+                // --- Panel interno con BoxLayout vertical ---
+                JPanel contenedorExtras = new JPanel();
+                contenedorExtras.setLayout(new BoxLayout(contenedorExtras, BoxLayout.Y_AXIS));
+                contenedorExtras.setBackground(Color.WHITE);
+
+                // --- Scroll ---
+                JScrollPane scrollExtras = new JScrollPane(contenedorExtras);
+                scrollExtras.setBounds(10, 40, subPanelExtras.getWidth() - 20, subPanelExtras.getHeight() - 50);
+                scrollExtras.setBorder(null);
+                scrollExtras.getVerticalScrollBar().setUnitIncrement(16);
+                scrollExtras.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollExtras.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+                subPanelExtras.add(scrollExtras);
+
+                List<JPanel> listaSubPanelesExtras = new ArrayList<>();
+
+                for (int j = 0; j < opciones.size(); j++) {
+
+             String nombreOpcion = opciones.get(j).getIdOpcionProducto().getNombreOpcion().toLowerCase();
+
+           if (nombreOpcion.contains("extra")) {
+
+             Valoropcion extra = opciones.get(j);
+
+                        // PANEL CONTENEDOR PRINCIPAL
+                        JPanel panel = new JPanel();
+                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                        panel.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
+                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+                        ));
+                        panel.setBackground(Color.WHITE);
+                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
+
+                        // ---------- Fila 1: Nombre + Precio ----------
+                        JPanel fila1 = new JPanel(new BorderLayout());
+                        fila1.setOpaque(false);
+
+                        JLabel lblNombre = new JLabel(extra.getNombreValor());
+                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
+
+                        fila1.add(lblNombre, BorderLayout.WEST);
+                        fila1.add(lblPrecio, BorderLayout.EAST);
+
+                        panel.add(fila1);
+                        panel.add(Box.createVerticalStrut(6));
+
+                        // ---------- Fila 2: Cantidad y Spinner ----------
+                        JPanel fila2 = new JPanel(new BorderLayout());
+                        fila2.setOpaque(false);
+
+                        JLabel lblCantidad = new JLabel("Cantidad:");
+
+                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+                        spiner.setPreferredSize(new Dimension(60, 26));
+                        spiner.setMaximumSize(new Dimension(60, 26));
+
+                        fila2.add(lblCantidad, BorderLayout.WEST);
+                        fila2.add(spiner, BorderLayout.EAST);
+
+                        panel.add(fila2);
+                        panel.add(Box.createVerticalStrut(4));
 
 
+                        if (!soloLectura) {
+                            spiner.addChangeListener(e -> {
+                                int cantidad = (int) spiner.getValue();
 
+                                if (cantidad > 0) {
+                                    extrasSeleccionados.put(extra, cantidad);
+                                } else {
+                                    extrasSeleccionados.remove(extra);
+                                }
 
-                
-                
-            
-            
-            
-            
-            
+                                calcularTotal();
+                                actualizarNota();
+                            });
+                        } else {
+                            spiner.setEnabled(false);
+                        }
 
+                        listaSubPanelesExtras.add(panel);
+                        contenedorExtras.add(panel);
+                        contenedorExtras.add(Box.createVerticalStrut(10));
+
+                        // AJUSTAR ALTURA DEL CONTENEDOR
+                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
+
+                        contenedorExtras.setPreferredSize(new Dimension(
+                                scrollExtras.getWidth() - 20,
+                                Math.max(alturaTotal, scrollExtras.getHeight())
+                        ));
+
+                        contenedorExtras.revalidate();
+                        contenedorExtras.repaint();
+                    }
+                }
+
+                if (soloLectura) subPanelExtras.setEnabled(false);
+
+                jPanelExtras.add(subPanelExtras);
+            }   
+     
             // ====== Refrescar vista ======
             jPanelExtras.revalidate();
             jPanelExtras.repaint();
@@ -510,7 +616,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         txtProductoResumen.setText(producto.getNombreProducto());
         txtDescripcion.setText(detalle.getNotadetalleComanda());
         
-        List <ExtrasProductos> extrasEncontrados = detalle.getExtrasProductosList();
+        List <ExtrasProductos> extrasEncontrados = detalle.getExtrasProductosList();//CEHCAR ESTA TABLA Y AGREGAR LO DE LAS CREPAS PARA QUE APAREZCA
         System.out.println("extras en" + extrasEncontrados.size());
         
         
@@ -793,10 +899,91 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
                 List<JPanel> listaSubPanelesExtras = new ArrayList<>();
 
-                for (int j = 0; j < opciones.size(); j++) {
+                for (int j = 0; j < opciones.size(); j++) {//**************************************************************************************** 
 
                     if (opciones.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")) {
 
+                        Valoropcion extra = opciones.get(j);
+
+                        // PANEL CONTENEDOR PRINCIPAL
+                        JPanel panel = new JPanel();
+                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                        panel.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
+                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+                        ));
+                        panel.setBackground(Color.WHITE);
+                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
+
+                        // ---------- Fila 1: Nombre + Precio ----------
+                        JPanel fila1 = new JPanel(new BorderLayout());
+                        fila1.setOpaque(false);
+
+                        JLabel lblNombre = new JLabel(extra.getNombreValor());
+                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
+
+                        fila1.add(lblNombre, BorderLayout.WEST);
+                        fila1.add(lblPrecio, BorderLayout.EAST);
+
+                        panel.add(fila1);
+                        panel.add(Box.createVerticalStrut(6));
+
+                        // ---------- Fila 2: Cantidad y Spinner ----------
+                        JPanel fila2 = new JPanel(new BorderLayout());
+                        fila2.setOpaque(false);
+
+                        JLabel lblCantidad = new JLabel("Cantidad:");
+
+                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+                        spiner.setPreferredSize(new Dimension(60, 26));
+                        spiner.setMaximumSize(new Dimension(60, 26));
+
+                        fila2.add(lblCantidad, BorderLayout.WEST);
+                        fila2.add(spiner, BorderLayout.EAST);
+
+                        panel.add(fila2);
+                        panel.add(Box.createVerticalStrut(4));
+
+                        // SI EXISTEN EXTRAS PRE-SELECCIONADOS
+                        for (int i = 0; i < extrasEncontrados.size(); i++) {
+                            if (extra.getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())) {
+                                spiner.setValue(extrasEncontrados.get(i).getCantidad());
+                                calcularTotal();
+                            }
+                        }
+
+                        if (!soloLectura) {
+                            spiner.addChangeListener(e -> {
+                                int cantidad = (int) spiner.getValue();
+
+                                if (cantidad > 0) {
+                                    extrasSeleccionados.put(extra, cantidad);
+                                } else {
+                                    extrasSeleccionados.remove(extra);
+                                }
+
+                                calcularTotal();
+                                actualizarNota();
+                            });
+                        } else {
+                            spiner.setEnabled(false);
+                        }
+
+                        listaSubPanelesExtras.add(panel);
+                        contenedorExtras.add(panel);
+                        contenedorExtras.add(Box.createVerticalStrut(10));
+
+                        // AJUSTAR ALTURA DEL CONTENEDOR
+                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
+
+                        contenedorExtras.setPreferredSize(new Dimension(
+                                scrollExtras.getWidth() - 20,
+                                Math.max(alturaTotal, scrollExtras.getHeight())
+                        ));
+
+                        contenedorExtras.revalidate();
+                        contenedorExtras.repaint();
+                    }else{//***************************************************************************************
                         Valoropcion extra = opciones.get(j);
 
                         // PANEL CONTENEDOR PRINCIPAL
