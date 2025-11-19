@@ -74,8 +74,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     float total = 0;
 
     boolean soloLectura;
-    
-    
+
     /**
      * Creates new form FrmListaProductos
      */
@@ -89,7 +88,6 @@ public class FrmListaProductos extends javax.swing.JFrame {
 //        cargarDiseno();
 //
 //        cargarPanelComanda();
-
     }
 
     public FrmListaProductos(Comandas comand, Integer idComanda, boolean soloLectura) {
@@ -98,14 +96,11 @@ public class FrmListaProductos extends javax.swing.JFrame {
         this.comandas = comand;
         this.idComanda = idComanda;
         this.soloLectura = soloLectura;
-        
-        
-        if (soloLectura){
+
+        if (soloLectura) {
             soloLectura();
-            
-        }
-        
-        else{
+
+        } else {
             jblSoloLectura.setVisible(false);
             cargarDiseno();
 
@@ -117,45 +112,39 @@ public class FrmListaProductos extends javax.swing.JFrame {
             cargarDiseno();
 
             cargarCategorias();
-        
+
         }
 
-
     }
-    
-    private void soloLectura(){
-    
+
+    private void soloLectura() {
+
         cargarPanelComanda();
-        
-        
-        
+
         txtBuscar.setEnabled(false);
         txtNombreCliente.setEnabled(false);
-        
+
         btnGuardar2.setEnabled(false);
         btnGuardar2.setVisible(false);
-        
+
         btnRegistrarVenta.setEnabled(false);
         btnRegistrarVenta.setVisible(false);
-        
+
         cbCategorias.setEnabled(false);
         cbCategorias.setVisible(false);
         rbParaLlevar.setEnabled(false);
         rbParaLlevar.setVisible(false);
-        
-        
+
         tblProductos.setEnabled(false);
-        
+
         jblSoloLectura.setVisible(true);
-        
-    
+
     }
-    
 
     private void cargarDiseno() {
 
-       HintToTextField.addHint(txtNombreCliente, "Nombre del cliente");
-       HintToTextField.addHint(txtBuscar, "Buscas Producto");
+        HintToTextField.addHint(txtNombreCliente, "Nombre del cliente");
+        HintToTextField.addHint(txtBuscar, "Buscas Producto");
     }
 
     private void cargarCategorias() {
@@ -187,14 +176,12 @@ public class FrmListaProductos extends javax.swing.JFrame {
     public void cargarPanelComanda() {
 
         jPanelItems.removeAll();
-        
-        
 
         try {
             if (idComanda != null) {
                 comanda = FComandas.obtenerComanda(idComanda);
             }
-            
+
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
@@ -238,18 +225,17 @@ public class FrmListaProductos extends javax.swing.JFrame {
             subPanel.add(jlabelPrecio);
 
             //boton Eliminar
-            
             JLabel jlabelBotonEliminar = new JLabel();
             jlabelBotonEliminar.setBounds(subPanel.getWidth() - 30, 8, 20, 20);
             // jlabelBotonEliminar.setBorder(new LineBorder(Color.BLACK));
-            if(!soloLectura){
+            if (!soloLectura) {
                 setImagenLabel(jlabelBotonEliminar, rutaBtnEliminar);
                 subPanel.add(jlabelBotonEliminar);
             }
 
             int id = i;
 
-            if(!soloLectura){
+            if (!soloLectura) {
                 jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -274,18 +260,16 @@ public class FrmListaProductos extends javax.swing.JFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     FrmDetallesProductos pantallaDetalles;
-                    if(soloLectura){
+                    if (soloLectura) {
                         pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), true);
 
-                    }
-                    else{
+                    } else {
                         pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), false);
 
                     }
                     pantallaDetalles.setVisible(true);
                     FrmListaProductos.this.setVisible(false);
-     
-                    
+
                 }
 
             });
@@ -300,14 +284,21 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
             jPanelItems.add(subPanel);
 
-
         }
-        
+
         jPanelItems.revalidate();
         jPanelItems.repaint();
 
+        // Calcular IVA (16%)
+        float iva = subTota * 0.16f;
+
+        // Calcular Total
+        float total = subTota + iva;
+
+        // Asignar valores a campos
         txtSubtotal.setText(String.valueOf(subTota));
-        txtTotal.setText(String.valueOf(subTota));
+        txtimpuestos.setText(String.valueOf(iva));
+        txtTotal.setText(String.valueOf(total));
 
     }
 
@@ -378,8 +369,8 @@ public class FrmListaProductos extends javax.swing.JFrame {
             // 3️⃣ Filtrar por texto (si hay búsqueda)
             if (!textoBusqueda.isBlank()) {
                 final String nombreBuscado = textoBusqueda.toLowerCase();
-                todosLosProductos.removeIf(p ->
-                    !p.getNombreProducto().toLowerCase().contains(nombreBuscado)
+                todosLosProductos.removeIf(p
+                        -> !p.getNombreProducto().toLowerCase().contains(nombreBuscado)
                 );
             }
 
@@ -389,7 +380,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
     public void llenarTablaProductos() {
@@ -435,8 +426,15 @@ public class FrmListaProductos extends javax.swing.JFrame {
                         //YA HAY UN METODO QUE TE TRAE LOS EXTRAS POR ID DE PRODUCTO
 
                         if (idComanda != null) {
-                            
-                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto, soloLectura);
+
+                            try {
+                                comanda = FComandas.obtenerComanda(idComanda);
+                                detalle = new FrmDetallesProductos(FrmListaProductos.this, comanda, null, producto, soloLectura);
+
+                            } catch (Exception ex) {
+                                Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
                         } else {
                             detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto, soloLectura);
                         }
@@ -900,11 +898,10 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     private void cbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriasActionPerformed
         // TODO add your handling code here:}
-        
-        try{
+
+        try {
             buscarProductosPorCategoria();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -913,74 +910,83 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
     private void btnGuardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar2ActionPerformed
         if (FrmListaProductos.comanda != null) {
-            try {
-                // Reiniciar el total para evitar acumulación en múltiples clics
-                this.total = 0f;
+        try {
+            // Reiniciar el total para evitar acumulación en múltiples clics
+            this.total = 0f;
 
-                // Calcular el total de la comanda sumando subtotales
-                for (Detallecomanda detalle2 : detalleComanda) {
-                    if (detalle2.getSubTotaldetalleComanda() != null) {
-                        this.total += detalle2.getSubTotaldetalleComanda();
-                    }
+            // Calcular el subtotal sumando los subtotales de cada detalle
+            for (Detallecomanda detalle2 : detalleComanda) {
+                if (detalle2.getSubTotaldetalleComanda() != null) {
+                    this.total += detalle2.getSubTotaldetalleComanda();
                 }
-
-                //Guardar nombre del cliente y si es para llevar
-                String nombre = txtNombreCliente.getText().trim();
-                if (nombre.equals("Nombre del cliente") || nombre.isEmpty()) {
-                    nombre = "Cliente General"; // Asignar un valor por defecto
-                }
-
-                // El texto debe ser "Para llevar: Si"
-                String paraLlevar = rbParaLlevar.isSelected() ? "Llevar: Si" : "Llevar: No";
-
-                // El texto debe incluir "Cliente: "
-                String descripcion = nombre + ", " + paraLlevar;
-
-                FrmListaProductos.comanda.setDescripcionGeneral(descripcion);
-
-                // Actualizar el total en la base de datos
-                FComandas.EditarTotalComanda(FrmListaProductos.idComanda, this.total);
-
-                //FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
-                if (FrmListaProductos.idComanda != null) {
-
-                    // --- MODO EDITAR ---
-                    // La comanda ya existe, solo actualizamos la descripción.
-                    System.out.println("Guardando descripción en comanda existente ID: " + idComanda);
-                    FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
-
-                } 
-                 //IMPRIMIR**********************************************
-                // Imprimir ticket
-                FrmListaProductos.comanda.setDetallecomandaList(fDC.obtenerDetallesComandasPorComanda(FrmListaProductos.comanda));
-                System.out.println("Imprimir lista datalles comanda: " + detalleComanda);
-PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
-    if (defaultPrinter != null) {
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintService(defaultPrinter);
-        job.setPrintable(new TicketPrinter(FrmListaProductos.comanda));//Agregar aqui lo de la descripcion general
-        job.print();
-    } else {
-        System.err.println("⚠️ No se encontró una impresora predeterminada.");
-    }
-
-                 //IMPRIMIR*************************************************
-                // Cerrar ventana actual y volver a la lista de comandas
-                this.comandas.initCustom();//Actualiza tablas
-                this.comandas.setVisible(true);   // muestra Comandas
-                this.dispose();
-
-            } catch (Exception ex) {
-                Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this,
-                        "Error al guardar los cambios en la comanda: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
+
+            // ---- APLICAR IVA (16%) ----
+            float iva = this.total * 0.16f;
+            float totalConIVA = this.total + iva;
+
+            // Guardar el total con IVA en la variable total
+            this.total = totalConIVA;
+
+            // Guardar nombre del cliente y si es para llevar
+            String nombre = txtNombreCliente.getText().trim();
+            if (nombre.equals("Nombre del cliente") || nombre.isEmpty()) {
+                nombre = "Cliente General"; // Asignar un valor por defecto
+            }
+
+            // El texto debe ser "Para llevar: Si"
+            String paraLlevar = rbParaLlevar.isSelected() ? "Llevar: Si" : "Llevar: No";
+
+            // El texto debe incluir "Cliente: "
+            String descripcion = nombre + ", " + paraLlevar;
+
+            FrmListaProductos.comanda.setDescripcionGeneral(descripcion);
+
+            // Actualizar el total EN LA BASE DE DATOS (ya trae IVA)
+            FComandas.EditarTotalComanda(FrmListaProductos.idComanda, this.total);
+
+            if (FrmListaProductos.idComanda != null) {
+
+                // --- MODO EDITAR ---
+                // La comanda ya existe, solo actualizamos la descripción.
+                System.out.println("Guardando descripción en comanda existente ID: " + idComanda);
+                FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
+            }
+
+            // IMPRIMIR **********************************************
+            // Imprimir ticket
+            FrmListaProductos.comanda.setDetallecomandaList(
+                fDC.obtenerDetallesComandasPorComanda(FrmListaProductos.comanda)
+            );
+
+            System.out.println("Imprimir lista detalles comanda: " + detalleComanda);
+
+            PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
+            if (defaultPrinter != null) {
+                PrinterJob job = PrinterJob.getPrinterJob();
+                job.setPrintService(defaultPrinter);
+                job.setPrintable(new TicketPrinter(FrmListaProductos.comanda)); 
+                job.print();
+            } else {
+                System.err.println("⚠️ No se encontró una impresora predeterminada.");
+            }
+
+            // Cerrar ventana actual y volver a la lista de comandas
+            this.comandas.initCustom(); // Actualiza tablas
+            this.comandas.setVisible(true); // Muestra Comandas
+            this.dispose();
+
+        } catch (Exception ex) {
+            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
-                    "No hay una comanda activa para guardar.",
-                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    "Error al guardar los cambios en la comanda: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+    } else {
+        JOptionPane.showMessageDialog(this,
+                "No hay una comanda activa para guardar.",
+                "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
     }//GEN-LAST:event_btnGuardar2ActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -991,19 +997,17 @@ PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
 
     private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
         // TODO add your handling code here:
-        
-        
-        if(txtBuscar.isFocusOwner() && evt.getKeyChar() == '\n'){
-            
-            try{
+
+        if (txtBuscar.isFocusOwner() && evt.getKeyChar() == '\n') {
+
+            try {
                 buscarProductosPorCategoria();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
-        
+
+
     }//GEN-LAST:event_txtBuscarKeyTyped
 
     /**

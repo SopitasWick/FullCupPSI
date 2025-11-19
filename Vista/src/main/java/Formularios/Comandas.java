@@ -115,19 +115,30 @@ public class Comandas extends javax.swing.JFrame {
             }
         });
 
-        // Listener para eliminar
+         // Listener para eliminar
         itemEliminar.addActionListener(e -> {
             Integer id = obtenerIdSeleccionado(tblComandasActivas);
             if (id != null) {
                 int confirm = JOptionPane.showConfirmDialog(this,
                         "¿Seguro que deseas eliminar esta comanda?",
                         "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
                 if (confirm == JOptionPane.YES_OPTION) {
                     try {
                         FComandas.comandaEliminada(id);
                         cargarTablas();
+
+                        // Mensaje de confirmación
+                        JOptionPane.showMessageDialog(this,
+                                "La comanda fue eliminada correctamente.",
+                                "Eliminación exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                "Error al eliminar la comanda: " + ex.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }

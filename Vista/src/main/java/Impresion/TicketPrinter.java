@@ -32,32 +32,46 @@ public class TicketPrinter implements Printable {
         int y = 15;
 
         // ===== ENCABEZADO =====
-        g2d.drawString("====================================", 10, y); y += 15;
-        g2d.drawString("        CAFETERIA FULL CUP        ", 10, y); y += 15;
-        g2d.drawString("====================================", 10, y); y += 20;
-         g2d.drawString(comanda.getDescripcionGeneral(), 10, y); y += 15;
-        g2d.drawString("====================================", 10, y); y += 20;
-        
+        g2d.drawString("====================================", 10, y);
+        y += 15;
+        g2d.drawString("        CAFETERIA FULL CUP        ", 10, y);
+        y += 15;
+        g2d.drawString("====================================", 10, y);
+        y += 20;
+        g2d.drawString(comanda.getDescripcionGeneral(), 10, y);
+        y += 15;
+        g2d.drawString("====================================", 10, y);
+        y += 20;
 
         // ===== INFO GENERAL =====
-        g2d.drawString("Comanda ID: " + comanda.getIdComanda(), 10, y); y += 15;
-        g2d.drawString("Fecha: " + sdf.format(comanda.getFechaHoracomanda()), 10, y); y += 15;
-        g2d.drawString("Estado: " + comanda.getEstadoComanda(), 10, y); y += 15;
-        g2d.drawString("------------------------------------", 10, y); y += 15;
+        g2d.drawString("Comanda ID: " + comanda.getIdComanda(), 10, y);
+        y += 15;
+        g2d.drawString("Fecha: " + sdf.format(comanda.getFechaHoracomanda()), 10, y);
+        y += 15;
+        g2d.drawString("Estado: " + comanda.getEstadoComanda(), 10, y);
+        y += 15;
+        g2d.drawString("------------------------------------", 10, y);
+        y += 15;
 
         // ===== ENCABEZADO PRODUCTOS =====
-        g2d.drawString("Producto              Cant   Subtotal", 10, y); y += 15;
-        g2d.drawString("------------------------------------", 10, y); y += 15;
+        g2d.drawString("Producto              Cant   Subtotal", 10, y);
+        y += 15;
+        g2d.drawString("------------------------------------", 10, y);
+        y += 15;
 
         // ===== DETALLES =====
+        float subtotalGeneral = 0;
         float total = 0;
         if (comanda.getDetallecomandaList() != null) {
             for (Detallecomanda d : comanda.getDetallecomandaList()) {
                 String nombre = (d.getIdProducto() != null) ? d.getIdProducto().getNombreProducto() : "Producto";
                 int cantidad = (d.getCaintidaddetalleComanda() != null) ? d.getCaintidaddetalleComanda() : 1;
                 float subtotal = (d.getSubTotaldetalleComanda() != null) ? d.getSubTotaldetalleComanda() : 0f;
+
+                subtotalGeneral += subtotal;
+
                 //Sumar subtotales para obtener el total
-                total+=d.getSubTotaldetalleComanda();
+                total += d.getSubTotaldetalleComanda();
 
                 g2d.drawString(String.format("%-20s %3d %8.2f", nombre, cantidad, subtotal), 10, y);
                 y += 15;
@@ -88,18 +102,29 @@ public class TicketPrinter implements Printable {
             } // ← AQUÍ FALTABA ESTA LLAVE para cerrar el for
         }
 
-        // ===== TOTAL =====
+        // ===== CALCULOS: IVA Y TOTAL =====
+        float iva = subtotalGeneral * 0.16f;
+        float totalConIVA = subtotalGeneral + iva;
+
         g2d.setFont(new Font("Monospaced", Font.BOLD, 10));
-        g2d.drawString(String.format("TOTAL: %30.2f", total), 10, y);
+
+        g2d.drawString(String.format("SUBTOTAL:%27.2f", subtotalGeneral), 10, y);
+        y += 15;
+
+        g2d.drawString(String.format("IVA (16%%):%26.2f", iva), 10, y);
+        y += 15;
+
+        g2d.drawString(String.format("TOTAL:%30.2f", totalConIVA), 10, y);
         y += 20;
 
         // ===== PIE DE TICKET =====
         g2d.setFont(new Font("Monospaced", Font.PLAIN, 9));
-        g2d.drawString("Gracias por su compra!", 10, y); y += 12;
-        g2d.drawString("Vuelva pronto :)", 10, y); y += 15;
+        g2d.drawString("Gracias por su compra!", 10, y);
+        y += 12;
+        g2d.drawString("Vuelva pronto :)", 10, y);
+        y += 15;
         g2d.drawString("====================================", 10, y);
 
         return PAGE_EXISTS;
     }
 }
-
