@@ -118,7 +118,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         this.producto = producto;
         this.soloLectura = soloLectura;
         
-        jPanel13.setVisible(false);
+        jPanel13.setVisible(false); // visualizar jpanelpromociones---------------------------------------------------------
         if(soloLectura){
             soloLectura();
         }
@@ -1390,9 +1390,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jblCantindadNumero = new javax.swing.JLabel();
-        jblCantidadMas = new javax.swing.JLabel();
-        jblCantidadMenos = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Comanda: Detalles del Producto");
@@ -1627,29 +1625,16 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(17, 24, 39));
-        jLabel8.setText("Cantidad");
+        jLabel8.setText("Promociones");
         jLabel8.setAlignmentX(16.0F);
         jLabel8.setAlignmentY(0.0F);
         jPanel13.add(jLabel8);
-        jLabel8.setBounds(19, 16, 160, 24);
+        jLabel8.setBounds(90, 10, 120, 24);
 
-        jblCantindadNumero.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jblCantindadNumero.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jblCantindadNumero.setText("1");
-        jPanel13.add(jblCantindadNumero);
-        jblCantindadNumero.setBounds(100, 55, 80, 30);
-
-        jblCantidadMas.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jblCantidadMas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jblCantidadMas.setText("+");
-        jPanel13.add(jblCantidadMas);
-        jblCantidadMas.setBounds(200, 50, 60, 40);
-
-        jblCantidadMenos.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jblCantidadMenos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jblCantidadMenos.setText("-");
-        jPanel13.add(jblCantidadMenos);
-        jblCantidadMenos.setBounds(30, 50, 60, 40);
+        lblDescripcion.setForeground(new java.awt.Color(0, 0, 0));
+        lblDescripcion.setText("Sin promociones.");
+        jPanel13.add(lblDescripcion);
+        lblDescripcion.setBounds(20, 40, 250, 60);
 
         jPanelFondo.add(jPanel13);
         jPanel13.setBounds(930, 70, 280, 110);
@@ -1707,10 +1692,8 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelExtras;
     private javax.swing.JPanel jPanelFondo;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel jblCantidadMas;
-    private javax.swing.JLabel jblCantidadMenos;
-    private javax.swing.JLabel jblCantindadNumero;
     private javax.swing.JLabel jblSoloLectura;
+    private javax.swing.JLabel lblDescripcion;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JLabel txtExtra;
     private javax.swing.JLabel txtLeche;
