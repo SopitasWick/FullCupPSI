@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     private void cargarDiseno() {
 
         HintToTextField.addHint(txtNombreCliente, "Nombre del cliente");
-        HintToTextField.addHint(txtBuscar, "Buscas Producto");
+        HintToTextField.addHint(txtBuscar, "Buscar Producto");
     }
 
     private void cargarCategorias() {
@@ -180,9 +181,13 @@ public class FrmListaProductos extends javax.swing.JFrame {
         try {
             if (idComanda != null) {
                 comanda = FComandas.obtenerComanda(idComanda);
+                String nombreCliente = comanda.getDescripcionGeneral().substring(0, comanda.getDescripcionGeneral().indexOf(","));
+                txtNombreCliente.setText(nombreCliente);
+                
             }
 
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
+            
         } catch (Exception ex) {
             Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -909,7 +914,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_cbCategoriasActionPerformed
 
     private void btnGuardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar2ActionPerformed
-        if (FrmListaProductos.comanda != null) {
+        if (FrmListaProductos.comanda != null && !detalleComanda.isEmpty()) {
         try {
             // Reiniciar el total para evitar acumulación en múltiples clics
             this.total = 0f;
@@ -966,7 +971,15 @@ public class FrmListaProductos extends javax.swing.JFrame {
                 PrinterJob job = PrinterJob.getPrinterJob();
                 job.setPrintService(defaultPrinter);
                 job.setPrintable(new TicketPrinter(FrmListaProductos.comanda)); 
-                job.print();
+                try {
+                    job.print();
+                }
+                catch (PrinterAbortException pae) {
+                    System.out.println("La impresión fue cancelada por el usuario.");
+                    // Aquí NO debe tronar. Simplemente continúas.
+                }
+                
+                
             } else {
                 System.err.println("⚠️ No se encontró una impresora predeterminada.");
             }
@@ -984,7 +997,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         }
     } else {
         JOptionPane.showMessageDialog(this,
-                "No hay una comanda activa para guardar.",
+                "Debe seleccionar al menos un producto",
                 "Advertencia", JOptionPane.WARNING_MESSAGE);
     }
     }//GEN-LAST:event_btnGuardar2ActionPerformed

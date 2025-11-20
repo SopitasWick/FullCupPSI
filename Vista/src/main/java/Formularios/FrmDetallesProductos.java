@@ -119,6 +119,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         this.soloLectura = soloLectura;
         
         jPanel13.setVisible(false); // visualizar jpanelpromociones---------------------------------------------------------
+        jblSoloLectura.setVisible(false);
         if(soloLectura){
             soloLectura();
         }
@@ -1631,7 +1632,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanel13.add(jLabel8);
         jLabel8.setBounds(90, 10, 120, 24);
 
-        lblDescripcion.setForeground(new java.awt.Color(0, 0, 0));
         lblDescripcion.setText("Sin promociones.");
         jPanel13.add(lblDescripcion);
         lblDescripcion.setBounds(20, 40, 250, 60);
