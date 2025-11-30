@@ -1,7 +1,7 @@
 
 package itson.edu.mx.vista;
 
-import Formularios.Comandas;
+import Formularios.FrmLogin;
 
 public class Vista {
 
@@ -10,7 +10,7 @@ public class Vista {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 // Crea una instancia de tu ventana diseñada y la hace visible.
-                new Comandas().setVisible(true);
+                new FrmLogin().setVisible(true);
             }
         });
     }

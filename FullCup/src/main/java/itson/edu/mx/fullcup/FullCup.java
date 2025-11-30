@@ -4,7 +4,7 @@
 
 package itson.edu.mx.fullcup;
 
-import Formularios.Comandas;
+import Formularios.FrmLogin;
 
 /**
  *
@@ -13,7 +13,7 @@ import Formularios.Comandas;
 public class FullCup {
 
     public static void main(String[] args) {
-          Comandas viston = new Comandas();
+          FrmLogin viston = new FrmLogin();
           viston.setVisible(true);
     }
 }
