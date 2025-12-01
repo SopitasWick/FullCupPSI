@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Formularios;
-
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import Entidades.Categoria;
 import Entidades.Comanda;
 import Entidades.Producto;
@@ -18,10 +19,12 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import utilerias.HintToTextField;
 
 
@@ -35,6 +38,8 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
     FrmPanelAdministrador admin;
     private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
     private final IFachadaProductoControlador fProducto = new GestionarProductoControlador();
+    
+    private TableRowSorter<DefaultTableModel> sorter;
     
     Categoria categoriaUtil;
     List <Categoria> listaCategoriaUtil;
@@ -54,13 +59,41 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         agregarListenersTabla();
         radioActivoEditar.setSelected(true);
         
+        txtBuscarCategoria.getDocument().addDocumentListener(new DocumentListener() {
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        filtrarTabla();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        filtrarTabla();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        filtrarTabla();
+    }
+});
+
+        
     }
     
-    
+    private void filtrarTabla() {
+    String texto = txtBuscarCategoria.getText().trim();
+
+    if (texto.length() == 0) {
+        sorter.setRowFilter(null);  // sin filtro
+    } else {
+        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto));
+    }
+}
+
     
     private void cargarDiseno(){
     
-        HintToTextField.addHint(txtBuscar, "Buscar Categoria");
+        HintToTextField.addHint(txtBuscarCategoria, "Buscar Categoria");
         HintToTextField.addHint(txtNombreCategoria, "Nombre de la Categoria");
         
         SwingUtilities.invokeLater(() -> {
@@ -89,11 +122,13 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         List<Categoria> categorias = fCategoria.obtenerTodasLasCategorias();
 
         for (Categoria c : categorias) {
-            modelo.addRow(new Object[]{
-                c.getIdCategoria(),
-                c.getNombre(),
-                c.getEstado()
-            });
+            if (c.getEstado() != null && c.getEstado().equalsIgnoreCase("activo")) {
+                modelo.addRow(new Object[]{
+                    c.getIdCategoria(),
+                    c.getNombre(),
+                    c.getEstado()
+                });
+            }
         }
 
     } catch (Exception ex) {
@@ -118,12 +153,67 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
 
     // Selección de solo una fila
     tableCategorias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    
+    sorter = new TableRowSorter<>((DefaultTableModel) tableCategorias.getModel());
+    tableCategorias.setRowSorter(sorter);
+
 }
     
-    private void cargarCategoriasInactivas(){//ESTE VA SER EL BUENO PARA HACER FUNCIONAR
-                                            //EL CHECK BOX DE INACTIVAS
-       
+    private void cargarCategoriasInactivas() {
+    // Definir columnas
+    String[] columnas = {"Id_Categoria", "Nombre_Categoria", "Estado_Categoria"};
+
+    // Crear modelo no editable
+    DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    try {
+        // Obtener todas las categorías
+        List<Categoria> categorias = fCategoria.obtenerTodasLasCategorias();
+
+        // Filtrar SOLO las inactivas
+        for (Categoria c : categorias) {
+
+            if (c.getEstado() != null && c.getEstado().equalsIgnoreCase("inactivo")) {
+                modelo.addRow(new Object[]{
+                    c.getIdCategoria(),
+                    c.getNombre(),
+                    c.getEstado()
+                });
+            }
+        }
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error cargando categorías inactivas: " + ex.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
     }
+
+    // Asignar modelo a la tabla
+    tableCategorias.setModel(modelo);
+
+    // Ajustar ancho de columnas
+    TableColumnModel columnModel = tableCategorias.getColumnModel();
+    columnModel.getColumn(0).setPreferredWidth(80);
+    columnModel.getColumn(1).setPreferredWidth(300);
+    columnModel.getColumn(2).setPreferredWidth(300);
+
+    // Evitar reordenamiento
+    tableCategorias.getTableHeader().setReorderingAllowed(false);
+
+    // Selección de solo una fila
+    tableCategorias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    
+    sorter = new TableRowSorter<>((DefaultTableModel) tableCategorias.getModel());
+    tableCategorias.setRowSorter(sorter);
+}
+
 
     
     private void agregarListenersTabla() {
@@ -155,7 +245,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanelListaCategorias = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableCategorias = new javax.swing.JTable();
-        txtBuscar = new javax.swing.JTextField();
+        txtBuscarCategoria = new javax.swing.JTextField();
         cbInactivas = new javax.swing.JCheckBox();
         jPanelListaCategorias1 = new javax.swing.JPanel();
         txtNombreCategoria = new javax.swing.JTextField();
@@ -247,17 +337,23 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanelFondo.add(jPanelListaCategorias);
         jPanelListaCategorias.setBounds(20, 150, 820, 420);
 
-        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtBuscarCategoria.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtBuscarKeyTyped(evt);
+                txtBuscarCategoriaKeyTyped(evt);
             }
         });
-        jPanelFondo.add(txtBuscar);
-        txtBuscar.setBounds(20, 80, 740, 42);
+        jPanelFondo.add(txtBuscarCategoria);
+        txtBuscarCategoria.setBounds(20, 80, 740, 42);
 
+        cbInactivas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         cbInactivas.setText("Inactivas");
+        cbInactivas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbInactivasActionPerformed(evt);
+            }
+        });
         jPanelFondo.add(cbInactivas);
-        cbInactivas.setBounds(760, 100, 84, 20);
+        cbInactivas.setBounds(780, 80, 140, 40);
 
         jPanelListaCategorias1.setBackground(new java.awt.Color(255, 255, 255));
         jPanelListaCategorias1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
@@ -316,9 +412,9 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanelListaCategorias1.add(jLabel3);
         jLabel3.setBounds(20, 20, 270, 24);
         jPanelListaCategorias1.add(jSeparator1);
-        jSeparator1.setBounds(0, 220, 320, 10);
+        jSeparator1.setBounds(0, 220, 320, 3);
         jPanelListaCategorias1.add(jSeparator2);
-        jSeparator2.setBounds(0, 290, 320, 10);
+        jSeparator2.setBounds(0, 290, 320, 3);
 
         radioInactivoEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         radioInactivoEditar.setText("Inactivo");
@@ -362,10 +458,10 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+    private void txtBuscarCategoriaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarCategoriaKeyTyped
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_txtBuscarKeyTyped
+    }//GEN-LAST:event_txtBuscarCategoriaKeyTyped
 
     private void txtNombreCategoriaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreCategoriaKeyTyped
         // TODO add your handling code here:
@@ -532,6 +628,17 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         radioInactivoEditar.setSelected(false);
     }//GEN-LAST:event_radioActivoEditarActionPerformed
 
+    private void cbInactivasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbInactivasActionPerformed
+        // TODO add your handling code here:
+         if (cbInactivas.isSelected()) {
+            // CHECK ACTIVADO
+            cargarCategoriasInactivas();
+        } else {
+            // CHECK DESACTIVADO
+            cargarCategoriasActivas();
+        }
+    }//GEN-LAST:event_cbInactivasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarCategoria;
     private javax.swing.JButton btnEliminarCategoria;
@@ -551,7 +658,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioActivoEditar;
     private javax.swing.JRadioButton radioInactivoEditar;
     private javax.swing.JTable tableCategorias;
-    private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtBuscarCategoria;
     private javax.swing.JTextField txtNombreCategoria;
     // End of variables declaration//GEN-END:variables
 }
