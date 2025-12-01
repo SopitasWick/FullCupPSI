@@ -31,4 +31,6 @@ public interface IFachadaProductoControlador {
     public List<Valoropcion> obtenerDetallesPorProducto (Integer idProducto) throws Exception;
     //FIN BLOQUE PARA IDENTIFICAR LOS DETALLES DE CADA PRODUCTO****************************
     
+    public void cambiarEstadoProductosByCategoria(Integer idCategoria,String estado) throws Exception;
+    
 }

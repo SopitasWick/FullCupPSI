@@ -4,6 +4,7 @@
  */
 package Implementaciones;
 
+import Entidades.Categoria;
 import Entidades.Producto;
 import Entidades.Productoopcion;
 import Entidades.Valoropcion;
@@ -75,5 +76,15 @@ public class GestionarProductoModel implements IFachadaProductoModel {
         }
 
         return listaValores;
+    }
+
+    @Override
+    public void cambiarEstadoProductosByCategoria(Integer idCategoria,String estado) throws Exception {
+          List <Producto> categorias = productoJPA.findProductosByIdCategoria(idCategoria);
+          
+          for (Producto producto : categorias){
+              producto.setEstado(estado);
+              productoJPA.edit(producto);
+          }
     }
 }

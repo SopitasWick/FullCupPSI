@@ -29,6 +29,9 @@ import javax.persistence.Table;
     @NamedQuery(name = "Categoria.findByNombre", query = "SELECT c FROM Categoria c WHERE c.nombre = :nombre")})
 public class Categoria implements Serializable {
 
+    @Column(name = "estado")
+    private String estado;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +60,11 @@ public class Categoria implements Serializable {
         this.idCategoria = idCategoria;
     }
 
+    public Categoria(Integer idCategoria, String nombre) {
+        this.idCategoria = idCategoria;
+        this.nombre = nombre;
+    }
+    
     public Integer getIdCategoria() {
         return idCategoria;
     }
@@ -104,6 +112,14 @@ public class Categoria implements Serializable {
     @Override
     public String toString() {
         return "Entidades.Categoria[ idCategoria=" + idCategoria + " ]";
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
 }

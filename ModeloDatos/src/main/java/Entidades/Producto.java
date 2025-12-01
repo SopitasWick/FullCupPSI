@@ -36,6 +36,9 @@ import javax.persistence.Table;
 })
 public class Producto implements Serializable {
 
+    @Column(name = "estado")
+    private String estado;
+
     private static final long serialVersionUID = 1L;
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -179,6 +182,14 @@ public class Producto implements Serializable {
     @Override
     public String toString() {
         return "Entidades.Producto[ idProducto=" + idProducto + " ]";
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
 }

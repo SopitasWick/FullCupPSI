@@ -45,4 +45,16 @@ public class GestionarCategoriasModel implements IFachadaCategoriaModel{
     public List<Categoria> obtenerTodasLasCategorias() throws Exception {
         return categoriaJPA.findCategoriaEntities();
     }
+
+    @Override
+    public Categoria obtenerCategoriaPorNombre(String nombre) throws Exception {
+         return categoriaJPA.findCategoriaByNombre(nombre);
+    }
+
+    @Override
+    public void editarEstadoCategoria(Integer id,String estado) throws Exception {
+       Categoria categoria = categoriaJPA.findCategoria(id);
+       categoria.setEstado(estado);
+       categoriaJPA.edit(categoria);
+    }
 }

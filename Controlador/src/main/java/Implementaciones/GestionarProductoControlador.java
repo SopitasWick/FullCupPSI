@@ -62,4 +62,9 @@ public class GestionarProductoControlador implements IFachadaProductoControlador
     public List<Valoropcion> obtenerDetallesPorProducto(Integer idProducto) throws Exception {
     return productoModel.obtenerDetallesPorProducto(idProducto);
     }
+
+    @Override
+    public void cambiarEstadoProductosByCategoria(Integer idCategoria, String estado) throws Exception {
+            productoModel.cambiarEstadoProductosByCategoria(idCategoria, estado);
+    }
 }

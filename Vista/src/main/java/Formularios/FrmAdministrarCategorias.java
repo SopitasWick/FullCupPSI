@@ -4,7 +4,24 @@
  */
 package Formularios;
 
+import Entidades.Categoria;
+import Entidades.Comanda;
+import Entidades.Producto;
+import Facades.IFachadaCategoriaControlador;
+import Facades.IFachadaProductoControlador;
+import Implementaciones.GestionarCategoriaControlador;
+import Implementaciones.GestionarProductoControlador;
+import java.awt.Color;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import utilerias.HintToTextField;
 
 
@@ -16,7 +33,12 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
 
   
     FrmPanelAdministrador admin;
+    private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
+    private final IFachadaProductoControlador fProducto = new GestionarProductoControlador();
     
+    Categoria categoriaUtil;
+    List <Categoria> listaCategoriaUtil;
+    Producto productoUtil;
     
     /**
      * Creates new form FrmDetallesProductos
@@ -28,6 +50,9 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         
         
         cargarDiseno();
+        cargarTablas();
+        agregarListenersTabla();
+        radioActivoEditar.setSelected(true);
         
     }
     
@@ -44,10 +69,75 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         
     }
     
-   
+    private void cargarTablas() {
+        cargarCategoriasActivas();
+    }
+    private void cargarCategoriasActivas() {
+    // Definir columnas
+    String[] columnas = {"Id_Categoria", "Nombre_Categoria", "Estado_Categoria"};
+
+    // Crear modelo no editable
+    DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    try {
+        // Obtener categorías
+        List<Categoria> categorias = fCategoria.obtenerTodasLasCategorias();
+
+        for (Categoria c : categorias) {
+            modelo.addRow(new Object[]{
+                c.getIdCategoria(),
+                c.getNombre(),
+                c.getEstado()
+            });
+        }
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error cargando categorías: " + ex.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+
+    // Asignar modelo a la tabla
+    tableCategorias.setModel(modelo);
+
+    // Ajustar ancho de columnas
+    TableColumnModel columnModel = tableCategorias.getColumnModel();
+    columnModel.getColumn(0).setPreferredWidth(80);   // Id_Categoria
+    columnModel.getColumn(1).setPreferredWidth(300);  // Nombre_Categoria
+    columnModel.getColumn(2).setPreferredWidth(300); //Estado_Categoria
+
+    // Evitar reordenamiento de columnas
+    tableCategorias.getTableHeader().setReorderingAllowed(false);
+
+    // Selección de solo una fila
+    tableCategorias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+}
     
+    private void cargarCategoriasInactivas(){//ESTE VA SER EL BUENO PARA HACER FUNCIONAR
+                                            //EL CHECK BOX DE INACTIVAS
+       
+    }
+
     
-    
+    private void agregarListenersTabla() {
+    tableCategorias.getSelectionModel().addListSelectionListener(e -> {
+    if (!e.getValueIsAdjusting()) {
+        int fila = tableCategorias.getSelectedRow();
+        if (fila != -1) {
+            String nombre = tableCategorias.getValueAt(fila, 1).toString();
+            txtNombreCategoria.setText(nombre);
+        }
+    }
+});
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -63,6 +153,8 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanelListaCategorias = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableCategorias = new javax.swing.JTable();
         txtBuscar = new javax.swing.JTextField();
         cbInactivas = new javax.swing.JCheckBox();
         jPanelListaCategorias1 = new javax.swing.JPanel();
@@ -71,12 +163,15 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         btnNuevaCategoria = new javax.swing.JButton();
         btnEditarCategoria = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        radioInactivoEditar = new javax.swing.JRadioButton();
+        radioActivoEditar = new javax.swing.JRadioButton();
         btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Comanda: Detalles del Producto");
         setMinimumSize(new java.awt.Dimension(1230, 620));
-        setPreferredSize(new java.awt.Dimension(1230, 620));
         setResizable(false);
         setSize(new java.awt.Dimension(1230, 620));
         getContentPane().setLayout(null);
@@ -123,6 +218,32 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanelListaCategorias.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
         jPanelListaCategorias.setPreferredSize(new java.awt.Dimension(500, 200));
         jPanelListaCategorias.setLayout(null);
+
+        tableCategorias.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Id_Categoria", "Nombre_Categoria"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tableCategorias);
+
+        jPanelListaCategorias.add(jScrollPane1);
+        jScrollPane1.setBounds(10, 10, 800, 402);
+
         jPanelFondo.add(jPanelListaCategorias);
         jPanelListaCategorias.setBounds(20, 150, 820, 420);
 
@@ -161,7 +282,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             }
         });
         jPanelListaCategorias1.add(btnEliminarCategoria);
-        btnEliminarCategoria.setBounds(170, 240, 130, 50);
+        btnEliminarCategoria.setBounds(20, 230, 280, 50);
 
         btnNuevaCategoria.setBackground(new java.awt.Color(17, 24, 39));
         btnNuevaCategoria.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -173,7 +294,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             }
         });
         jPanelListaCategorias1.add(btnNuevaCategoria);
-        btnNuevaCategoria.setBounds(20, 160, 280, 60);
+        btnNuevaCategoria.setBounds(20, 150, 280, 60);
 
         btnEditarCategoria.setBackground(new java.awt.Color(224, 223, 223));
         btnEditarCategoria.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -185,7 +306,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             }
         });
         jPanelListaCategorias1.add(btnEditarCategoria);
-        btnEditarCategoria.setBounds(20, 240, 130, 50);
+        btnEditarCategoria.setBounds(20, 310, 280, 50);
 
         jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(39, 24, 17));
@@ -194,9 +315,33 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jLabel3.setAlignmentY(0.0F);
         jPanelListaCategorias1.add(jLabel3);
         jLabel3.setBounds(20, 20, 270, 24);
+        jPanelListaCategorias1.add(jSeparator1);
+        jSeparator1.setBounds(0, 220, 320, 10);
+        jPanelListaCategorias1.add(jSeparator2);
+        jSeparator2.setBounds(0, 290, 320, 10);
+
+        radioInactivoEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        radioInactivoEditar.setText("Inactivo");
+        radioInactivoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioInactivoEditarActionPerformed(evt);
+            }
+        });
+        jPanelListaCategorias1.add(radioInactivoEditar);
+        radioInactivoEditar.setBounds(50, 380, 80, 25);
+
+        radioActivoEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        radioActivoEditar.setText("Activo");
+        radioActivoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioActivoEditarActionPerformed(evt);
+            }
+        });
+        jPanelListaCategorias1.add(radioActivoEditar);
+        radioActivoEditar.setBounds(190, 380, 70, 25);
 
         jPanelFondo.add(jPanelListaCategorias1);
-        jPanelListaCategorias1.setBounds(860, 150, 320, 340);
+        jPanelListaCategorias1.setBounds(860, 150, 320, 420);
 
         btnRegresar.setBackground(new java.awt.Color(224, 223, 223));
         btnRegresar.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -208,7 +353,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             }
         });
         jPanelFondo.add(btnRegresar);
-        btnRegresar.setBounds(860, 520, 110, 50);
+        btnRegresar.setBounds(1100, 60, 110, 50);
 
         getContentPane().add(jPanelFondo);
         jPanelFondo.setBounds(0, 0, 1230, 620);
@@ -228,14 +373,147 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
 
     private void btnEliminarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCategoriaActionPerformed
         // TODO add your handling code here:
+       int fila = tableCategorias.getSelectedRow();
+
+    // VALIDAR QUE SE HAYA SELECCIONADO UNA FILA
+    if (fila == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione una categoría de la tabla.");
+        return;
+    }
+    int id = (int) tableCategorias.getValueAt(fila, 0);
+ 
+    try{
+    Categoria categoria = fCategoria.obtenerCategoria(id);
+     if("inactivo".equals(categoria.getEstado())){
+         JOptionPane.showMessageDialog(this, "No se puede eliminar - categoria ya inactiva");
+         return;
+     }   
+        
+     fCategoria.editarEstadoCategoria(id, "inactivo");
+     fProducto.cambiarEstadoProductosByCategoria(id, "inactivo");
+     //LIMPIAR Y ACTUALIZAR TABLA
+                DefaultTableModel modelo = (DefaultTableModel) tableCategorias.getModel();
+                modelo.setRowCount(0); // LIMPIAR
+                JOptionPane.showMessageDialog(this, "Se elimino con exito la categoria y sus productos");
+                cargarCategoriasActivas();    // CARGAR DE NUEVO
+    }catch (Exception ex) {
+                Logger.getLogger(FrmAdministrarCategorias.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    
+    //VALIDACIONES
     }//GEN-LAST:event_btnEliminarCategoriaActionPerformed
 
     private void btnNuevaCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCategoriaActionPerformed
         // TODO add your handling code here:
+        
+        //VALIDACIONES
+        if (txtNombreCategoria.getText().trim().isEmpty()) {
+            txtNombreCategoria.setBorder(BorderFactory.createLineBorder(Color.RED));
+        JOptionPane.showMessageDialog(this, "Campo vacio");
+         } else {
+          txtNombreCategoria.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+            try {
+            String nombre = txtNombreCategoria.getText().trim();
+
+            // Buscar categoría por nombre
+            Categoria cat = fCategoria.obtenerCategoriaPorNombre(nombre);
+
+            if (cat != null) {
+            JOptionPane.showMessageDialog(this, "La categoría ya existe.");
+            
+            }else{
+                //CREAR OBJETO A GUARDAR
+                listaCategoriaUtil = fCategoria.obtenerTodasLasCategorias();
+                categoriaUtil = new Categoria(listaCategoriaUtil.size()+1, txtNombreCategoria.getText());
+                //GUARDAR OBJETO EN LA DB
+                fCategoria.agregarCategoria(categoriaUtil);
+                //LIMPIAR Y ACTUALIZAR TABLA
+                DefaultTableModel modelo = (DefaultTableModel) tableCategorias.getModel();
+                modelo.setRowCount(0); // LIMPIAR
+                JOptionPane.showMessageDialog(this, "Se agrego con exito la categoria");
+                cargarCategoriasActivas();    // CARGAR DE NUEVO
+            }
+                 
+            } catch (Exception ex) {
+                Logger.getLogger(FrmAdministrarCategorias.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }//GEN-LAST:event_btnNuevaCategoriaActionPerformed
 
     private void btnEditarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCategoriaActionPerformed
         // TODO add your handling code here:
+         int fila = tableCategorias.getSelectedRow();
+
+    // VALIDAR QUE SE HAYA SELECCIONADO UNA FILA
+    if (fila == -1) {
+        JOptionPane.showMessageDialog(this, "Seleccione una categoría de la tabla.");
+        return;
+    }
+    
+
+    // VALIDAR TEXTFIELD VACÍO
+    String nuevoNombre = txtNombreCategoria.getText().trim();
+    if (nuevoNombre.isEmpty()) {
+        txtNombreCategoria.setBorder(BorderFactory.createLineBorder(Color.RED));
+        JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
+        return;
+    }
+
+    txtNombreCategoria.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+
+    // OBTENER ID DE LA TABLA
+    int id = (int) tableCategorias.getValueAt(fila, 0);
+
+    try {
+        // BUSCAR CATEGORÍA EN BD
+        Categoria categoria = fCategoria.obtenerCategoria(id);
+
+        if (categoria == null) {
+            JOptionPane.showMessageDialog(this, "La categoría ya no existe.");
+            return;
+        }
+
+        // VALIDAR QUE NO EXISTA OTRA CON EL MISMO NOMBRE
+        Categoria duplicado = fCategoria.obtenerCategoriaPorNombre(nuevoNombre);
+        if (duplicado != null && duplicado.getIdCategoria() != id) {
+            JOptionPane.showMessageDialog(this, "Ya existe una categoría con ese nombre.");
+            return;
+        }
+
+              // ACTUALIZAR VALOR
+                categoria.setNombre(nuevoNombre);
+                fCategoria.editarCategoria(categoria);
+                
+                if("inactivo".equals(categoria.getEstado())&& radioInactivoEditar.isSelected()){
+                      JOptionPane.showMessageDialog(this, "No se puede editar - Elegir otra opcion");
+                       return;
+                }
+                
+                if("activo".equals(categoria.getEstado())&& radioActivoEditar.isSelected()){
+                      JOptionPane.showMessageDialog(this, "No se puede editar - Elegir otra opcion");
+                       return;
+                }
+                
+                if("activo".equals(categoria.getEstado()) && radioInactivoEditar.isSelected()){
+                    fCategoria.editarEstadoCategoria(id, "inactivo");
+                    fProducto.cambiarEstadoProductosByCategoria(id, "inactivo");
+                }
+                if("inactivo".equals(categoria.getEstado()) && radioActivoEditar.isSelected()){
+                    fCategoria.editarEstadoCategoria(id, "activo");
+                    fProducto.cambiarEstadoProductosByCategoria(id, "activo");
+                }
+                    
+ 
+                DefaultTableModel modelo = (DefaultTableModel) tableCategorias.getModel();
+                modelo.setRowCount(0); // LIMPIAR
+                JOptionPane.showMessageDialog(this, "Categoria actualizada con exito");
+                cargarCategoriasActivas();    // CARGAR DE NUEVO   
+            
+
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error al editar categoría: " + ex.getMessage());
+    }
     }//GEN-LAST:event_btnEditarCategoriaActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
@@ -243,6 +521,16 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         admin.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void radioInactivoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioInactivoEditarActionPerformed
+        // TODO add your handling code here:
+        radioActivoEditar.setSelected(false);
+    }//GEN-LAST:event_radioInactivoEditarActionPerformed
+
+    private void radioActivoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioActivoEditarActionPerformed
+        // TODO add your handling code here:
+        radioInactivoEditar.setSelected(false);
+    }//GEN-LAST:event_radioActivoEditarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarCategoria;
@@ -257,6 +545,12 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelFondo;
     private javax.swing.JPanel jPanelListaCategorias;
     private javax.swing.JPanel jPanelListaCategorias1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JRadioButton radioActivoEditar;
+    private javax.swing.JRadioButton radioInactivoEditar;
+    private javax.swing.JTable tableCategorias;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtNombreCategoria;
     // End of variables declaration//GEN-END:variables

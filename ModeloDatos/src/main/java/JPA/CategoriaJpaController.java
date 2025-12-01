@@ -179,6 +179,45 @@ public class CategoriaJpaController implements Serializable {
             em.close();
         }
     }
+public Categoria findCategoriaByNombre(String nombre) {
+    EntityManager em = getEntityManager();
+    try {
+        List<Categoria> resultados = em.createQuery(
+                "SELECT c FROM Categoria c WHERE LOWER(c.nombre) = LOWER(:nombre)",
+                Categoria.class
+        )
+        .setParameter("nombre", nombre)
+        .getResultList();
+
+        return resultados.isEmpty() ? null : resultados.get(0);
+
+    } finally {
+        em.close();
+    }
+}
+
+public List<Categoria> findCategoriasActivas() {
+    EntityManager em = getEntityManager();
+    try {
+        return em.createQuery(
+                "SELECT c FROM Categoria c WHERE c.estado = 'activo'",
+                Categoria.class
+        ).getResultList();
+    } finally {
+        em.close();
+    }
+}
+public List<Categoria> findCategoriasInactivas() {
+    EntityManager em = getEntityManager();
+    try {
+        return em.createQuery(
+                "SELECT c FROM Categoria c WHERE c.estado = 'inactivo'",
+                Categoria.class
+        ).getResultList();
+    } finally {
+        em.close();
+    }
+}
 
     public int getCategoriaCount() {
         EntityManager em = getEntityManager();

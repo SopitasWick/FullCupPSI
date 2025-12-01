@@ -45,5 +45,15 @@ public class GestionarCategoriaControlador implements IFachadaCategoriaControlad
     public List<Categoria> obtenerTodasLasCategorias() throws Exception {
         return categoriaModel.obtenerTodasLasCategorias();
     }
+
+    @Override
+    public Categoria obtenerCategoriaPorNombre(String nombre) throws Exception {
+           return categoriaModel.obtenerCategoriaPorNombre(nombre);
+    }
+
+    @Override
+    public void editarEstadoCategoria(Integer id,String estado) throws Exception {
+         categoriaModel.editarEstadoCategoria(id,estado);
+    }
     
 }

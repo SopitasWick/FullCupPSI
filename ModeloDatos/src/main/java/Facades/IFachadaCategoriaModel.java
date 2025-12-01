@@ -21,4 +21,10 @@ public interface IFachadaCategoriaModel {
     public void eliminarCategoria(Integer id) throws Exception;
     
     public List<Categoria> obtenerTodasLasCategorias() throws Exception;
+    
+    public Categoria obtenerCategoriaPorNombre(String nombre) throws Exception;
+    
+    public void editarEstadoCategoria(Integer id,String estado) throws Exception;
+    
 }
+
