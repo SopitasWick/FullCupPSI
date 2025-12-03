@@ -691,7 +691,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             // CHECK ACTIVADO
             cargarCategoriasInactivas();
             txtNombreCategoria.setEditable(false);
-            btnEliminarCategoria.setVisible(false);
+           // btnEliminarCategoria.setVisible(false);
             btnNuevaCategoria.setVisible(false);
             
             
@@ -703,7 +703,8 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             // CHECK DESACTIVADO
             cargarCategoriasActivas();
             txtNombreCategoria.setEditable(true);
-            btnEliminarCategoria.setVisible(true);
+          //  btnEliminarCategoria.setVisible(true);
+            btnNuevaCategoria.setVisible(true);
             
             radioActivoEditar.setVisible(false);
             radioInactivoEditar.setVisible(false);
