@@ -13,6 +13,9 @@ import Facades.IFachadaProductoControlador;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarProductoControlador;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +53,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
      */
     public FrmAdministrarCategorias(FrmPanelAdministrador admin) {
         initComponents();
+       
         
         this.admin = admin;
         
@@ -99,6 +103,17 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         SwingUtilities.invokeLater(() -> {
             jLabel2.requestFocusInWindow(); // El foco se va al label
         });
+        
+        btnEditarCategoria.setVisible(false);
+        btnEliminarCategoria.setVisible(false);
+        jSeparator1.setVisible(false);
+        jSeparator2.setVisible(false);
+        radioActivoEditar.setVisible(false);
+        radioInactivoEditar.setVisible(false);
+        
+        
+        
+               
         
     }
     
@@ -212,8 +227,9 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
     
     sorter = new TableRowSorter<>((DefaultTableModel) tableCategorias.getModel());
     tableCategorias.setRowSorter(sorter);
+    
+    
 }
-
 
     
     private void agregarListenersTabla() {
@@ -222,8 +238,50 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         int fila = tableCategorias.getSelectedRow();
         if (fila != -1) {
             String nombre = tableCategorias.getValueAt(fila, 1).toString();
-            txtNombreCategoria.setText(nombre);
+            String estado = tableCategorias.getValueAt(fila, 2).toString();
+            txtNombreCategoria.setText(nombre);  
+            
+            if(estado.equalsIgnoreCase("activo")){
+                radioActivoEditar.setSelected(true);
+                radioInactivoEditar.setSelected(false);
+            }
+            else{
+                radioActivoEditar.setSelected(false);
+                radioInactivoEditar.setSelected(true);
+            }
+            
+
+            if(cbInactivas.isSelected()){
+                btnEliminarCategoria.setVisible(false);
+                btnEditarCategoria.setVisible(true);
+                radioActivoEditar.setVisible(true);
+                radioInactivoEditar.setVisible(true);
+            }
+            else{
+
+                btnEditarCategoria.setVisible(true);
+                btnEliminarCategoria.setVisible(true);
+                jSeparator1.setVisible(true);
+                jSeparator2.setVisible(true);
+//                radioActivoEditar.setVisible(true);
+//                radioInactivoEditar.setVisible(true);
+
+                btnNuevaCategoria.setVisible(false);
+            }
+
         }
+        else {
+            btnEditarCategoria.setVisible(false);
+            btnEliminarCategoria.setVisible(false);
+            jSeparator1.setVisible(false);
+            jSeparator2.setVisible(false);
+            radioActivoEditar.setVisible(false);
+            radioInactivoEditar.setVisible(false);
+            
+            btnNuevaCategoria.setVisible(true);
+                }
+            
+        
     }
 });
 }
@@ -260,15 +318,16 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Comanda: Detalles del Producto");
-        setMinimumSize(new java.awt.Dimension(1230, 620));
-        setResizable(false);
-        setSize(new java.awt.Dimension(1230, 620));
+        setTitle("Administrar Categoria");
+        setMaximumSize(new java.awt.Dimension(1245, 700));
+        setMinimumSize(new java.awt.Dimension(1244, 657));
+        setPreferredSize(new java.awt.Dimension(1244, 700));
+        setSize(new java.awt.Dimension(1244, 700));
         getContentPane().setLayout(null);
 
         jPanelFondo.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelFondo.setMinimumSize(new java.awt.Dimension(1230, 620));
-        jPanelFondo.setPreferredSize(new java.awt.Dimension(1230, 620));
+        jPanelFondo.setMinimumSize(new java.awt.Dimension(1230, 670));
+        jPanelFondo.setPreferredSize(new java.awt.Dimension(1230, 670));
         jPanelFondo.setLayout(null);
 
         jPanelEncabezado.setBackground(new java.awt.Color(255, 255, 255));
@@ -278,18 +337,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(31, 41, 55));
         jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel3.setPreferredSize(new java.awt.Dimension(32, 32));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-
+        jPanel3.setLayout(null);
         jPanelEncabezado.add(jPanel3);
         jPanel3.setBounds(10, 10, 32, 32);
 
@@ -302,7 +350,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jLabel2.setBounds(50, 15, 830, 24);
 
         jPanelFondo.add(jPanelEncabezado);
-        jPanelEncabezado.setBounds(0, 0, 1220, 50);
+        jPanelEncabezado.setBounds(0, 0, 1230, 50);
 
         jPanelListaCategorias.setBackground(new java.awt.Color(255, 255, 255));
         jPanelListaCategorias.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
@@ -345,6 +393,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanelFondo.add(txtBuscarCategoria);
         txtBuscarCategoria.setBounds(20, 80, 740, 42);
 
+        cbInactivas.setBackground(new java.awt.Color(255, 255, 255));
         cbInactivas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         cbInactivas.setText("Inactivas");
         cbInactivas.addActionListener(new java.awt.event.ActionListener() {
@@ -392,9 +441,9 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         jPanelListaCategorias1.add(btnNuevaCategoria);
         btnNuevaCategoria.setBounds(20, 150, 280, 60);
 
-        btnEditarCategoria.setBackground(new java.awt.Color(224, 223, 223));
+        btnEditarCategoria.setBackground(new java.awt.Color(17, 24, 39));
         btnEditarCategoria.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
-        btnEditarCategoria.setForeground(new java.awt.Color(102, 102, 102));
+        btnEditarCategoria.setForeground(new java.awt.Color(255, 255, 255));
         btnEditarCategoria.setText("Editar");
         btnEditarCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -437,7 +486,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
         radioActivoEditar.setBounds(190, 380, 70, 25);
 
         jPanelFondo.add(jPanelListaCategorias1);
-        jPanelListaCategorias1.setBounds(860, 150, 320, 420);
+        jPanelListaCategorias1.setBounds(880, 150, 320, 420);
 
         btnRegresar.setBackground(new java.awt.Color(224, 223, 223));
         btnRegresar.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -449,10 +498,10 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             }
         });
         jPanelFondo.add(btnRegresar);
-        btnRegresar.setBounds(1100, 60, 110, 50);
+        btnRegresar.setBounds(20, 590, 110, 50);
 
         getContentPane().add(jPanelFondo);
-        jPanelFondo.setBounds(0, 0, 1230, 620);
+        jPanelFondo.setBounds(0, 0, 1230, 670);
 
         pack();
         setLocationRelativeTo(null);
@@ -520,7 +569,7 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
             }else{
                 //CREAR OBJETO A GUARDAR
                 listaCategoriaUtil = fCategoria.obtenerTodasLasCategorias();
-                categoriaUtil = new Categoria(listaCategoriaUtil.size()+1, txtNombreCategoria.getText());
+                categoriaUtil = new Categoria(listaCategoriaUtil.size()+1, "activo", txtNombreCategoria.getText());
                 //GUARDAR OBJETO EN LA DB
                 fCategoria.agregarCategoria(categoriaUtil);
                 //LIMPIAR Y ACTUALIZAR TABLA
@@ -579,32 +628,40 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
 
               // ACTUALIZAR VALOR
                 categoria.setNombre(nuevoNombre);
+                if(radioActivoEditar.isSelected()){
+                    categoria.setEstado("activo");
+                }
+                else{
+                    categoria.setEstado("inactivo");
+                }
+                
                 fCategoria.editarCategoria(categoria);
                 
-                if("inactivo".equals(categoria.getEstado())&& radioInactivoEditar.isSelected()){
-                      JOptionPane.showMessageDialog(this, "No se puede editar - Elegir otra opcion");
-                       return;
-                }
-                
-                if("activo".equals(categoria.getEstado())&& radioActivoEditar.isSelected()){
-                      JOptionPane.showMessageDialog(this, "No se puede editar - Elegir otra opcion");
-                       return;
-                }
-                
-                if("activo".equals(categoria.getEstado()) && radioInactivoEditar.isSelected()){
-                    fCategoria.editarEstadoCategoria(id, "inactivo");
-                    fProducto.cambiarEstadoProductosByCategoria(id, "inactivo");
-                }
-                if("inactivo".equals(categoria.getEstado()) && radioActivoEditar.isSelected()){
-                    fCategoria.editarEstadoCategoria(id, "activo");
-                    fProducto.cambiarEstadoProductosByCategoria(id, "activo");
-                }
+//                if("inactivo".equals(categoria.getEstado())&& radioInactivoEditar.isSelected()){
+//                      JOptionPane.showMessageDialog(this, "No se puede editar - Elegir otra opcion");
+//                       return;
+//                }
+//                
+//                if("activo".equals(categoria.getEstado())&& radioActivoEditar.isSelected()){
+//                      JOptionPane.showMessageDialog(this, "No se puede editar - Elegir otra opcion");
+//                       return;
+//                }
+//                
+//                if("activo".equals(categoria.getEstado()) && radioInactivoEditar.isSelected()){
+//                    fCategoria.editarEstadoCategoria(id, "inactivo");
+//                    fProducto.cambiarEstadoProductosByCategoria(id, "inactivo");
+//                }
+//                if("inactivo".equals(categoria.getEstado()) && radioActivoEditar.isSelected()){
+//                    fCategoria.editarEstadoCategoria(id, "activo");
+//                    fProducto.cambiarEstadoProductosByCategoria(id, "activo");
+//                }
                     
  
                 DefaultTableModel modelo = (DefaultTableModel) tableCategorias.getModel();
                 modelo.setRowCount(0); // LIMPIAR
                 JOptionPane.showMessageDialog(this, "Categoria actualizada con exito");
                 cargarCategoriasActivas();    // CARGAR DE NUEVO   
+                cbInactivas.setSelected(false);
             
 
     } catch (Exception ex) {
@@ -633,9 +690,24 @@ public class FrmAdministrarCategorias extends javax.swing.JFrame {
          if (cbInactivas.isSelected()) {
             // CHECK ACTIVADO
             cargarCategoriasInactivas();
+            txtNombreCategoria.setEditable(false);
+            btnEliminarCategoria.setVisible(false);
+            btnNuevaCategoria.setVisible(false);
+            
+            
+            //radioActivoEditar.setVisible(true);
+            //radioInactivoEditar.setVisible(true);
+            
+            
         } else {
             // CHECK DESACTIVADO
             cargarCategoriasActivas();
+            txtNombreCategoria.setEditable(true);
+            btnEliminarCategoria.setVisible(true);
+            
+            radioActivoEditar.setVisible(false);
+            radioInactivoEditar.setVisible(false);
+            
         }
     }//GEN-LAST:event_cbInactivasActionPerformed
 

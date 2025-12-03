@@ -60,9 +60,10 @@ public class Categoria implements Serializable {
         this.idCategoria = idCategoria;
     }
 
-    public Categoria(Integer idCategoria, String nombre) {
+    public Categoria(Integer idCategoria, String estado, String nombre) {
         this.idCategoria = idCategoria;
         this.nombre = nombre;
+        this.estado = estado;
     }
     
     public Integer getIdCategoria() {
