@@ -4,6 +4,12 @@
  */
 package Formularios;
 
+import Formularios.paneles.JPanelAdminCategorias;
+import Formularios.paneles.JPanelAdminExtras;
+import Formularios.paneles.JPanelAdminProductos;
+import Formularios.paneles.JPanelAdminUsuarios;
+import java.awt.Color;
+
 
 /**
  *
@@ -14,6 +20,19 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
   
     FrmLogin login;
     
+    JPanelAdminProductos panelProductos = new JPanelAdminProductos();
+    JPanelAdminCategorias panelCategorias = new JPanelAdminCategorias();
+    JPanelAdminUsuarios panelUsuarios = new JPanelAdminUsuarios();
+    JPanelAdminExtras panelExtras = new JPanelAdminExtras();
+    
+    
+    Color colorSeleccion = Color.decode("#E0E0E0");
+    Color colorNoSeleccion = Color.decode("#FFFFFF");
+    Color colorHover = Color.decode("#F0F0F0");
+    String seleccion = "productos";
+    
+    
+    
     
     /**
      * Creates new form FrmDetallesProductos
@@ -23,10 +42,73 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         
         this.login = login;
         
-        
+        cargarDiseno();
     }
     
    
+    
+    private void comprobarSeleccion(){
+        
+        switch (seleccion) {
+            case "productos" -> {
+                jPanelAdminProductos1.setBackground(colorSeleccion);
+                
+                jPanelAdminCategoria.setBackground(colorNoSeleccion);
+                jPanelAdminExtra.setBackground(colorNoSeleccion);
+                jPanelAdminUsuario.setBackground(colorNoSeleccion);
+                
+            }
+            
+            case "extras" -> {
+                jPanelAdminExtra.setBackground(colorSeleccion);
+                
+                jPanelAdminCategoria.setBackground(colorNoSeleccion);
+                jPanelAdminProductos1.setBackground(colorNoSeleccion);
+                jPanelAdminUsuario.setBackground(colorNoSeleccion);
+                
+            }
+                
+            case "categorias" -> {
+                jPanelAdminCategoria.setBackground(colorSeleccion);
+                
+                jPanelAdminProductos1.setBackground(colorNoSeleccion);
+                jPanelAdminExtra.setBackground(colorNoSeleccion);
+                jPanelAdminUsuario.setBackground(colorNoSeleccion);
+            }
+            
+            case "usuarios" -> {
+                jPanelAdminUsuario.setBackground(colorSeleccion);
+                
+                jPanelAdminCategoria.setBackground(colorNoSeleccion);
+                jPanelAdminExtra.setBackground(colorNoSeleccion);
+                jPanelAdminProductos1.setBackground(colorNoSeleccion);
+            }
+            
+            
+                
+                
+                
+            default -> throw new AssertionError();
+        }
+    
+    }
+    
+    
+    private void cargarDiseno(){
+    
+        jPanelAdminProductos1.setBackground(colorSeleccion);
+        
+        
+        
+        
+        jPanelSeccion.removeAll();
+        panelProductos.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
+        jPanelSeccion.add(panelProductos);
+
+        jPanelSeccion.revalidate();
+        jPanelSeccion.repaint();
+    }
+    
     
     
     
@@ -45,15 +127,26 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        btnAdministrarCategorias = new javax.swing.JButton();
-        btnAdministrarCortes = new javax.swing.JButton();
-        btnAdministrarProductos = new javax.swing.JButton();
+        jPanelAdminUsuario = new javax.swing.JPanel();
+        jblIconUsuario = new javax.swing.JLabel();
+        jblAdminUsuarios = new javax.swing.JLabel();
+        jPanelAdminProductos1 = new javax.swing.JPanel();
+        jblIconProducto = new javax.swing.JLabel();
+        jblAdminProductos = new javax.swing.JLabel();
+        jPanelAdminCategoria = new javax.swing.JPanel();
+        jblIconCategorias = new javax.swing.JLabel();
+        jblAdminCategorias = new javax.swing.JLabel();
+        jPanelAdminExtra = new javax.swing.JPanel();
+        jblIconExtra = new javax.swing.JLabel();
+        jblAdminExtras = new javax.swing.JLabel();
+        jPanelSeccion = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Comanda: Detalles del Producto");
-        setMinimumSize(new java.awt.Dimension(1230, 620));
+        setTitle("Full Cup: Panel Administrador");
+        setMinimumSize(new java.awt.Dimension(875, 566));
+        setPreferredSize(new java.awt.Dimension(1230, 707));
         setResizable(false);
-        setSize(new java.awt.Dimension(1230, 620));
+        setSize(new java.awt.Dimension(1230, 707));
         getContentPane().setLayout(null);
 
         jPanelFondo.setBackground(new java.awt.Color(255, 255, 255));
@@ -83,92 +176,299 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(39, 24, 17));
-        jLabel2.setText("Café Express POS: Panel Administrador");
+        jLabel2.setText("Full Cup: Panel Administrador");
         jLabel2.setAlignmentX(16.0F);
         jLabel2.setAlignmentY(0.0F);
         jPanelEncabezado.add(jLabel2);
-        jLabel2.setBounds(50, 15, 830, 24);
+        jLabel2.setBounds(50, 15, 400, 24);
 
         jPanelFondo.add(jPanelEncabezado);
-        jPanelEncabezado.setBounds(0, 0, 1230, 50);
+        jPanelEncabezado.setBounds(0, 0, 1216, 50);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel4.setPreferredSize(new java.awt.Dimension(500, 200));
         jPanel4.setLayout(null);
 
-        btnAdministrarCategorias.setBackground(new java.awt.Color(17, 24, 39));
-        btnAdministrarCategorias.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
-        btnAdministrarCategorias.setForeground(new java.awt.Color(255, 255, 255));
-        btnAdministrarCategorias.setText("Administrar Categorias");
-        btnAdministrarCategorias.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdministrarCategoriasActionPerformed(evt);
+        jPanelAdminUsuario.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelAdminUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelAdminUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelAdminUsuarioMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelAdminUsuarioMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelAdminUsuarioMouseExited(evt);
             }
         });
-        jPanel4.add(btnAdministrarCategorias);
-        btnAdministrarCategorias.setBounds(70, 150, 210, 60);
+        jPanelAdminUsuario.setLayout(null);
 
-        btnAdministrarCortes.setBackground(new java.awt.Color(17, 24, 39));
-        btnAdministrarCortes.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
-        btnAdministrarCortes.setForeground(new java.awt.Color(255, 255, 255));
-        btnAdministrarCortes.setText("Administrar Cortes");
-        btnAdministrarCortes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdministrarCortesActionPerformed(evt);
-            }
-        });
-        jPanel4.add(btnAdministrarCortes);
-        btnAdministrarCortes.setBounds(70, 260, 210, 60);
+        jblIconUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/group.png"))); // NOI18N
+        jblIconUsuario.setText("jLabel1");
+        jblIconUsuario.setPreferredSize(new java.awt.Dimension(20, 20));
+        jPanelAdminUsuario.add(jblIconUsuario);
+        jblIconUsuario.setBounds(15, 12, 35, 35);
 
-        btnAdministrarProductos.setBackground(new java.awt.Color(17, 24, 39));
-        btnAdministrarProductos.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
-        btnAdministrarProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnAdministrarProductos.setText("Administrar Productos");
-        btnAdministrarProductos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdministrarProductosActionPerformed(evt);
+        jblAdminUsuarios.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblAdminUsuarios.setText("Administrar Usuarios");
+        jPanelAdminUsuario.add(jblAdminUsuarios);
+        jblAdminUsuarios.setBounds(60, 18, 180, 22);
+
+        jPanel4.add(jPanelAdminUsuario);
+        jPanelAdminUsuario.setBounds(0, 180, 260, 60);
+
+        jPanelAdminProductos1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelAdminProductos1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelAdminProductos1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminProductos1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelAdminProductos1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelAdminProductos1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelAdminProductos1MouseExited(evt);
             }
         });
-        jPanel4.add(btnAdministrarProductos);
-        btnAdministrarProductos.setBounds(70, 38, 210, 60);
+        jPanelAdminProductos1.setLayout(null);
+
+        jblIconProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/coffee.png"))); // NOI18N
+        jblIconProducto.setPreferredSize(new java.awt.Dimension(20, 20));
+        jPanelAdminProductos1.add(jblIconProducto);
+        jblIconProducto.setBounds(15, 12, 35, 35);
+
+        jblAdminProductos.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblAdminProductos.setText("Administrar Productos");
+        jPanelAdminProductos1.add(jblAdminProductos);
+        jblAdminProductos.setBounds(60, 18, 170, 22);
+
+        jPanel4.add(jPanelAdminProductos1);
+        jPanelAdminProductos1.setBounds(0, 0, 260, 60);
+
+        jPanelAdminCategoria.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelAdminCategoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelAdminCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelAdminCategoriaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelAdminCategoriaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelAdminCategoriaMouseExited(evt);
+            }
+        });
+        jPanelAdminCategoria.setLayout(null);
+
+        jblIconCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/product-categories.png"))); // NOI18N
+        jblIconCategorias.setText("jLabel1");
+        jblIconCategorias.setPreferredSize(new java.awt.Dimension(20, 20));
+        jPanelAdminCategoria.add(jblIconCategorias);
+        jblIconCategorias.setBounds(15, 12, 35, 35);
+
+        jblAdminCategorias.setBackground(new java.awt.Color(255, 255, 255));
+        jblAdminCategorias.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblAdminCategorias.setText("Administrar Categorias");
+        jPanelAdminCategoria.add(jblAdminCategorias);
+        jblAdminCategorias.setBounds(60, 18, 180, 22);
+
+        jPanel4.add(jPanelAdminCategoria);
+        jPanelAdminCategoria.setBounds(0, 120, 260, 60);
+
+        jPanelAdminExtra.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelAdminExtra.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelAdminExtra.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminExtra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelAdminExtraMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelAdminExtraMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelAdminExtraMouseExited(evt);
+            }
+        });
+        jPanelAdminExtra.setLayout(null);
+
+        jblIconExtra.setIcon(new javax.swing.ImageIcon("D:\\Descargas\\sugar-cubes.png")); // NOI18N
+        jblIconExtra.setPreferredSize(new java.awt.Dimension(20, 20));
+        jPanelAdminExtra.add(jblIconExtra);
+        jblIconExtra.setBounds(15, 12, 35, 35);
+
+        jblAdminExtras.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblAdminExtras.setText("Administrar Extras");
+        jPanelAdminExtra.add(jblAdminExtras);
+        jblAdminExtras.setBounds(60, 18, 180, 22);
+
+        jPanel4.add(jPanelAdminExtra);
+        jPanelAdminExtra.setBounds(0, 60, 260, 60);
 
         jPanelFondo.add(jPanel4);
-        jPanel4.setBounds(20, 70, 370, 470);
+        jPanel4.setBounds(0, 50, 260, 620);
+
+        jPanelSeccion.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelSeccion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelSeccion.setLayout(null);
+        jPanelFondo.add(jPanelSeccion);
+        jPanelSeccion.setBounds(260, 50, 956, 620);
 
         getContentPane().add(jPanelFondo);
-        jPanelFondo.setBounds(0, 0, 1230, 720);
+        jPanelFondo.setBounds(0, 0, 1230, 670);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAdministrarCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministrarCategoriasActionPerformed
+    private void jPanelAdminCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminCategoriaMouseClicked
         // TODO add your handling code here:
-
-        FrmAdministrarCategorias categorias = new FrmAdministrarCategorias(this);
-        categorias.setVisible(true);
-        this.setVisible(false);
         
         
-    }//GEN-LAST:event_btnAdministrarCategoriasActionPerformed
+        
+            seleccion = "categorias";
+            
+            comprobarSeleccion();
+            
+            jPanelSeccion.removeAll();
+            panelCategorias.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
+            jPanelSeccion.add(panelCategorias);
 
-    private void btnAdministrarCortesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministrarCortesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAdministrarCortesActionPerformed
+            jPanelSeccion.revalidate();
+            jPanelSeccion.repaint();
+        
+        
+        
+        
+    }//GEN-LAST:event_jPanelAdminCategoriaMouseClicked
 
-    private void btnAdministrarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministrarProductosActionPerformed
+    private void jPanelAdminProductos1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductos1MouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAdministrarProductosActionPerformed
+        
+        seleccion = "productos";
+            
+        comprobarSeleccion();
+        
+        
+        jPanelSeccion.removeAll();
+        panelProductos.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
+        jPanelSeccion.add(panelProductos);
+
+        jPanelSeccion.revalidate();
+        jPanelSeccion.repaint();
+        
+        
+    }//GEN-LAST:event_jPanelAdminProductos1MouseClicked
+
+    private void jPanelAdminExtraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminExtraMouseClicked
+        // TODO add your handling code here:
+        seleccion = "extras";
+            
+        comprobarSeleccion();
+        
+        jPanelSeccion.removeAll();
+        panelExtras.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
+        jPanelSeccion.add(panelExtras);
+
+        jPanelSeccion.revalidate();
+        jPanelSeccion.repaint();
+        
+    }//GEN-LAST:event_jPanelAdminExtraMouseClicked
+
+    private void jPanelAdminUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminUsuarioMouseClicked
+        // TODO add your handling code here:
+        seleccion = "usuarios";
+            
+        comprobarSeleccion();
+        
+        
+        jPanelSeccion.removeAll();
+        panelUsuarios.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
+        jPanelSeccion.add(panelUsuarios);
+
+        jPanelSeccion.revalidate();
+        jPanelSeccion.repaint();
+        
+    }//GEN-LAST:event_jPanelAdminUsuarioMouseClicked
+
+    private void jPanelAdminProductos1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductos1MouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("productos")){
+            jPanelAdminProductos1.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelAdminProductos1MouseEntered
+
+    private void jPanelAdminProductos1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductos1MouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("productos")){
+            jPanelAdminProductos1.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelAdminProductos1MouseExited
+
+    private void jPanelAdminExtraMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminExtraMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("extras")){
+            jPanelAdminExtra.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelAdminExtraMouseEntered
+
+    private void jPanelAdminExtraMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminExtraMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("extras")){
+            jPanelAdminExtra.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelAdminExtraMouseExited
+
+    private void jPanelAdminCategoriaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminCategoriaMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("categorias")){
+            jPanelAdminCategoria.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelAdminCategoriaMouseEntered
+
+    private void jPanelAdminCategoriaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminCategoriaMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("categorias")){
+            jPanelAdminCategoria.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelAdminCategoriaMouseExited
+
+    private void jPanelAdminUsuarioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminUsuarioMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("usuarios")){
+            jPanelAdminUsuario.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelAdminUsuarioMouseEntered
+
+    private void jPanelAdminUsuarioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminUsuarioMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("usuarios")){
+            jPanelAdminUsuario.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelAdminUsuarioMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdministrarCategorias;
-    private javax.swing.JButton btnAdministrarCortes;
-    private javax.swing.JButton btnAdministrarProductos;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanelAdminCategoria;
+    private javax.swing.JPanel jPanelAdminExtra;
+    private javax.swing.JPanel jPanelAdminProductos1;
+    private javax.swing.JPanel jPanelAdminUsuario;
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelFondo;
+    public static javax.swing.JPanel jPanelSeccion;
+    private javax.swing.JLabel jblAdminCategorias;
+    private javax.swing.JLabel jblAdminExtras;
+    private javax.swing.JLabel jblAdminProductos;
+    private javax.swing.JLabel jblAdminUsuarios;
+    private javax.swing.JLabel jblIconCategorias;
+    private javax.swing.JLabel jblIconExtra;
+    private javax.swing.JLabel jblIconProducto;
+    private javax.swing.JLabel jblIconUsuario;
     // End of variables declaration//GEN-END:variables
 }

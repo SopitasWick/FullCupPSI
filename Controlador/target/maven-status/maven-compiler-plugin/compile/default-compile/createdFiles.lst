@@ -8,7 +8,9 @@ Implementaciones\GestionarComandaControlador.class
 Pruebas\PruebasTamañoVaso.class
 Facades\IFachadaDetallesComandaControlador.class
 Implementaciones\GestionarCategoriaControlador.class
+Implementaciones\GestionarValorOpcionControlador.class
 Implementaciones\GestionarLecheControlador.class
+Facades\IFachadaValorOpcionControlador.class
 Facades\IFachadaProductoControlador.class
 Facades\IFachadaTamanoVasosControlador.class
 Implementaciones\GestionarExtrasControlador.class

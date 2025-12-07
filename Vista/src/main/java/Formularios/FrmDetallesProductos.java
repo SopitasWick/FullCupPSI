@@ -1363,10 +1363,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanelFondo = new javax.swing.JPanel();
-        jPanelEncabezado = new javax.swing.JPanel();
-        jblSoloLectura = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtNombreProducto = new javax.swing.JTextField();
@@ -1392,6 +1388,17 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanel13 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         lblDescripcion = new javax.swing.JLabel();
+        jPanelNavegacion = new javax.swing.JPanel();
+        jblNavegacionSeparador1 = new javax.swing.JLabel();
+        jblNavegacionComandas = new javax.swing.JLabel();
+        jblNavegacionComandas1 = new javax.swing.JLabel();
+        jblNavegacionComandas2 = new javax.swing.JLabel();
+        jblNavegacionSeparador2 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanelEncabezado = new javax.swing.JPanel();
+        jblSoloLectura = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Comanda: Detalles del Producto");
@@ -1403,47 +1410,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
         jPanelFondo.setBackground(new java.awt.Color(255, 255, 255));
         jPanelFondo.setLayout(null);
-
-        jPanelEncabezado.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelEncabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanelEncabezado.setLayout(null);
-
-        jblSoloLectura.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jblSoloLectura.setForeground(new java.awt.Color(39, 24, 17));
-        jblSoloLectura.setText("Solo Visualizacion");
-        jblSoloLectura.setAlignmentX(16.0F);
-        jblSoloLectura.setAlignmentY(0.0F);
-        jPanelEncabezado.add(jblSoloLectura);
-        jblSoloLectura.setBounds(300, 15, 230, 24);
-
-        jPanel3.setBackground(new java.awt.Color(31, 41, 55));
-        jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel3.setPreferredSize(new java.awt.Dimension(32, 32));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-
-        jPanelEncabezado.add(jPanel3);
-        jPanel3.setBounds(10, 10, 32, 32);
-
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(39, 24, 17));
-        jLabel2.setText("Café Express POS");
-        jLabel2.setAlignmentX(16.0F);
-        jLabel2.setAlignmentY(0.0F);
-        jPanelEncabezado.add(jLabel2);
-        jLabel2.setBounds(50, 15, 160, 24);
-
-        jPanelFondo.add(jPanelEncabezado);
-        jPanelEncabezado.setBounds(0, 0, 1230, 50);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
@@ -1501,7 +1467,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanelExtras.setBounds(10, 130, 850, 400);
 
         jPanelFondo.add(jPanel4);
-        jPanel4.setBounds(20, 70, 880, 540);
+        jPanel4.setBounds(20, 125, 880, 540);
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
         jPanel12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
@@ -1618,7 +1584,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanel1.setBounds(30, 250, 211, 3);
 
         jPanelFondo.add(jPanel12);
-        jPanel12.setBounds(930, 200, 280, 410);
+        jPanel12.setBounds(930, 255, 280, 410);
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
         jPanel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(229, 231, 225)));
@@ -1637,7 +1603,95 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         lblDescripcion.setBounds(20, 40, 250, 60);
 
         jPanelFondo.add(jPanel13);
-        jPanel13.setBounds(930, 70, 280, 110);
+        jPanel13.setBounds(930, 125, 280, 110);
+
+        jPanelNavegacion.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelNavegacion.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 1, new java.awt.Color(0, 0, 0)));
+        jPanelNavegacion.setLayout(null);
+
+        jblNavegacionSeparador1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jblNavegacionSeparador1.setForeground(new java.awt.Color(102, 102, 102));
+        jblNavegacionSeparador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jblNavegacionSeparador1.setText(">");
+        jPanelNavegacion.add(jblNavegacionSeparador1);
+        jblNavegacionSeparador1.setBounds(90, 16, 20, 27);
+
+        jblNavegacionComandas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jblNavegacionComandas.setForeground(new java.awt.Color(102, 102, 102));
+        jblNavegacionComandas.setText("Detalle Comanda\n");
+        jblNavegacionComandas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jblNavegacionComandas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jblNavegacionComandasMouseClicked(evt);
+            }
+        });
+        jPanelNavegacion.add(jblNavegacionComandas);
+        jblNavegacionComandas.setBounds(125, 20, 110, 25);
+
+        jblNavegacionComandas1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jblNavegacionComandas1.setForeground(new java.awt.Color(102, 102, 102));
+        jblNavegacionComandas1.setText("Comandas");
+        jPanelNavegacion.add(jblNavegacionComandas1);
+        jblNavegacionComandas1.setBounds(20, 20, 60, 25);
+
+        jblNavegacionComandas2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jblNavegacionComandas2.setForeground(new java.awt.Color(102, 102, 102));
+        jblNavegacionComandas2.setText("<html> <u>Detalle del Producto</u> </html> ");
+        jPanelNavegacion.add(jblNavegacionComandas2);
+        jblNavegacionComandas2.setBounds(275, 20, 120, 25);
+
+        jblNavegacionSeparador2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jblNavegacionSeparador2.setForeground(new java.awt.Color(102, 102, 102));
+        jblNavegacionSeparador2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jblNavegacionSeparador2.setText(">");
+        jPanelNavegacion.add(jblNavegacionSeparador2);
+        jblNavegacionSeparador2.setBounds(235, 16, 20, 27);
+        jPanelNavegacion.add(jSeparator1);
+        jSeparator1.setBounds(20, 50, 1190, 10);
+
+        jPanelFondo.add(jPanelNavegacion);
+        jPanelNavegacion.setBounds(0, 50, 1230, 60);
+
+        jPanelEncabezado.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelEncabezado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelEncabezado.setLayout(null);
+
+        jblSoloLectura.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jblSoloLectura.setForeground(new java.awt.Color(39, 24, 17));
+        jblSoloLectura.setText("Solo Visualizacion");
+        jblSoloLectura.setAlignmentX(16.0F);
+        jblSoloLectura.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jblSoloLectura);
+        jblSoloLectura.setBounds(350, 15, 310, 24);
+
+        jPanel3.setBackground(new java.awt.Color(31, 41, 55));
+        jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel3.setPreferredSize(new java.awt.Dimension(32, 32));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
+        jPanelEncabezado.add(jPanel3);
+        jPanel3.setBounds(10, 10, 32, 32);
+
+        jLabel7.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(39, 24, 17));
+        jLabel7.setText("Full Cup");
+        jLabel7.setAlignmentX(16.0F);
+        jLabel7.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jLabel7);
+        jLabel7.setBounds(50, 15, 310, 24);
+
+        jPanelFondo.add(jPanelEncabezado);
+        jPanelEncabezado.setBounds(0, 0, 1230, 50);
 
         getContentPane().add(jPanelFondo);
         jPanelFondo.setBounds(0, 0, 1230, 720);
@@ -1674,13 +1728,22 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void jblNavegacionComandasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblNavegacionComandasMouseClicked
+        // TODO add your handling code here:
+        
+        pantallaProductos.setVisible(true);
+        this.dispose();
+        
+        
+    }//GEN-LAST:event_jblNavegacionComandasMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardarCambios;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -1691,7 +1754,14 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelExtras;
     private javax.swing.JPanel jPanelFondo;
+    private javax.swing.JPanel jPanelNavegacion;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel jblNavegacionComandas;
+    private javax.swing.JLabel jblNavegacionComandas1;
+    private javax.swing.JLabel jblNavegacionComandas2;
+    private javax.swing.JLabel jblNavegacionSeparador1;
+    private javax.swing.JLabel jblNavegacionSeparador2;
     private javax.swing.JLabel jblSoloLectura;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JTextArea txtDescripcion;
