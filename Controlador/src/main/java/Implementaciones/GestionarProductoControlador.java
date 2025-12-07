@@ -27,8 +27,8 @@ public class GestionarProductoControlador implements IFachadaProductoControlador
     }
     
     @Override
-    public void agregarProducto(Producto producto) throws Exception {
-        productoModel.agregarProducto(producto);
+    public Producto agregarProducto(Producto producto) throws Exception {
+        return productoModel.agregarProducto(producto);
     }
     
     @Override

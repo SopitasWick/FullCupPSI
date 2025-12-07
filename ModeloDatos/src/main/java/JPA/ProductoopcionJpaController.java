@@ -175,6 +175,8 @@ public class ProductoopcionJpaController implements Serializable {
         em.close();
     }
 }
+    
+
 
     
     public int getProductoopcionCount() {

@@ -34,8 +34,8 @@ public class GestionarProductoModel implements IFachadaProductoModel {
     }
 
     @Override
-    public void agregarProducto(Producto producto) throws Exception {
-        productoJPA.create(producto);
+    public Producto agregarProducto(Producto producto) throws Exception {
+        return productoJPA.create(producto);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class ProductoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Producto producto) throws PreexistingEntityException, Exception {
+    public Producto create(Producto producto) throws PreexistingEntityException, Exception {
         if (producto.getPromocionList() == null) {
             producto.setPromocionList(new ArrayList<Promocion>());
         }
@@ -87,7 +87,15 @@ public class ProductoJpaController implements Serializable {
                     oldIdProductoOfDetallecomandaListDetallecomanda = em.merge(oldIdProductoOfDetallecomandaListDetallecomanda);
                 }
             }
+            
+            em.flush();
+            
             em.getTransaction().commit();
+            
+            
+            
+            return producto;
+            
         } catch (Exception ex) {
             if (findProducto(producto.getIdProducto()) != null) {
                 throw new PreexistingEntityException("Producto " + producto + " already exists.", ex);

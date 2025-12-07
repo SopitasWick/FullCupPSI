@@ -15,7 +15,7 @@ import java.util.List;
 public interface IFachadaProductoModel {
     public Producto obtenerProducto(Integer id) throws Exception;
     
-    public void agregarProducto(Producto producto) throws Exception;
+    public Producto agregarProducto(Producto producto) throws Exception;
     
     public void editarProducto(Producto producto) throws Exception;
     

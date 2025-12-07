@@ -72,21 +72,6 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
         SwingUtilities.invokeLater(() -> {
             jLabelCategorias.requestFocusInWindow(); // El foco se va al label
         });
-        
-        
-        
-        //Estblecer para la lista de productos en jpanel
-//        jScrollPaneProductos.setViewportView(jPanelListaProductos);
-//        
-//       // jPanelListaProductos.setLayout(new BoxLayout(jPanelListaProductos, BoxLayout.Y_AXIS));
-//        
-//        jPanelListaProductos.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-//
-//        jPanelListaProductos.setAutoscrolls(true);
-
-        
-       // pruebas();
-    
        
         cargarCategorias();
        
@@ -250,12 +235,15 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
                 listaProvicional = listaFiltradaBuscador;
             }            
             
-            
+            final List<Producto> listaProductosFinal = listaProvicional;
             
             int alturaProducto = 72; 
 
             
             for(int i = 0; i < listaProvicional.size(); i++){
+                
+                final int indiceFinal = i;
+                
                 JPanelProducto producto1 = new JPanelProducto();
                 producto1.setBounds(0, alturaProducto * i, 772, 62);
                 producto1.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -274,7 +262,7 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
                       FrmPanelAdministrador.jPanelSeccion.removeAll();
   
                         
-                      productosCRUD = new JPanelAdminProductosCRUD(ConstantesGUI.EDITAR);
+                      productosCRUD = new JPanelAdminProductosCRUD(ConstantesGUI.EDITAR, listaProductosFinal.get(indiceFinal));
                       productosCRUD.setBounds(0, 0, FrmPanelAdministrador.jPanelSeccion.getWidth(), FrmPanelAdministrador.jPanelSeccion.getHeight());
                             FrmPanelAdministrador.jPanelSeccion.add(productosCRUD);
 
@@ -304,7 +292,7 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
                         
                         FrmPanelAdministrador.jPanelSeccion.removeAll();
 
-                        productosCRUD = new JPanelAdminProductosCRUD(ConstantesGUI.ELIMINAR);
+                        productosCRUD = new JPanelAdminProductosCRUD(ConstantesGUI.ELIMINAR, listaProductosFinal.get(indiceFinal));
                         productosCRUD.setBounds(0, 0, FrmPanelAdministrador.jPanelSeccion.getWidth(), FrmPanelAdministrador.jPanelSeccion.getHeight());
                         FrmPanelAdministrador.jPanelSeccion.add(productosCRUD);
 
@@ -503,7 +491,7 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
         // TODO add your handling code here:
         FrmPanelAdministrador.jPanelSeccion.removeAll();
         
-        productosCRUD = new JPanelAdminProductosCRUD(ConstantesGUI.NUEVO);
+        productosCRUD = new JPanelAdminProductosCRUD(ConstantesGUI.NUEVO, null);
         productosCRUD.setBounds(0, 0, FrmPanelAdministrador.jPanelSeccion.getWidth(), FrmPanelAdministrador.jPanelSeccion.getHeight());
             FrmPanelAdministrador.jPanelSeccion.add(productosCRUD);
 

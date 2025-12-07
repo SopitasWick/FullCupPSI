@@ -6,13 +6,21 @@ package Formularios.paneles;
 
 import Entidades.Categoria;
 import Entidades.Producto;
+import Entidades.Productoopcion;
+import Entidades.Valoropcion;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaProductoControlador;
-import Formularios.paneles.elementos.JPanelProducto;
+import Facades.IFachadaProductoOpcionModel;
+import Facades.IFachadaValorOpcionModel;
+import Formularios.FrmPanelAdministrador;
+import Formularios.paneles.elementos.JPanelExtra;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarProductoControlador;
+import Implementaciones.GestionarProductoOpcionModel;
+import Implementaciones.GestionarValorOpcionesModel;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,9 +29,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.AbstractDocument;
 import utilerias.ConstantesGUI;
 import utilerias.HintToTextField;
+import utilerias.NumberDecimalDocumentFilter;
 
 /**
  *
@@ -34,25 +50,42 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     
     private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
     private final IFachadaProductoControlador fProducto = new GestionarProductoControlador();
+    private final IFachadaValorOpcionModel fExtras = new GestionarValorOpcionesModel();
+    private final IFachadaProductoOpcionModel fProductoOpcion = new GestionarProductoOpcionModel();
+
     
     
     ConstantesGUI accion;
+    Producto producto;
+    
+    Color colorSeleccion = Color.decode("#E0E0E0");
+    Color colorNoSeleccion = Color.decode("#FFFFFF");
+    Color colorHover = Color.decode("#F0F0F0");
+    String seleccion = "Tipo vaso";
     
     
     Dimension dimension = null;
     
     List <Producto> listaProductos;
+    List <Valoropcion> listaExtras;
     List <Categoria> listaCategorias;
+    
+    List <Valoropcion> extrasSeleccionados = new ArrayList<>();
+    
+    private boolean extraExpandido = false;
+    
+    private Object ultimoValorValido;
     
     
 
     /**
      * Creates new form JPanelAdminCategorias
      */
-    public JPanelAdminProductosCRUD(ConstantesGUI accion) {
+    public JPanelAdminProductosCRUD(ConstantesGUI accion, Producto producto) {
         initComponents();
         
         this.accion = accion;
+        this.producto = producto;
         
         
         cargarDiseno();
@@ -70,7 +103,32 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     private void cargarDiseno(){
            
         cargarCategorias();
-       
+      
+        
+        cargarExtras();
+        
+        
+        jPanelExtrasProductos.setPreferredSize(new Dimension(605, 312));
+        jPanelNavegacion.setVisible(false);
+        jPanelListaGeneral.setVisible(false);
+        
+        jPanelMostrarExtras.setOpaque(false);
+        jPanelListaGeneral.setBorder(null);
+        
+        
+        jblResumenCategoria.setVisible(true);
+        jblResumenPrecio.setVisible(false);
+        jblResumenNombre.setVisible(false);
+        
+        jblNumExtra.setVisible(false);
+        jblNumExtraLeches.setVisible(false);
+        jblNumExtraVaso.setVisible(false);
+        
+        if(!listaCategorias.isEmpty()){
+            jblResumenCategoria.setText(listaCategorias.get(0).getNombre());
+        }
+        
+        
         accionesConstantesGUI();
         
         
@@ -80,9 +138,11 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     private void cargarCategorias() {
 
         List<String> listaCategoriasString = new ArrayList<>();
-        listaCategoriasString.add("Todos");
 
         try {
+            
+            listaExtras = fExtras.ObtenerTodosValorOpciones();
+            
             listaCategorias = fCategoria.obtenerTodasLasCategorias();
 
             for (int i = 0; i < listaCategorias.size(); i++) {
@@ -96,6 +156,8 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             }
 
             cbCategorias.setModel(modelo);
+            
+           
 
         } catch (Exception ex) {
             Logger.getLogger(JPanelAdminProductosCRUD.class.getName()).log(Level.SEVERE, null, ex);
@@ -117,8 +179,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         }
         
         if(accion == ConstantesGUI.ELIMINAR){
-            btnAccion.setText("ELIMINAR");
-            btnAccion.setBackground(Color.red);
+            accionesEliminar();
         }
         
         
@@ -127,9 +188,382 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     
 
 
+    private void comprobarSeleccion(){
+        
+        switch (seleccion) {
+            case "Tipo Vaso" -> {
+                jPanelSeccionVasos.setBackground(colorSeleccion);
+                
+                jPanelSeccionExtras.setBackground(colorNoSeleccion);
+                jPanelSeccionLeches.setBackground(colorNoSeleccion);
+                
+            }
+            
+            case "Tipo leche" -> {
+                jPanelSeccionLeches.setBackground(colorSeleccion);
+                
+                jPanelSeccionExtras.setBackground(colorNoSeleccion);
+                jPanelSeccionVasos.setBackground(colorNoSeleccion);
+                
+            }
+                
+            case "Extra bebidas" -> {
+                jPanelSeccionExtras.setBackground(colorSeleccion);
+                
+                jPanelSeccionLeches.setBackground(colorNoSeleccion);
+                jPanelSeccionVasos.setBackground(colorNoSeleccion);
+            }      
+                
+            
+        }
+        
+     }
+     
+     
+     
+     
+     
+    private void cargarExtras(){
+        
+        jPanelListaGeneral.removeAll();
+
+        
+        try{
+            
+            List<Valoropcion> listaProvisional = new ArrayList<>();
+            if(!listaProvisional.isEmpty()){
+                listaProvisional.clear();
+            }
+            
+            for(int i = 0; i < listaExtras.size(); i++){
+                    if(listaExtras.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase(seleccion)){
+                        listaProvisional.add(listaExtras.get(i));
+                    }
+            }
+            
+            if(accion == ConstantesGUI.NUEVO){
+                
+            }
+            
+            if(accion == ConstantesGUI.EDITAR || accion == ConstantesGUI.ELIMINAR){
+                List <Productoopcion> otraLista = fProductoOpcion.findProductoopcionByProducto(producto.getIdProducto());
+                for(int i = 0; i < listaProvisional.size(); i++){
+                    for(int j = 0; j < otraLista.size(); j++){
+                        if(otraLista.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase(listaProvisional.get(i).getIdOpcionProducto().getNombreOpcion())){
+                           extrasSeleccionados.add(listaProvisional.get(j));
+                        }
+                    }
+                }
+                
+            }
+            
+            
+            int alturaProducto = 55; 
+                
+            for(int i = 0; i < listaProvisional.size(); i++){    
+                
+                JPanelExtra extra = new JPanelExtra();
+                
+                extra.setBounds(0, alturaProducto * i, 530, 45);
+
+                extra.setAlignmentX(Component.LEFT_ALIGNMENT);
+                extra.setBackground(Color.decode("#FFFFFF"));
+
+
+
+                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreValor());
+                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getCosteAdicional()));
+
+                
+                Valoropcion opcionActual = listaProvisional.get(i);
+
+                for(int j = 0; j < extrasSeleccionados.size(); j++){
+                    if(extrasSeleccionados.get(j).getNombreValor().equalsIgnoreCase(opcionActual.getNombreValor())){
+                        extra.setBackground(colorSeleccion);
+                        extra.setSelecionado(true);
+                    }
+                }
+                
+                if(!(accion == ConstantesGUI.EDITAR || accion == ConstantesGUI.ELIMINAR)){
+                    extra.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            if(extra.isSelecionado()){
+                                if(extrasSeleccionados.contains(opcionActual)){
+                                    extrasSeleccionados.remove(opcionActual);
+                                }
+                                extra.setBackground(colorNoSeleccion);
+                                extra.setSelecionado(false);
+
+                            }
+                            else{
+                                extra.setSelecionado(true);
+                                extrasSeleccionados.add(opcionActual);
+
+                                extra.setBackground(colorSeleccion);
+                            }
+
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e){
+                            if(!extrasSeleccionados.contains(opcionActual)){
+                                extra.setBackground(Color.decode("#E0E0E0"));
+                            }
+
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e){
+                            if(!extrasSeleccionados.contains(opcionActual)){
+                                extra.setBackground(Color.decode("#FFFFFF"));
+                            }
+                        }
+
+                    });
+                }
+
+                establecerResumenExtras();
+
+                extra.getJblEliminarExtra().setVisible(false);
+                extra.getJblEliminarExtra().setCursor(new Cursor(1));
+
+              
+               
+               if(jPanelListaGeneral.getPreferredSize().height < alturaProducto * i){
+                    
+                    if(dimension == null){
+                        dimension = new Dimension();
+                    }
+                    
+                    dimension.setSize(jPanelListaGeneral.getPreferredSize().width, alturaProducto * i);
+                    jPanelListaGeneral.setPreferredSize(dimension);
+               }
+                    
+                jPanelListaGeneral.add(extra);
+
+            
+
+                
+            }
+        
+        
+            jPanelListaGeneral.revalidate();
+            jPanelListaGeneral.repaint();
+        }
+        
+        
+        
+        catch(NumberFormatException e){
+        } catch (Exception ex) {
+            Logger.getLogger(JPanelAdminProductosCRUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
+    }
+    
+    
+     
+     
+    private void accionesEliminar(){
+        btnAccion.setText("ELIMINAR");
+        btnAccion.setBackground(Color.red);
+        
+        txtNombreProducto1.setEditable(false);
+        jSpinnerPrecioProducto.setEnabled(false);
+        cbCategorias.setEnabled(false);
+        
+        txtNombreProducto1.setText(producto.getNombreProducto());
+       // jblDescripcionProducto1.setText(producto.ge);
+        jSpinnerPrecioProducto.setValue(producto.getPrecioProducto());
+        cbCategorias.setSelectedItem((String)producto.getIdCategoria().getNombre());
+        
+        jblResumenNombre.setText(producto.getNombreProducto());
+        jblResumenNombre.setVisible(true);
+        
+        jblResumenPrecio.setText(String.valueOf(producto.getPrecioProducto()));
+        jblResumenPrecio.setVisible(true);
+        
+        
+        establecerResumenExtras();
+        
+        
+    } 
+     
+     
+    private void agregarProducto(){
+    
+        try{
+        
+            String nombre = txtNombreProducto1.getText();
+            float precio = ((Number)jSpinnerPrecioProducto.getValue()).floatValue();
+            Categoria categoria = fCategoria.obtenerCategoriaPorNombre((String)cbCategorias.getSelectedItem());
+            
+            //Validaciones
+            
+            
+            Producto producto = new Producto();
+            producto.setNombreProducto(nombre);
+            producto.setIdCategoria(categoria);
+            producto.setPrecioProducto(precio);
+            producto.setEstado("activo");
+            
+            Producto nuevoProducto = fProducto.agregarProducto(producto);
+            
+            //Aqui se guardan los extras
+            if(!extrasSeleccionados.isEmpty()){
+               for(int i = 0; i < extrasSeleccionados.size(); i++){ 
+                   Productoopcion po = new Productoopcion();
+                   po.setIdProducto(nuevoProducto);
+                   po.setIdOpcionProducto(extrasSeleccionados.get(i).getIdOpcionProducto());
+                   fProductoOpcion.agregarProductoOpcion(po);
+               }
+            }
+            
+            JOptionPane.showMessageDialog(this, "Producto agregado");
+            
+            volverSecccionAnterior();
+        }
+        
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        
+    }
+    
+    private void editarProducto(){
+    
+    }
+    
+    private void eliminarProducto(){
+    
+    }
+    
+    
+    private void volverSecccionAnterior(){
+        FrmPanelAdministrador.jPanelSeccion.removeAll();
+            
+        JPanelAdminProductos panelProductos = new JPanelAdminProductos();
+            
+        panelProductos.setBounds(0, 0, FrmPanelAdministrador.jPanelSeccion.getWidth(), FrmPanelAdministrador.jPanelSeccion.getHeight());
+        FrmPanelAdministrador.jPanelSeccion.add(panelProductos);
+        
+        FrmPanelAdministrador.jPanelSeccion.revalidate();
+        FrmPanelAdministrador.jPanelSeccion.repaint();
+    
+    }
     
     
     
+    private void aplicarValidadorASpinner(JSpinner spinner) {
+    
+        JComponent editor = spinner.getEditor();
+        JFormattedTextField textField = null;
+
+        // Paso 1: Intentar obtener el JFormattedTextField del editor
+        if (editor instanceof JSpinner.DefaultEditor) {
+            textField = ((JSpinner.DefaultEditor) editor).getTextField();
+        } 
+
+        if (textField != null) {
+            // Paso 2: Crear el filtro
+            NumberDecimalDocumentFilter decimalFilter = new NumberDecimalDocumentFilter();
+
+            // Paso 3: Aplicar el filtro al Documento
+            ((AbstractDocument) textField.getDocument()).setDocumentFilter(decimalFilter);
+
+            // Opcional: Asegurarse de que el spinner solo permita editar texto
+            textField.setEditable(true); 
+        } else {
+            System.err.println("Advertencia: No se pudo encontrar el campo de texto interno del JSpinner.");
+        }
+}
+    
+    
+    private void configurarSpinnerConReversion(JSpinner spinner) {
+    // 1. Inicializar el último valor válido
+    ultimoValorValido = spinner.getValue();
+
+    // 2. Agregar el ChangeListener al modelo
+    spinner.getModel().addChangeListener(new ChangeListener() {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            try {
+                // El método getValue() del SpinnerModel intenta devolver el valor,
+                // PERO puede lanzar una excepción si el texto del campo es inválido
+                // o si excede los límites definidos por el modelo.
+                
+                Object nuevoValor = spinner.getValue();
+                
+                // Si llegamos aquí, el valor es válido (dentro de los límites del modelo).
+                // Guardamos este nuevo valor para usarlo si el próximo intento falla.
+                ultimoValorValido = nuevoValor;
+
+            } catch (Exception ex) {
+                // 3. Si hay una excepción (valor inválido o fuera de límites):
+                
+                // Revertir el JSpinner al último valor conocido y válido
+                spinner.setValue(ultimoValorValido);
+                
+                // Opcional: Mostrar un mensaje o loguear el error.
+                System.out.println("Valor inválido detectado. Revertiendo a: " + ultimoValorValido);
+            }
+        }
+    });
+
+    // Opcional: Si además quieres asegurar que solo se puedan escribir números,
+    // asegúrate de llamar a tu método de aplicación del DocumentFilter aquí:
+     aplicarValidadorASpinner(spinner);
+}
+    
+    
+    private void establecerResumenExtras(){
+        if(!extrasSeleccionados.isEmpty()){
+            int leche = 0;
+            int vaso = 0;
+            int otros = 0;
+            
+            for(int i = 0; i < extrasSeleccionados.size(); i++){
+                if(extrasSeleccionados.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Tipo vaso")){
+                    vaso++;
+                }
+                
+                if(extrasSeleccionados.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Tipo leche")){
+                    leche++;
+                }
+                
+                if(extrasSeleccionados.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")){
+                    otros++;
+                }
+                
+            }
+            
+            jblNumExtraLeches.setText("Leches (" + leche + ")" );
+            jblNumExtraVaso.setText("Vasos (" + vaso + ")" );
+            jblNumExtra.setText("Otros (" + otros + ")" );
+            
+            
+            // Código mejorado usando el operador ternario:
+            jblNumExtraLeches.setVisible(leche != 0);
+
+            // Código original:
+            // if(vaso == 0){ jblNumExtraVaso.setVisible(false); } else { jblNumExtraVaso.setVisible(true); }
+
+            // Código mejorado usando el operador ternario:
+            jblNumExtraVaso.setVisible(vaso != 0);
+
+            // Código original:
+            // if(otros == 0){ jblNumExtra.setVisible(false); } else { jblNumExtra.setVisible(true); }
+
+            // Código mejorado usando el operador ternario:
+            jblNumExtra.setVisible(otros != 0);
+            
+            
+            jblNumExtra.setText("Extras (" + extrasSeleccionados.size() + "");
+            
+        }
+    }
     
 
     /**
@@ -145,22 +579,35 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         jblAdminProductos = new javax.swing.JLabel();
         jScrollPaneProductos = new javax.swing.JScrollPane();
         jPanelExtrasProductos = new javax.swing.JPanel();
-        txtDescripcionProducto = new javax.swing.JTextField();
         txtNombreProducto1 = new javax.swing.JTextField();
         jblCategoriaProducto = new javax.swing.JLabel();
         jblNombreProducto = new javax.swing.JLabel();
-        jblDescripcionProducto1 = new javax.swing.JLabel();
         jSpinnerPrecioProducto = new javax.swing.JSpinner();
         cbCategorias = new javax.swing.JComboBox<>();
-        jblExtraProducto = new javax.swing.JLabel();
         jblPrecioProducto = new javax.swing.JLabel();
-        jPanelContenedorExtras = new javax.swing.JPanel();
-        jPanelContenedorLeches = new javax.swing.JPanel();
-        cbLeches = new javax.swing.JCheckBox();
-        cbTipoExtras = new javax.swing.JCheckBox();
-        jPanelContenedorVasos = new javax.swing.JPanel();
-        jPanelContenedorTipoExtra = new javax.swing.JPanel();
-        cbVasos = new javax.swing.JCheckBox();
+        jPanelNavegacion = new javax.swing.JPanel();
+        jPanelSeccionVasos = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanelSeccionLeches = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanelSeccionExtras = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanelListaGeneral = new javax.swing.JPanel();
+        jPanelMostrarExtras = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanelResumenProducto = new javax.swing.JPanel();
+        jblNumExtra = new javax.swing.JLabel();
+        jblResumenPrecio = new javax.swing.JLabel();
+        jblResumenNombre = new javax.swing.JLabel();
+        jblResumenCategoria = new javax.swing.JLabel();
+        jblResumenNombre1 = new javax.swing.JLabel();
+        jblResumenPrecio1 = new javax.swing.JLabel();
+        jblResumenCategoria1 = new javax.swing.JLabel();
+        jblNumExtra1 = new javax.swing.JLabel();
+        jblNumExtraVaso = new javax.swing.JLabel();
+        jblNumExtraLeches = new javax.swing.JLabel();
         btnAccion = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -187,42 +634,43 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         jScrollPaneProductos.setViewportView(jPanelExtrasProductos);
 
         jPanelExtrasProductos.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelExtrasProductos.setMinimumSize(new java.awt.Dimension(965, 794));
-        jPanelExtrasProductos.setPreferredSize(new java.awt.Dimension(965, 794));
+        jPanelExtrasProductos.setMinimumSize(new java.awt.Dimension(605, 794));
+        jPanelExtrasProductos.setPreferredSize(new java.awt.Dimension(605, 794));
         jPanelExtrasProductos.setLayout(null);
 
-        txtDescripcionProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtDescripcionProductoKeyTyped(evt);
-            }
-        });
-        jPanelExtrasProductos.add(txtDescripcionProducto);
-        txtDescripcionProducto.setBounds(10, 140, 770, 42);
-
         txtNombreProducto1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreProducto1KeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtNombreProducto1KeyTyped(evt);
             }
         });
         jPanelExtrasProductos.add(txtNombreProducto1);
-        txtNombreProducto1.setBounds(10, 40, 770, 42);
+        txtNombreProducto1.setBounds(10, 40, 530, 42);
 
         jblCategoriaProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jblCategoriaProducto.setText("Categoria");
         jPanelExtrasProductos.add(jblCategoriaProducto);
-        jblCategoriaProducto.setBounds(250, 230, 170, 22);
+        jblCategoriaProducto.setBounds(230, 140, 150, 22);
 
         jblNombreProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jblNombreProducto.setText("Nombre del producto");
         jPanelExtrasProductos.add(jblNombreProducto);
         jblNombreProducto.setBounds(10, 10, 170, 22);
 
-        jblDescripcionProducto1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jblDescripcionProducto1.setText("Nombre del producto");
-        jPanelExtrasProductos.add(jblDescripcionProducto1);
-        jblDescripcionProducto1.setBounds(10, 110, 170, 22);
+        jSpinnerPrecioProducto.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerPrecioProductoStateChanged(evt);
+            }
+        });
+        jSpinnerPrecioProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jSpinnerPrecioProductoKeyTyped(evt);
+            }
+        });
         jPanelExtrasProductos.add(jSpinnerPrecioProducto);
-        jSpinnerPrecioProducto.setBounds(10, 260, 130, 40);
+        jSpinnerPrecioProducto.setBounds(10, 180, 150, 40);
 
         cbCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deshabilitado" }));
         cbCategorias.addActionListener(new java.awt.event.ActionListener() {
@@ -231,78 +679,176 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             }
         });
         jPanelExtrasProductos.add(cbCategorias);
-        cbCategorias.setBounds(250, 260, 150, 40);
-
-        jblExtraProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jblExtraProducto.setText("Extras");
-        jPanelExtrasProductos.add(jblExtraProducto);
-        jblExtraProducto.setBounds(10, 360, 170, 22);
+        cbCategorias.setBounds(230, 180, 150, 40);
 
         jblPrecioProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jblPrecioProducto.setText("Precio");
         jPanelExtrasProductos.add(jblPrecioProducto);
-        jblPrecioProducto.setBounds(10, 230, 170, 22);
+        jblPrecioProducto.setBounds(10, 140, 130, 22);
 
-        jPanelContenedorExtras.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelContenedorExtras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanelContenedorExtras.setLayout(null);
+        jPanelNavegacion.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelNavegacion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelNavegacion.setLayout(new javax.swing.BoxLayout(jPanelNavegacion, javax.swing.BoxLayout.LINE_AXIS));
 
-        jPanelContenedorLeches.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelContenedorLeches.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanelContenedorExtras.add(jPanelContenedorLeches);
-        jPanelContenedorLeches.setBounds(10, 210, 400, 80);
-
-        cbLeches.setBackground(new java.awt.Color(255, 255, 255));
-        cbLeches.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbLeches.setText("Leche");
-        cbLeches.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbLechesActionPerformed(evt);
+        jPanelSeccionVasos.setBackground(new java.awt.Color(224, 224, 224));
+        jPanelSeccionVasos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelSeccionVasosMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelSeccionVasosMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelSeccionVasosMouseExited(evt);
             }
         });
-        jPanelContenedorExtras.add(cbLeches);
-        cbLeches.setBounds(10, 180, 170, 20);
+        jPanelSeccionVasos.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 10));
 
-        cbTipoExtras.setBackground(new java.awt.Color(255, 255, 255));
-        cbTipoExtras.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbTipoExtras.setText("Extras");
-        cbTipoExtras.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbTipoExtrasActionPerformed(evt);
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Vasos");
+        jPanelSeccionVasos.add(jLabel1);
+
+        jPanelNavegacion.add(jPanelSeccionVasos);
+
+        jPanelSeccionLeches.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelSeccionLeches.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelSeccionLeches.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelSeccionLechesMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelSeccionLechesMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelSeccionLechesMouseExited(evt);
             }
         });
-        jPanelContenedorExtras.add(cbTipoExtras);
-        cbTipoExtras.setBounds(470, 30, 170, 20);
+        jPanelSeccionLeches.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 10));
 
-        jPanelContenedorVasos.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelContenedorVasos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanelContenedorExtras.add(jPanelContenedorVasos);
-        jPanelContenedorVasos.setBounds(10, 60, 400, 80);
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("Leches");
+        jPanelSeccionLeches.add(jLabel2);
 
-        jPanelContenedorTipoExtra.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelContenedorTipoExtra.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanelContenedorTipoExtra.setForeground(new java.awt.Color(204, 204, 204));
-        jPanelContenedorExtras.add(jPanelContenedorTipoExtra);
-        jPanelContenedorTipoExtra.setBounds(470, 60, 270, 290);
+        jPanelNavegacion.add(jPanelSeccionLeches);
 
-        cbVasos.setBackground(new java.awt.Color(255, 255, 255));
-        cbVasos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbVasos.setText("Vasos");
-        cbVasos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbVasosActionPerformed(evt);
+        jPanelSeccionExtras.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelSeccionExtras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelSeccionExtras.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelSeccionExtrasMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelSeccionExtrasMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelSeccionExtrasMouseExited(evt);
             }
         });
-        jPanelContenedorExtras.add(cbVasos);
-        cbVasos.setBounds(10, 30, 170, 20);
+        jPanelSeccionExtras.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 10));
 
-        jPanelExtrasProductos.add(jPanelContenedorExtras);
-        jPanelContenedorExtras.setBounds(10, 410, 780, 370);
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setText("Extras");
+        jPanelSeccionExtras.add(jLabel3);
+
+        jPanelNavegacion.add(jPanelSeccionExtras);
+
+        jPanelExtrasProductos.add(jPanelNavegacion);
+        jPanelNavegacion.setBounds(10, 420, 560, 50);
+
+        jPanelListaGeneral.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelListaGeneral.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelListaGeneral.setMinimumSize(new java.awt.Dimension(300, 20));
+        jPanelListaGeneral.setPreferredSize(new java.awt.Dimension(490, 380));
+        jPanelListaGeneral.setLayout(null);
+        jPanelExtrasProductos.add(jPanelListaGeneral);
+        jPanelListaGeneral.setBounds(10, 490, 560, 380);
+
+        jPanelMostrarExtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelMostrarExtras.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelMostrarExtrasMouseClicked(evt);
+            }
+        });
+        jPanelMostrarExtras.setLayout(null);
+
+        jLabel4.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel4.setText("Mostrar Extras");
+        jPanelMostrarExtras.add(jLabel4);
+        jLabel4.setBounds(5, 5, 90, 16);
+
+        jLabel5.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel5.setText("▼");
+        jPanelMostrarExtras.add(jLabel5);
+        jLabel5.setBounds(145, 5, 20, 16);
+        jPanelMostrarExtras.add(jSeparator1);
+        jSeparator1.setBounds(95, 16, 40, 10);
+
+        jPanelExtrasProductos.add(jPanelMostrarExtras);
+        jPanelMostrarExtras.setBounds(10, 380, 160, 25);
 
         jScrollPaneProductos.setViewportView(jPanelExtrasProductos);
 
         jPanel1.add(jScrollPaneProductos);
-        jScrollPaneProductos.setBounds(20, 70, 880, 500);
+        jScrollPaneProductos.setBounds(20, 80, 600, 490);
+
+        jPanelResumenProducto.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelResumenProducto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelResumenProducto.setLayout(null);
+
+        jblNumExtra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jblNumExtra.setText("Otros");
+        jPanelResumenProducto.add(jblNumExtra);
+        jblNumExtra.setBounds(110, 320, 110, 30);
+
+        jblResumenPrecio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jblResumenPrecio.setText("Precio");
+        jPanelResumenProducto.add(jblResumenPrecio);
+        jblResumenPrecio.setBounds(110, 90, 130, 30);
+
+        jblResumenNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jblResumenNombre.setText("Nombre");
+        jPanelResumenProducto.add(jblResumenNombre);
+        jblResumenNombre.setBounds(110, 40, 140, 30);
+
+        jblResumenCategoria.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jblResumenCategoria.setText("Categoria");
+        jPanelResumenProducto.add(jblResumenCategoria);
+        jblResumenCategoria.setBounds(110, 140, 70, 30);
+
+        jblResumenNombre1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jblResumenNombre1.setText("Nombre");
+        jPanelResumenProducto.add(jblResumenNombre1);
+        jblResumenNombre1.setBounds(20, 40, 60, 30);
+
+        jblResumenPrecio1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jblResumenPrecio1.setText("Precio");
+        jPanelResumenProducto.add(jblResumenPrecio1);
+        jblResumenPrecio1.setBounds(20, 90, 80, 30);
+
+        jblResumenCategoria1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jblResumenCategoria1.setText("Categoria");
+        jPanelResumenProducto.add(jblResumenCategoria1);
+        jblResumenCategoria1.setBounds(20, 140, 70, 30);
+
+        jblNumExtra1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jblNumExtra1.setText("Extras: 0");
+        jPanelResumenProducto.add(jblNumExtra1);
+        jblNumExtra1.setBounds(20, 200, 70, 30);
+
+        jblNumExtraVaso.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jblNumExtraVaso.setText("Vasos (0)");
+        jPanelResumenProducto.add(jblNumExtraVaso);
+        jblNumExtraVaso.setBounds(110, 240, 120, 30);
+
+        jblNumExtraLeches.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jblNumExtraLeches.setText("Leches (0)");
+        jPanelResumenProducto.add(jblNumExtraLeches);
+        jblNumExtraLeches.setBounds(110, 280, 120, 30);
+
+        jPanel1.add(jPanelResumenProducto);
+        jPanelResumenProducto.setBounds(640, 80, 260, 360);
 
         btnAccion.setBackground(new java.awt.Color(17, 24, 39));
         btnAccion.setFont(new java.awt.Font("Helvetica Neue", 1, 16)); // NOI18N
@@ -314,7 +860,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             }
         });
         jPanel1.add(btnAccion);
-        btnAccion.setBounds(720, 30, 170, 30);
+        btnAccion.setBounds(730, 30, 170, 30);
 
         add(jPanel1);
         jPanel1.setBounds(20, 14, 920, 590);
@@ -327,62 +873,188 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         
     }//GEN-LAST:event_formMouseClicked
 
-    private void txtDescripcionProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionProductoKeyTyped
-        // TODO add your handling code here:
-
-
-    }//GEN-LAST:event_txtDescripcionProductoKeyTyped
-
     private void txtNombreProducto1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreProducto1KeyTyped
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtNombreProducto1KeyTyped
 
     private void cbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriasActionPerformed
         // TODO add your handling code here:}
-
-
+        jblResumenCategoria.setVisible(true);
+        jblResumenCategoria.setText((String)cbCategorias.getSelectedItem());
     }//GEN-LAST:event_cbCategoriasActionPerformed
-
-    private void cbLechesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbLechesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbLechesActionPerformed
-
-    private void cbTipoExtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoExtrasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbTipoExtrasActionPerformed
-
-    private void cbVasosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVasosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbVasosActionPerformed
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         // TODO add your handling code here:
 
+        if(accion == ConstantesGUI.NUEVO){
+            System.out.println("guardar");
+            agregarProducto();
+        }
+        
+        if(accion == ConstantesGUI.NUEVO){
+            editarProducto();
+        }
+        
+        if(accion == ConstantesGUI.NUEVO){
+            eliminarProducto();
+        }
 
     }//GEN-LAST:event_btnAccionActionPerformed
+
+    private void jPanelSeccionVasosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionVasosMouseClicked
+        // TODO add your handling code here:
+
+        seleccion = "Tipo vaso";
+
+        comprobarSeleccion();
+
+        dimension = null;
+        cargarExtras();
+
+    }//GEN-LAST:event_jPanelSeccionVasosMouseClicked
+
+    private void jPanelSeccionVasosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionVasosMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("Tipo vaso")){
+            jPanelSeccionVasos.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelSeccionVasosMouseEntered
+
+    private void jPanelSeccionVasosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionVasosMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("Tipo vaso")){
+            jPanelSeccionVasos.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelSeccionVasosMouseExited
+
+    private void jPanelSeccionLechesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionLechesMouseClicked
+        // TODO add your handling code here:
+
+        seleccion = "Tipo leche";
+
+        comprobarSeleccion();
+
+        dimension = null;
+        cargarExtras();
+    }//GEN-LAST:event_jPanelSeccionLechesMouseClicked
+
+    private void jPanelSeccionLechesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionLechesMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("Tipo leche")){
+            jPanelSeccionLeches.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelSeccionLechesMouseEntered
+
+    private void jPanelSeccionLechesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionLechesMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("Tipo leche")){
+            jPanelSeccionLeches.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelSeccionLechesMouseExited
+
+    private void jPanelSeccionExtrasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseClicked
+        // TODO add your handling code here:
+
+        seleccion = "Extra bebidas";
+
+        comprobarSeleccion();
+
+        dimension = null;
+        cargarExtras();
+    }//GEN-LAST:event_jPanelSeccionExtrasMouseClicked
+
+    private void jPanelSeccionExtrasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("Extra bebidas")){
+            jPanelSeccionExtras.setBackground(colorHover);
+        }
+
+    }//GEN-LAST:event_jPanelSeccionExtrasMouseEntered
+
+    private void jPanelSeccionExtrasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("Extra bebidas")){
+            jPanelSeccionExtras.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelSeccionExtrasMouseExited
+
+    private void jPanelMostrarExtrasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelMostrarExtrasMouseClicked
+        // TODO add your handling code here:
+        
+        if(extraExpandido){
+           jPanelExtrasProductos.setPreferredSize(new Dimension(605, 312));
+           jPanelNavegacion.setVisible(false);
+           jPanelListaGeneral.setVisible(false);
+           jLabel5.setText("▼");
+           
+           extraExpandido = false;
+        }
+        
+        else{
+            jPanelExtrasProductos.setPreferredSize(new Dimension(605, 894));
+            jPanelNavegacion.setVisible(true);
+            jPanelListaGeneral.setVisible(true);
+            jLabel5.setText("▶");
+           
+            extraExpandido = true;
+        
+        }
+        
+    }//GEN-LAST:event_jPanelMostrarExtrasMouseClicked
+
+    private void jSpinnerPrecioProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerPrecioProductoStateChanged
+        // TODO add your handling code here:
+        configurarSpinnerConReversion(jSpinnerPrecioProducto);
+        
+    }//GEN-LAST:event_jSpinnerPrecioProductoStateChanged
+
+    private void jSpinnerPrecioProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinnerPrecioProductoKeyTyped
+        // TODO add your handling code here:
+        configurarSpinnerConReversion(jSpinnerPrecioProducto);
+    }//GEN-LAST:event_jSpinnerPrecioProductoKeyTyped
+
+    private void txtNombreProducto1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreProducto1KeyReleased
+        // TODO add your handling code here:
+        jblResumenNombre.setVisible(true);
+        jblResumenNombre.setText(txtNombreProducto1.getText());
+    }//GEN-LAST:event_txtNombreProducto1KeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccion;
     private javax.swing.JComboBox<String> cbCategorias;
-    private javax.swing.JCheckBox cbLeches;
-    private javax.swing.JCheckBox cbTipoExtras;
-    private javax.swing.JCheckBox cbVasos;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanelContenedorExtras;
-    private javax.swing.JPanel jPanelContenedorLeches;
-    private javax.swing.JPanel jPanelContenedorTipoExtra;
-    private javax.swing.JPanel jPanelContenedorVasos;
     private javax.swing.JPanel jPanelExtrasProductos;
+    private javax.swing.JPanel jPanelListaGeneral;
+    private javax.swing.JPanel jPanelMostrarExtras;
+    private javax.swing.JPanel jPanelNavegacion;
+    private javax.swing.JPanel jPanelResumenProducto;
+    private javax.swing.JPanel jPanelSeccionExtras;
+    private javax.swing.JPanel jPanelSeccionLeches;
+    private javax.swing.JPanel jPanelSeccionVasos;
     private javax.swing.JScrollPane jScrollPaneProductos;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSpinner jSpinnerPrecioProducto;
     private javax.swing.JLabel jblAdminProductos;
     private javax.swing.JLabel jblCategoriaProducto;
-    private javax.swing.JLabel jblDescripcionProducto1;
-    private javax.swing.JLabel jblExtraProducto;
     private javax.swing.JLabel jblNombreProducto;
+    private javax.swing.JLabel jblNumExtra;
+    private javax.swing.JLabel jblNumExtra1;
+    private javax.swing.JLabel jblNumExtraLeches;
+    private javax.swing.JLabel jblNumExtraVaso;
     private javax.swing.JLabel jblPrecioProducto;
-    private javax.swing.JTextField txtDescripcionProducto;
+    private javax.swing.JLabel jblResumenCategoria;
+    private javax.swing.JLabel jblResumenCategoria1;
+    private javax.swing.JLabel jblResumenNombre;
+    private javax.swing.JLabel jblResumenNombre1;
+    private javax.swing.JLabel jblResumenPrecio;
+    private javax.swing.JLabel jblResumenPrecio1;
     private javax.swing.JTextField txtNombreProducto1;
     // End of variables declaration//GEN-END:variables
 }

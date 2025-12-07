@@ -105,6 +105,7 @@ public class JPanelProducto extends javax.swing.JPanel {
         jblPrecioProducto.setBounds(520, 17, 180, 30);
 
         jblEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/btnEliminarProducto.png"))); // NOI18N
+        jblEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         add(jblEliminar);
         jblEliminar.setBounds(722, 10, 40, 40);
 

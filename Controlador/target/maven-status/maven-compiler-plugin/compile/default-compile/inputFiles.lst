@@ -5,6 +5,7 @@ C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Imp
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaProductoControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaValorOpcionControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarComandaControlador.java
+C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarProductoOpcionControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaDetallesComandaControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarTamanoVasosControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtrasControlador.java
@@ -18,3 +19,4 @@ C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Imp
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaComandasControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarDetallesComandaControlador.java
 C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Pruebas\PruebaDetallesProducto.java
+C:\Users\Sergio Arturo\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaProductoOpcionControlador.java

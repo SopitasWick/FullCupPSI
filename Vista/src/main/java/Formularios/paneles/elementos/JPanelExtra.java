@@ -19,6 +19,8 @@ public class JPanelExtra extends javax.swing.JPanel {
 
     
     private int radius = 20;
+    private boolean selecionado;
+    
     
     /**
      * Creates new form JPanelProducto
@@ -72,6 +74,16 @@ public class JPanelExtra extends javax.swing.JPanel {
     public JLabel getJblEliminarExtra() {
         return jblEliminar;
     } 
+
+    public boolean isSelecionado() {
+        return selecionado;
+    }
+
+    public void setSelecionado(boolean selecionado) {
+        this.selecionado = selecionado;
+    }
+    
+    
     
     
 

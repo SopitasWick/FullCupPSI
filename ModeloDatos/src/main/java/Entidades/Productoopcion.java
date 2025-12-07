@@ -8,6 +8,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,12 +25,15 @@ import javax.persistence.Table;
 @Table(name = "productoopcion")
 @NamedQueries({
     @NamedQuery(name = "Productoopcion.findAll", query = "SELECT p FROM Productoopcion p"),
+    @NamedQuery(name = "Productoopcion.findAllByIdProducto", query = "SELECT p FROM Productoopcion p WHERE p.idProducto = :idProducto"),
     @NamedQuery(name = "Productoopcion.findByIdProductoOpcion", query = "SELECT p FROM Productoopcion p WHERE p.idProductoOpcion = :idProductoOpcion")})
 public class Productoopcion implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     @Id
-    @Basic(optional = false)
     @Column(name = "idProductoOpcion")
     private Integer idProductoOpcion;
     @JoinColumn(name = "idOpcionProducto", referencedColumnName = "idOpcionProducto")
@@ -48,6 +53,15 @@ public class Productoopcion implements Serializable {
     public Integer getIdProductoOpcion() {
         return idProductoOpcion;
     }
+
+    public Productoopcion(Opcionproducto idOpcionProducto, Producto idProducto) {
+        this.idOpcionProducto = idOpcionProducto;
+        this.idProducto = idProducto;
+    }
+    
+    
+    
+    
 
     public void setIdProductoOpcion(Integer idProductoOpcion) {
         this.idProductoOpcion = idProductoOpcion;
