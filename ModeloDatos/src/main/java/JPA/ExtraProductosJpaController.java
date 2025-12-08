@@ -76,7 +76,7 @@ public class ExtraProductosJpaController implements Serializable {
             em.persist(extraProducto);
             
             if (idProducto != null) {
-                idProducto.getExtrasProductosList().add(extraProducto);
+              //  idProducto.getExtrasProductosList().add(extraProducto);
                 idProducto = em.merge(idProducto);
             }
             
@@ -146,7 +146,7 @@ public class ExtraProductosJpaController implements Serializable {
             
             Producto idProducto = extraProducto.getIdProducto();
             if (idProducto != null) {
-                idProducto.getExtrasProductosList().remove(extraProducto);
+          //      idProducto.getExtrasProductosList().remove(extraProducto);
                 idProducto = em.merge(idProducto);
             }
             

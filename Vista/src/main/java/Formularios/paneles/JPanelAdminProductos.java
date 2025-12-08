@@ -197,7 +197,7 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
             listaProductos = fProducto.obtenerTodosLosProductos();
             
             List<Producto> listaProvicional = new ArrayList<>();
-            
+            List<Producto> listaProvicionalEstado = new ArrayList<>();
             
             
             
@@ -216,8 +216,6 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
             else{
                 listaProvicional = listaProductos;
             }
-            
-            
 
 
             if (!textoBuscador.trim().equalsIgnoreCase("")) {
@@ -233,7 +231,33 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
 
                 // Cambiar la lista provisional al resultado del filtro
                 listaProvicional = listaFiltradaBuscador;
-            }            
+            }
+
+
+            for(int i = 0; i < listaProvicional.size(); i++){
+                listaProvicionalEstado.add(listaProvicional.get(i));
+            }
+            
+            listaProvicional.clear();
+            if(!cbInactivas.isSelected()){
+                for(int i = 0; i < listaProvicionalEstado.size(); i++){
+                    
+                    if(listaProvicionalEstado.get(i).getEstado().equalsIgnoreCase("activo")){
+                        listaProvicional.add(listaProvicionalEstado.get(i));
+                    }
+                }
+            }
+            else{
+                for(int i = 0; i < listaProvicionalEstado.size(); i++){
+                    
+                    if(listaProvicionalEstado.get(i).getEstado().equalsIgnoreCase("inactivo")){
+                        listaProvicional.add(listaProvicionalEstado.get(i));
+                    }
+                }
+            }
+            
+
+            
             
             final List<Producto> listaProductosFinal = listaProvicional;
             
@@ -464,6 +488,16 @@ public class JPanelAdminProductos extends javax.swing.JPanel {
 
     private void cbInactivasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbInactivasActionPerformed
         // TODO add your handling code here:
+        
+        String seleccion = cbCategorias.getSelectedItem() != null
+                ? cbCategorias.getSelectedItem().toString()
+                : "";
+
+            try {
+                cargarProductos(seleccion, txtBuscarProducto.getText());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
     }//GEN-LAST:event_cbInactivasActionPerformed
 

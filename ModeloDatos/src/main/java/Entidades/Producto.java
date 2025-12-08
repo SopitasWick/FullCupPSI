@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -63,16 +65,28 @@ public class Producto implements Serializable {
     @ManyToOne
     private Categoria idCategoria;
     
-    @OneToMany(mappedBy = "idProducto")
-    private List<ExtrasProductos> extrasProductosList;
+//    @OneToMany(mappedBy = "idProducto")
+//    private List<ExtrasProductos> extrasProductosList;
+//
+//    public List<ExtrasProductos> getExtrasProductosList() {
+//        return extrasProductosList;
+//    }
+    
+    
+    
+    @ManyToMany
+    @JoinTable(
+        name = "ProductoExtra",
+        joinColumns = @JoinColumn(name = "idProducto"),
+        inverseJoinColumns = @JoinColumn(name = "idExtraProducto")
+    )
+    private List<Extra> extras;
 
-    public List<ExtrasProductos> getExtrasProductosList() {
-        return extrasProductosList;
-    }
+    
 
-    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
-        this.extrasProductosList = extrasProductosList;
-    }
+//    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
+//        this.extrasProductosList = extrasProductosList;
+//    }
 
     public Producto() {
     }
@@ -158,6 +172,19 @@ public class Producto implements Serializable {
     public void setIdCategoria(Categoria idCategoria) {
         this.idCategoria = idCategoria;
     }
+
+    public List<Extra> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<Extra> extras) {
+        this.extras = extras;
+    }
+    
+    
+    
+    
+    
 
     @Override
     public int hashCode() {

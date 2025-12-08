@@ -5,16 +5,19 @@
 package Formularios.paneles;
 
 import Entidades.Categoria;
+import Entidades.Extra;
 import Entidades.Producto;
 import Entidades.Productoopcion;
 import Entidades.Valoropcion;
 import Facades.IFachadaCategoriaControlador;
+import Facades.IFachadaExtraModel2;
 import Facades.IFachadaProductoControlador;
 import Facades.IFachadaProductoOpcionModel;
 import Facades.IFachadaValorOpcionModel;
 import Formularios.FrmPanelAdministrador;
 import Formularios.paneles.elementos.JPanelExtra;
 import Implementaciones.GestionarCategoriaControlador;
+import Implementaciones.GestionarExtrasModel2;
 import Implementaciones.GestionarProductoControlador;
 import Implementaciones.GestionarProductoOpcionModel;
 import Implementaciones.GestionarValorOpcionesModel;
@@ -24,6 +27,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,10 +37,13 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import utilerias.ConstantesGUI;
 import utilerias.HintToTextField;
 import utilerias.NumberDecimalDocumentFilter;
@@ -52,6 +59,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     private final IFachadaProductoControlador fProducto = new GestionarProductoControlador();
     private final IFachadaValorOpcionModel fExtras = new GestionarValorOpcionesModel();
     private final IFachadaProductoOpcionModel fProductoOpcion = new GestionarProductoOpcionModel();
+    private final IFachadaExtraModel2 fex2 = new GestionarExtrasModel2();
 
     
     
@@ -67,14 +75,15 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     Dimension dimension = null;
     
     List <Producto> listaProductos;
-    List <Valoropcion> listaExtras;
+    List <Extra> listaExtras;
     List <Categoria> listaCategorias;
     
-    List <Valoropcion> extrasSeleccionados = new ArrayList<>();
+    List <Extra> extrasSeleccionados = new ArrayList<>();
     
     private boolean extraExpandido = false;
     
     private Object ultimoValorValido;
+    boolean cargarExtras = false;
     
     
 
@@ -108,12 +117,14 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         cargarExtras();
         
         
-        jPanelExtrasProductos.setPreferredSize(new Dimension(605, 312));
-        jPanelNavegacion.setVisible(false);
-        jPanelListaGeneral.setVisible(false);
-        
-        jPanelMostrarExtras.setOpaque(false);
+//        jPanelExtrasProductos.setPreferredSize(new Dimension(605, 312));
+//        jPanelNavegacion.setVisible(false);
+//        jPanelListaGeneral.setVisible(false);
+//        
+//        jPanelMostrarExtras.setOpaque(false);
         jPanelListaGeneral.setBorder(null);
+        
+        jScrollPaneExtras.setBorder(null);
         
         
         jblResumenCategoria.setVisible(true);
@@ -137,12 +148,14 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     
     private void cargarCategorias() {
 
+        
         List<String> listaCategoriasString = new ArrayList<>();
 
         try {
             
-            listaExtras = fExtras.ObtenerTodosValorOpciones();
+            listaExtras = fex2.obtenerTodosLosExtras();
             
+                        
             listaCategorias = fCategoria.obtenerTodasLasCategorias();
 
             for (int i = 0; i < listaCategorias.size(); i++) {
@@ -175,10 +188,11 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         }
         
         if(accion == ConstantesGUI.EDITAR){
-            btnAccion.setText("EDITAR");
+            accionesEditar();
         }
         
         if(accion == ConstantesGUI.ELIMINAR){
+            System.out.println("producto extras: " + producto.getExtras().size());
             accionesEliminar();
         }
         
@@ -224,19 +238,19 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
      
      
     private void cargarExtras(){
-        
+  
         jPanelListaGeneral.removeAll();
 
         
         try{
             
-            List<Valoropcion> listaProvisional = new ArrayList<>();
+            List<Extra> listaProvisional = new ArrayList<>();
             if(!listaProvisional.isEmpty()){
                 listaProvisional.clear();
             }
             
             for(int i = 0; i < listaExtras.size(); i++){
-                    if(listaExtras.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase(seleccion)){
+                    if(listaExtras.get(i).getTipoExtra().equalsIgnoreCase(seleccion)){
                         listaProvisional.add(listaExtras.get(i));
                     }
             }
@@ -246,17 +260,16 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             }
             
             if(accion == ConstantesGUI.EDITAR || accion == ConstantesGUI.ELIMINAR){
-                List <Productoopcion> otraLista = fProductoOpcion.findProductoopcionByProducto(producto.getIdProducto());
-                for(int i = 0; i < listaProvisional.size(); i++){
-                    for(int j = 0; j < otraLista.size(); j++){
-                        if(otraLista.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase(listaProvisional.get(i).getIdOpcionProducto().getNombreOpcion())){
-                           extrasSeleccionados.add(listaProvisional.get(j));
-                        }
+                if(cargarExtras == false){
+                    for (int i = 0; i < producto.getExtras().size(); i++){
+                        extrasSeleccionados.add(producto.getExtras().get(i));
                     }
+                    cargarExtras = true;
                 }
-                
+                               
             }
             
+            System.out.println("ex " + extrasSeleccionados.size());
             
             int alturaProducto = 55; 
                 
@@ -264,50 +277,58 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
                 
                 JPanelExtra extra = new JPanelExtra();
                 
-                extra.setBounds(0, alturaProducto * i, 530, 45);
+                extra.setBounds(10, alturaProducto * i, 530, 45);
 
                 extra.setAlignmentX(Component.LEFT_ALIGNMENT);
                 extra.setBackground(Color.decode("#FFFFFF"));
 
 
 
-                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreValor());
-                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getCosteAdicional()));
+                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
+                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
 
                 
-                Valoropcion opcionActual = listaProvisional.get(i);
+                Extra opcionActual = listaProvisional.get(i);
 
                 for(int j = 0; j < extrasSeleccionados.size(); j++){
-                    if(extrasSeleccionados.get(j).getNombreValor().equalsIgnoreCase(opcionActual.getNombreValor())){
+                    if(extrasSeleccionados.get(j).getNombreExtra().equalsIgnoreCase(opcionActual.getNombreExtra())){
                         extra.setBackground(colorSeleccion);
                         extra.setSelecionado(true);
                     }
                 }
                 
-                if(!(accion == ConstantesGUI.EDITAR || accion == ConstantesGUI.ELIMINAR)){
+                if(!(accion == ConstantesGUI.ELIMINAR)){
                     extra.addMouseListener(new MouseAdapter() {
                         @Override
-                        public void mouseClicked(MouseEvent e) {
-                            if(extra.isSelecionado()){
-                                if(extrasSeleccionados.contains(opcionActual)){
-                                    extrasSeleccionados.remove(opcionActual);
+                        public void mouseClicked(MouseEvent e) {                            
+                            if (extra.isSelecionado()) {
+                                for (int i = 0; i < extrasSeleccionados.size(); i++) {
+                                    if (extrasSeleccionados.get(i).getIdExtra().equals(opcionActual.getIdExtra())) {
+
+                                        extrasSeleccionados.remove(i); 
+                                        break;
+                                    }
                                 }
                                 extra.setBackground(colorNoSeleccion);
                                 extra.setSelecionado(false);
+                                
 
                             }
                             else{
                                 extra.setSelecionado(true);
                                 extrasSeleccionados.add(opcionActual);
-
+                                
                                 extra.setBackground(colorSeleccion);
+                                
+                                System.out.println("nolo contiene");
                             }
-
+                            establecerResumenExtras();
+                            System.out.println("extraselect " + extrasSeleccionados.size() );
                         }
 
                         @Override
                         public void mouseEntered(MouseEvent e){
-                            if(!extrasSeleccionados.contains(opcionActual)){
+                            if(!extra.isSelecionado()){
                                 extra.setBackground(Color.decode("#E0E0E0"));
                             }
 
@@ -315,7 +336,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
 
                         @Override
                         public void mouseExited(MouseEvent e){
-                            if(!extrasSeleccionados.contains(opcionActual)){
+                            if(!extra.isSelecionado()){
                                 extra.setBackground(Color.decode("#FFFFFF"));
                             }
                         }
@@ -323,26 +344,48 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
                     });
                 }
 
-                establecerResumenExtras();
+                
 
                 extra.getJblEliminarExtra().setVisible(false);
                 extra.getJblEliminarExtra().setCursor(new Cursor(1));
+                
 
               
-               
-               if(jPanelListaGeneral.getPreferredSize().height < alturaProducto * i){
-                    
-                    if(dimension == null){
-                        dimension = new Dimension();
-                    }
-                    
-                    dimension.setSize(jPanelListaGeneral.getPreferredSize().width, alturaProducto * i);
-                    jPanelListaGeneral.setPreferredSize(dimension);
-               }
-                    
+//               
+//               if(jPanelListaGeneral.getPreferredSize().height < alturaProducto * i){
+//                    
+//                    if(dimension == null){
+//                        dimension = new Dimension();
+//                    }
+//                    
+//                    dimension.setSize(jPanelListaGeneral.getPreferredSize().width, alturaProducto * i);
+//                    jPanelListaGeneral.setPreferredSize(dimension);
+//               }
+//                    
                 jPanelListaGeneral.add(extra);
-
-            
+                
+                
+                
+                
+             int numeroExtras = listaProvisional.size();
+             
+             if(numeroExtras > 0){
+                 int nuevaAltura = alturaProducto * numeroExtras;
+                 
+                 if(dimension == null){
+                     dimension = new Dimension();
+                 }
+                 
+                 int anchoActual = jPanelListaGeneral.getPreferredSize().width;
+                 
+                 dimension.setSize(anchoActual, nuevaAltura);
+                 jPanelListaGeneral.setPreferredSize(dimension);
+                 
+             }
+             
+             else{
+                 jPanelListaGeneral.setPreferredSize(new Dimension(jPanelListaGeneral.getPreferredSize().width,10));
+             }
 
                 
             }
@@ -350,6 +393,10 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         
             jPanelListaGeneral.revalidate();
             jPanelListaGeneral.repaint();
+            
+            
+          establecerResumenExtras();
+            
         }
         
         
@@ -364,6 +411,26 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     
     
      
+    
+    private void accionesEditar(){
+        
+        btnAccion.setText("EDITAR");
+        
+         txtNombreProducto1.setText(producto.getNombreProducto());
+       // jblDescripcionProducto1.setText(producto.ge);
+        jSpinnerPrecioProducto.setValue(producto.getPrecioProducto());
+        cbCategorias.setSelectedItem((String)producto.getIdCategoria().getNombre());
+        
+        jblResumenNombre.setText(producto.getNombreProducto());
+        jblResumenNombre.setVisible(true);
+        
+        jblResumenPrecio.setText(String.valueOf(producto.getPrecioProducto()));
+        jblResumenPrecio.setVisible(true);
+        
+        
+        establecerResumenExtras();
+    }
+    
      
     private void accionesEliminar(){
         btnAccion.setText("ELIMINAR");
@@ -408,17 +475,28 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             producto.setPrecioProducto(precio);
             producto.setEstado("activo");
             
-            Producto nuevoProducto = fProducto.agregarProducto(producto);
-            
             //Aqui se guardan los extras
             if(!extrasSeleccionados.isEmpty()){
+                
+               List <Extra> listaExtrasGuardar = new ArrayList<>();
+               
                for(int i = 0; i < extrasSeleccionados.size(); i++){ 
-                   Productoopcion po = new Productoopcion();
-                   po.setIdProducto(nuevoProducto);
-                   po.setIdOpcionProducto(extrasSeleccionados.get(i).getIdOpcionProducto());
-                   fProductoOpcion.agregarProductoOpcion(po);
+                   Extra extraGuardar = new Extra();
+                   extraGuardar.setIdExtra(extrasSeleccionados.get(i).getIdExtra());
+                   extraGuardar.setEstado("activo");
+                   extraGuardar.setNombreExtra(extrasSeleccionados.get(i).getNombreExtra());
+                   extraGuardar.setPrecio(extrasSeleccionados.get(i).getPrecio());
+                   extraGuardar.setTipoExtra(extrasSeleccionados.get(i).getTipoExtra());
+                   
+                   listaExtrasGuardar.add(extraGuardar);
                }
+               
+                producto.setExtras(listaExtrasGuardar);
+       
             }
+            
+            Producto nuevoProducto = fProducto.agregarProducto(producto);
+            
             
             JOptionPane.showMessageDialog(this, "Producto agregado");
             
@@ -433,10 +511,90 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     }
     
     private void editarProducto(){
+        
+        
+        try{
+        String nombre = txtNombreProducto1.getText();
+        float precio = ((Number)jSpinnerPrecioProducto.getValue()).floatValue();
+        Categoria categoria = fCategoria.obtenerCategoriaPorNombre((String)cbCategorias.getSelectedItem());
+            
+        //Validaciones
+     
+        
+        
+        producto.setNombreProducto(nombre);
+        producto.setIdCategoria(categoria);
+        producto.setPrecioProducto(precio);
+        producto.setEstado("activo");
+            
+        
+        List <Extra> listaExtrasGuardar = new ArrayList<>();
+            if(!extrasSeleccionados.isEmpty()){    
+               for(int i = 0; i < extrasSeleccionados.size(); i++){ 
+                   Extra extraGuardar = new Extra();
+                   extraGuardar.setIdExtra(extrasSeleccionados.get(i).getIdExtra());
+                   extraGuardar.setEstado("activo");
+                   extraGuardar.setNombreExtra(extrasSeleccionados.get(i).getNombreExtra());
+                   extraGuardar.setPrecio(extrasSeleccionados.get(i).getPrecio());
+                   extraGuardar.setTipoExtra(extrasSeleccionados.get(i).getTipoExtra());
+                   
+                   listaExtrasGuardar.add(extraGuardar);
+               }
+               
+            }
+            
+            producto.setExtras(listaExtrasGuardar);
+            
+            fProducto.editarProducto(producto);
+            
+            
+            JOptionPane.showMessageDialog(this, "Producto Editado");
+            
+            volverSecccionAnterior();
+            
+        }
+        
+        catch(Exception e){
+            e.printStackTrace();
+        }
     
     }
     
     private void eliminarProducto(){
+        
+        int opcion = JOptionPane.showConfirmDialog(
+            null, // Componente padre: null si es una ventana independiente
+            "¿Estás seguro que deseas eliminar este elemento?", // Mensaje
+            "Confirmar Eliminación", // Título de la ventana
+            JOptionPane.YES_NO_OPTION, // Tipo de opciones (Sí/No)
+            JOptionPane.QUESTION_MESSAGE // Icono (Signo de interrogación)
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            
+            producto.setEstado("inactivo");
+            try {
+                fProducto.editarProducto(producto);
+                System.out.println("Elemento eliminado exitosamente.");
+                JOptionPane.showMessageDialog(null, "El elemento ha sido eliminado.");
+                
+                volverSecccionAnterior();
+                
+            } catch (Exception ex) {
+                Logger.getLogger(JPanelAdminProductosCRUD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            
+        }
+        else if (opcion == JOptionPane.NO_OPTION) {
+
+            
+        } 
+        
+        else if (opcion == JOptionPane.CLOSED_OPTION) {
+            
+        }
     
     }
     
@@ -453,6 +611,35 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         FrmPanelAdministrador.jPanelSeccion.repaint();
     
     }
+    
+    
+    
+    
+    private void configurarEditorDecimal(JSpinner spinner) {
+    JComponent editor = spinner.getEditor();
+    
+    if (editor instanceof JSpinner.DefaultEditor) {
+        JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
+        
+        // 1. Crear el formato decimal explícito (con punto decimal)
+        DecimalFormat decimalFormat = new DecimalFormat("0.00"); // Acepta 2 decimales
+        
+        // 2. Crear el formateador con el formato decimal
+        NumberFormatter formatter = new NumberFormatter(decimalFormat);
+        
+        // 3. Configurar para que acepte decimales (Float o Double)
+        formatter.setValueClass(Double.class);
+        formatter.setAllowsInvalid(true); // Permitir entrada temporalmente inválida (ej: solo un punto)
+        formatter.setCommitsOnValidEdit(true); // Actualizar el modelo solo si es válido
+        
+        // 4. Aplicar el formateador al campo de texto
+        DefaultFormatterFactory factory = new DefaultFormatterFactory(formatter);
+        textField.setFormatterFactory(factory);
+
+        // Opcional: Centrar el texto
+        textField.setHorizontalAlignment(JTextField.RIGHT);
+    }
+}
     
     
     
@@ -482,58 +669,61 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     
     
     private void configurarSpinnerConReversion(JSpinner spinner) {
-    // 1. Inicializar el último valor válido
-    ultimoValorValido = spinner.getValue();
+        
+      //  configurarEditorDecimal(spinner);    
 
-    // 2. Agregar el ChangeListener al modelo
-    spinner.getModel().addChangeListener(new ChangeListener() {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            try {
-                // El método getValue() del SpinnerModel intenta devolver el valor,
-                // PERO puede lanzar una excepción si el texto del campo es inválido
-                // o si excede los límites definidos por el modelo.
-                
-                Object nuevoValor = spinner.getValue();
-                
-                // Si llegamos aquí, el valor es válido (dentro de los límites del modelo).
-                // Guardamos este nuevo valor para usarlo si el próximo intento falla.
-                ultimoValorValido = nuevoValor;
+        // 1. Inicializar el último valor válido
+        ultimoValorValido = spinner.getValue();
 
-            } catch (Exception ex) {
-                // 3. Si hay una excepción (valor inválido o fuera de límites):
-                
-                // Revertir el JSpinner al último valor conocido y válido
-                spinner.setValue(ultimoValorValido);
-                
-                // Opcional: Mostrar un mensaje o loguear el error.
-                System.out.println("Valor inválido detectado. Revertiendo a: " + ultimoValorValido);
+        // 2. Agregar el ChangeListener al modelo
+        spinner.getModel().addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    // El método getValue() del SpinnerModel intenta devolver el valor,
+                    // PERO puede lanzar una excepción si el texto del campo es inválido
+                    // o si excede los límites definidos por el modelo.
+
+                    Object nuevoValor = spinner.getValue();
+
+                    // Si llegamos aquí, el valor es válido (dentro de los límites del modelo).
+                    // Guardamos este nuevo valor para usarlo si el próximo intento falla.
+                    ultimoValorValido = nuevoValor;
+
+                } catch (Exception ex) {
+                    // 3. Si hay una excepción (valor inválido o fuera de límites):
+
+                    // Revertir el JSpinner al último valor conocido y válido
+                    spinner.setValue(ultimoValorValido);
+
+                    // Opcional: Mostrar un mensaje o loguear el error.
+                    System.out.println("Valor inválido detectado. Revertiendo a: " + ultimoValorValido);
+                }
             }
-        }
-    });
+        });
 
-    // Opcional: Si además quieres asegurar que solo se puedan escribir números,
-    // asegúrate de llamar a tu método de aplicación del DocumentFilter aquí:
-     aplicarValidadorASpinner(spinner);
+        // Opcional: Si además quieres asegurar que solo se puedan escribir números,
+        // asegúrate de llamar a tu método de aplicación del DocumentFilter aquí:
+         aplicarValidadorASpinner(spinner);
 }
     
     
     private void establecerResumenExtras(){
-        if(!extrasSeleccionados.isEmpty()){
+        if(extrasSeleccionados != null){
             int leche = 0;
             int vaso = 0;
             int otros = 0;
             
             for(int i = 0; i < extrasSeleccionados.size(); i++){
-                if(extrasSeleccionados.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Tipo vaso")){
+                if(extrasSeleccionados.get(i).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
                     vaso++;
                 }
                 
-                if(extrasSeleccionados.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Tipo leche")){
+                if(extrasSeleccionados.get(i).getTipoExtra().equalsIgnoreCase("Tipo leche")){
                     leche++;
                 }
                 
-                if(extrasSeleccionados.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")){
+                if(extrasSeleccionados.get(i).getTipoExtra().equalsIgnoreCase("Tipo Extra")){
                     otros++;
                 }
                 
@@ -552,6 +742,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
 
             // Código mejorado usando el operador ternario:
             jblNumExtraVaso.setVisible(vaso != 0);
+            System.out.println("lec" + jblNumExtraVaso.getText());
 
             // Código original:
             // if(otros == 0){ jblNumExtra.setVisible(false); } else { jblNumExtra.setVisible(true); }
@@ -560,7 +751,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             jblNumExtra.setVisible(otros != 0);
             
             
-            jblNumExtra.setText("Extras (" + extrasSeleccionados.size() + "");
+            jblNumExtra1.setText("Extras (" + extrasSeleccionados.size() + ")");
             
         }
     }
@@ -592,11 +783,8 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanelSeccionExtras = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPaneExtras = new javax.swing.JScrollPane();
         jPanelListaGeneral = new javax.swing.JPanel();
-        jPanelMostrarExtras = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         jPanelResumenProducto = new javax.swing.JPanel();
         jblNumExtra = new javax.swing.JLabel();
         jblResumenPrecio = new javax.swing.JLabel();
@@ -634,8 +822,8 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         jScrollPaneProductos.setViewportView(jPanelExtrasProductos);
 
         jPanelExtrasProductos.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelExtrasProductos.setMinimumSize(new java.awt.Dimension(605, 794));
-        jPanelExtrasProductos.setPreferredSize(new java.awt.Dimension(605, 794));
+        jPanelExtrasProductos.setMinimumSize(new java.awt.Dimension(603, 482));
+        jPanelExtrasProductos.setPreferredSize(new java.awt.Dimension(603, 482));
         jPanelExtrasProductos.setLayout(null);
 
         txtNombreProducto1.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -652,7 +840,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         jblCategoriaProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jblCategoriaProducto.setText("Categoria");
         jPanelExtrasProductos.add(jblCategoriaProducto);
-        jblCategoriaProducto.setBounds(230, 140, 150, 22);
+        jblCategoriaProducto.setBounds(230, 100, 150, 22);
 
         jblNombreProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jblNombreProducto.setText("Nombre del producto");
@@ -670,7 +858,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             }
         });
         jPanelExtrasProductos.add(jSpinnerPrecioProducto);
-        jSpinnerPrecioProducto.setBounds(10, 180, 150, 40);
+        jSpinnerPrecioProducto.setBounds(10, 130, 150, 40);
 
         cbCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deshabilitado" }));
         cbCategorias.addActionListener(new java.awt.event.ActionListener() {
@@ -679,12 +867,12 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             }
         });
         jPanelExtrasProductos.add(cbCategorias);
-        cbCategorias.setBounds(230, 180, 150, 40);
+        cbCategorias.setBounds(230, 130, 150, 40);
 
         jblPrecioProducto.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jblPrecioProducto.setText("Precio");
         jPanelExtrasProductos.add(jblPrecioProducto);
-        jblPrecioProducto.setBounds(10, 140, 130, 22);
+        jblPrecioProducto.setBounds(10, 100, 130, 22);
 
         jPanelNavegacion.setBackground(new java.awt.Color(255, 255, 255));
         jPanelNavegacion.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -753,40 +941,17 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         jPanelNavegacion.add(jPanelSeccionExtras);
 
         jPanelExtrasProductos.add(jPanelNavegacion);
-        jPanelNavegacion.setBounds(10, 420, 560, 50);
+        jPanelNavegacion.setBounds(10, 250, 560, 50);
 
         jPanelListaGeneral.setBackground(new java.awt.Color(255, 255, 255));
         jPanelListaGeneral.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanelListaGeneral.setMinimumSize(new java.awt.Dimension(300, 20));
-        jPanelListaGeneral.setPreferredSize(new java.awt.Dimension(490, 380));
+        jPanelListaGeneral.setPreferredSize(new java.awt.Dimension(550, 200));
         jPanelListaGeneral.setLayout(null);
-        jPanelExtrasProductos.add(jPanelListaGeneral);
-        jPanelListaGeneral.setBounds(10, 490, 560, 380);
+        jScrollPaneExtras.setViewportView(jPanelListaGeneral);
 
-        jPanelMostrarExtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanelMostrarExtras.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanelMostrarExtrasMouseClicked(evt);
-            }
-        });
-        jPanelMostrarExtras.setLayout(null);
-
-        jLabel4.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel4.setText("Mostrar Extras");
-        jPanelMostrarExtras.add(jLabel4);
-        jLabel4.setBounds(5, 5, 90, 16);
-
-        jLabel5.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel5.setText("▼");
-        jPanelMostrarExtras.add(jLabel5);
-        jLabel5.setBounds(145, 5, 20, 16);
-        jPanelMostrarExtras.add(jSeparator1);
-        jSeparator1.setBounds(95, 16, 40, 10);
-
-        jPanelExtrasProductos.add(jPanelMostrarExtras);
-        jPanelMostrarExtras.setBounds(10, 380, 160, 25);
+        jPanelExtrasProductos.add(jScrollPaneExtras);
+        jScrollPaneExtras.setBounds(10, 320, 570, 160);
 
         jScrollPaneProductos.setViewportView(jPanelExtrasProductos);
 
@@ -892,11 +1057,11 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
             agregarProducto();
         }
         
-        if(accion == ConstantesGUI.NUEVO){
+        if(accion == ConstantesGUI.EDITAR){
             editarProducto();
         }
         
-        if(accion == ConstantesGUI.NUEVO){
+        if(accion == ConstantesGUI.ELIMINAR){
             eliminarProducto();
         }
 
@@ -956,7 +1121,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     private void jPanelSeccionExtrasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseClicked
         // TODO add your handling code here:
 
-        seleccion = "Extra bebidas";
+        seleccion = "Tipo extra";
 
         comprobarSeleccion();
 
@@ -966,7 +1131,7 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
 
     private void jPanelSeccionExtrasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseEntered
         // TODO add your handling code here:
-        if(!seleccion.equalsIgnoreCase("Extra bebidas")){
+        if(!seleccion.equalsIgnoreCase("Tipo extra")){
             jPanelSeccionExtras.setBackground(colorHover);
         }
 
@@ -974,38 +1139,17 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
 
     private void jPanelSeccionExtrasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseExited
         // TODO add your handling code here:
-        if(!seleccion.equalsIgnoreCase("Extra bebidas")){
+        if(!seleccion.equalsIgnoreCase("Tipo extra")){
             jPanelSeccionExtras.setBackground(colorNoSeleccion);
         }
     }//GEN-LAST:event_jPanelSeccionExtrasMouseExited
 
-    private void jPanelMostrarExtrasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelMostrarExtrasMouseClicked
-        // TODO add your handling code here:
-        
-        if(extraExpandido){
-           jPanelExtrasProductos.setPreferredSize(new Dimension(605, 312));
-           jPanelNavegacion.setVisible(false);
-           jPanelListaGeneral.setVisible(false);
-           jLabel5.setText("▼");
-           
-           extraExpandido = false;
-        }
-        
-        else{
-            jPanelExtrasProductos.setPreferredSize(new Dimension(605, 894));
-            jPanelNavegacion.setVisible(true);
-            jPanelListaGeneral.setVisible(true);
-            jLabel5.setText("▶");
-           
-            extraExpandido = true;
-        
-        }
-        
-    }//GEN-LAST:event_jPanelMostrarExtrasMouseClicked
-
     private void jSpinnerPrecioProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerPrecioProductoStateChanged
         // TODO add your handling code here:
         configurarSpinnerConReversion(jSpinnerPrecioProducto);
+        
+        jblResumenPrecio.setVisible(true);
+        jblResumenPrecio.setText(String.valueOf(ultimoValorValido));
         
     }//GEN-LAST:event_jSpinnerPrecioProductoStateChanged
 
@@ -1027,19 +1171,16 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelExtrasProductos;
     private javax.swing.JPanel jPanelListaGeneral;
-    private javax.swing.JPanel jPanelMostrarExtras;
     private javax.swing.JPanel jPanelNavegacion;
     private javax.swing.JPanel jPanelResumenProducto;
     private javax.swing.JPanel jPanelSeccionExtras;
     private javax.swing.JPanel jPanelSeccionLeches;
     private javax.swing.JPanel jPanelSeccionVasos;
+    private javax.swing.JScrollPane jScrollPaneExtras;
     private javax.swing.JScrollPane jScrollPaneProductos;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSpinner jSpinnerPrecioProducto;
     private javax.swing.JLabel jblAdminProductos;
     private javax.swing.JLabel jblCategoriaProducto;

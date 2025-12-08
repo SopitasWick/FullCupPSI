@@ -355,6 +355,9 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         
         
         jPanelSeccion.removeAll();
+        
+        panelProductos = new JPanelAdminProductos();
+        
         panelProductos.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
         jPanelSeccion.add(panelProductos);
 

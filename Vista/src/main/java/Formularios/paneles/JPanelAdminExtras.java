@@ -4,11 +4,14 @@
  */
 package Formularios.paneles;
 
+import Entidades.Extra;
 import Entidades.Usuario;
 import Entidades.Valoropcion;
+import Facades.IFachadaExtraModel2;
 import Facades.IFachadaValorOpcionModel;
 import Formularios.paneles.elementos.JPanelExtra;
 import Formularios.paneles.elementos.JPanelUsuario;
+import Implementaciones.GestionarExtrasModel2;
 import Implementaciones.GestionarValorOpcionesModel;
 import java.awt.Color;
 import java.awt.Component;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import utilerias.HintToTextField;
 
 /**
@@ -28,11 +32,12 @@ import utilerias.HintToTextField;
 public class JPanelAdminExtras extends javax.swing.JPanel {
     
     
-    private final IFachadaValorOpcionModel fExtras = new GestionarValorOpcionesModel();
+    private final IFachadaExtraModel2 fExtras = new GestionarExtrasModel2();
+
     
     Dimension dimension = null;
     
-    List <Valoropcion> listaExtras;
+    List <Extra> listaExtras;
     
     
     Color colorSeleccion = Color.decode("#E0E0E0");
@@ -40,6 +45,9 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     Color colorHover = Color.decode("#F0F0F0");
     String seleccion = "Tipo vaso";
         
+    
+    Extra extraEditar;
+    
 
     /**
      * Creates new form JPanelAdminCategorias
@@ -70,7 +78,7 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         btnAccion.setText("Guardar");
         
         try {
-            listaExtras = fExtras.ObtenerTodosValorOpciones();
+            listaExtras = fExtras.obtenerTodosLosExtras();
             
             cargarExtras();
             
@@ -90,13 +98,13 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         
         try{
             
-            List<Valoropcion> listaProvisional = new ArrayList<>();
+            List<Extra> listaProvisional = new ArrayList<>();
             if(!listaProvisional.isEmpty()){
                 listaProvisional.clear();
             }
             
             for(int i = 0; i < listaExtras.size(); i++){
-                if(listaExtras.get(i).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase(seleccion)){
+                if(listaExtras.get(i).getTipoExtra().equalsIgnoreCase(seleccion)){
                     listaProvisional.add(listaExtras.get(i));
                 }
             }
@@ -115,25 +123,42 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
 
 
 
-                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreValor());
-                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getCosteAdicional()));
+                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
+                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
 
                 int iProvisional = i;        
 
                 extra.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        txtTipoExtra.setText(listaProvisional.get(iProvisional).getIdOpcionProducto().getNombreOpcion());
-                        txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreValor());
-                        jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getCosteAdicional());
+                        
+                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
+                            cbTipoExtras.setSelectedIndex(0);
+                            
+                        }
+                        
+                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo leche")){
+                            cbTipoExtras.setSelectedIndex(1);
+                            
+                        }
+                        
+                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo extra")){
+                            cbTipoExtras.setSelectedIndex(2);
+                            
+                        }
+                        
+                        txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
+                        jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
 
 
+                        cbTipoExtras.setEnabled(true);
                         txtNombreExtra.setEditable(true);
                         jSpinnerPrecioExtra.setEnabled(true);
 
-
+                        btnAccion.setBackground(Color.decode("#111827"));
                         btnAccion.setText("Editar");
-
+                        
+                        extraEditar = listaProvisional.get(iProvisional);
 
                     }
 
@@ -155,17 +180,34 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
 
                     @Override
                     public void mouseClicked(MouseEvent e){
-                        txtTipoExtra.setText(listaProvisional.get(iProvisional).getIdOpcionProducto().getNombreOpcion());
-                        txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreValor());
-                        jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getCosteAdicional());
+                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
+                            cbTipoExtras.setSelectedIndex(0);
+                            
+                        }
+                        
+                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo leche")){
+                            cbTipoExtras.setSelectedIndex(1);
+                            
+                        }
+                        
+                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo extra")){
+                            cbTipoExtras.setSelectedIndex(2);
+                            
+                        }
+                        txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
+                        jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
 
 
-                        txtTipoExtra.setEditable(false);
+                        cbTipoExtras.setEnabled(false);
                         txtNombreExtra.setEditable(false);
                         jSpinnerPrecioExtra.setEnabled(false);
+                        
+                        btnAccion.setBackground(Color.red);
 
 
                         btnAccion.setText("Eliminar");
+                        
+                        extraEditar = listaProvisional.get(iProvisional);
 
                     }
 
@@ -207,19 +249,105 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     
     
     private void guardarExtra(){
+        Extra extra = new Extra();
+        extra.setEstado("activo");
+        extra.setNombreExtra(txtNombreExtra.getText());
+        extra.setPrecio(((Number)jSpinnerPrecioExtra.getValue()).floatValue());
+        extra.setTipoExtra(String.valueOf(cbTipoExtras.getSelectedItem()));
+        
+        try{
+        
+            fExtras.agregarExtra(extra);
+            
+            JOptionPane.showMessageDialog(this, "Extra agregado");
+            
+            listaExtras = fExtras.obtenerTodosLosExtras();
+            cargarExtras();
+        }
+        
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
     
     }
     
     private void editarExtra(){
     
+        if(extraEditar != null){
+            extraEditar.setNombreExtra(txtNombreExtra.getText());
+            extraEditar.setPrecio(((Number)jSpinnerPrecioExtra.getValue()).floatValue());
+            extraEditar.setTipoExtra(String.valueOf(cbTipoExtras.getSelectedItem()));
+            
+            try{
+        
+                fExtras.actualizarExtra(extraEditar);
+                JOptionPane.showMessageDialog(this, "Extra editado");
+                
+                listaExtras = fExtras.obtenerTodosLosExtras();
+                cargarExtras();
+                
+            }
+        
+            catch(Exception e){
+                e.printStackTrace();
+            }
+            
+        }
     }
     
     private void eliminarExtra(){
-    
-        jPanelListaGeneral.removeAll();
         
-        jPanelListaGeneral.revalidate();
-        jPanelListaGeneral.repaint();
+        try{
+        
+            extraEditar.setEstado("inactivo");
+            
+            
+            int opcion = JOptionPane.showConfirmDialog(
+            null, // Componente padre: null si es una ventana independiente
+            "¿Estás seguro que deseas eliminar este elemento?", // Mensaje
+            "Confirmar Eliminación", // Título de la ventana
+            JOptionPane.YES_NO_OPTION, // Tipo de opciones (Sí/No)
+            JOptionPane.QUESTION_MESSAGE // Icono (Signo de interrogación)
+        );
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                
+                try {
+                    extraEditar.setEstado("inactivo");
+                    
+                    fExtras.actualizarExtra(extraEditar);
+                    
+                    System.out.println("Elemento eliminado exitosamente.");
+                    JOptionPane.showMessageDialog(null, "El elemento ha sido eliminado.");
+                    
+                    listaExtras = fExtras.obtenerTodosLosExtras();
+                    cargarExtras();
+
+
+                } catch (Exception ex) {
+                    Logger.getLogger(JPanelAdminProductosCRUD.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+
+
+            }
+            else if (opcion == JOptionPane.NO_OPTION) {
+
+
+            } 
+
+            else if (opcion == JOptionPane.CLOSED_OPTION) {
+
+            }
+                 
+                
+       }
+        
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
     }
     
     
@@ -244,7 +372,7 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
                 
             }
                 
-            case "Extra bebidas" -> {
+            case "Tipo extra" -> {
                 jPanelSeccionExtras.setBackground(colorSeleccion);
                 
                 jPanelSeccionLeches.setBackground(colorNoSeleccion);
@@ -275,12 +403,12 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         jPanelListaGeneral = new javax.swing.JPanel();
         jPanelDatosUsuario = new javax.swing.JPanel();
         txtNombreExtra = new javax.swing.JTextField();
-        txtTipoExtra = new javax.swing.JTextField();
         jblRolUsuario = new javax.swing.JLabel();
         jblNombreUsuario = new javax.swing.JLabel();
         jblContrasenaUsuario = new javax.swing.JLabel();
         btnAccion = new javax.swing.JButton();
         jSpinnerPrecioExtra = new javax.swing.JSpinner();
+        cbTipoExtras = new javax.swing.JComboBox<>();
         jPanelNavegacion = new javax.swing.JPanel();
         jPanelSeccionVasos = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -288,6 +416,7 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanelSeccionExtras = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        btnAccionNuevo = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(965, 620));
@@ -336,10 +465,6 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         jPanelDatosUsuario.add(txtNombreExtra);
         txtNombreExtra.setBounds(20, 140, 310, 30);
 
-        txtTipoExtra.setEditable(false);
-        jPanelDatosUsuario.add(txtTipoExtra);
-        txtTipoExtra.setBounds(20, 50, 310, 30);
-
         jblRolUsuario.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jblRolUsuario.setForeground(new java.awt.Color(39, 24, 17));
         jblRolUsuario.setText("Precio");
@@ -377,6 +502,10 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         btnAccion.setBounds(20, 270, 300, 40);
         jPanelDatosUsuario.add(jSpinnerPrecioExtra);
         jSpinnerPrecioExtra.setBounds(80, 205, 90, 30);
+
+        cbTipoExtras.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tipo vaso", "Tipo leche", "Tipo extra" }));
+        jPanelDatosUsuario.add(cbTipoExtras);
+        cbTipoExtras.setBounds(20, 50, 310, 30);
 
         add(jPanelDatosUsuario);
         jPanelDatosUsuario.setBounds(590, 140, 350, 330);
@@ -447,6 +576,18 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
 
         add(jPanelNavegacion);
         jPanelNavegacion.setBounds(20, 80, 560, 50);
+
+        btnAccionNuevo.setBackground(new java.awt.Color(17, 24, 39));
+        btnAccionNuevo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAccionNuevo.setForeground(new java.awt.Color(255, 255, 255));
+        btnAccionNuevo.setText("Nuevo Extra");
+        btnAccionNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccionNuevoActionPerformed(evt);
+            }
+        });
+        add(btnAccionNuevo);
+        btnAccionNuevo.setBounds(800, 90, 140, 40);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarUsuarioKeyTyped
@@ -513,7 +654,7 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     private void jPanelSeccionExtrasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseClicked
         // TODO add your handling code here:
         
-        seleccion = "Extra bebidas";
+        seleccion = "Tipo extra";
         
         comprobarSeleccion();
         
@@ -564,10 +705,22 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jPanelSeccionExtrasMouseExited
 
+    private void btnAccionNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionNuevoActionPerformed
+        // TODO add your handling code here:
+        
+        btnAccion.setText("Guardar");
+        btnAccion.setBackground(Color.decode("#111827"));
+        
+        txtNombreExtra.setText("");
+        
+    }//GEN-LAST:event_btnAccionNuevoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccion;
+    private javax.swing.JButton btnAccionNuevo;
     private javax.swing.JCheckBox cbInactivas;
+    private javax.swing.JComboBox<String> cbTipoExtras;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -584,6 +737,5 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     private javax.swing.JLabel jblRolUsuario;
     private javax.swing.JTextField txtBuscarUsuario;
     private javax.swing.JTextField txtNombreExtra;
-    private javax.swing.JTextField txtTipoExtra;
     // End of variables declaration//GEN-END:variables
 }
