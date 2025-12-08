@@ -20,6 +20,7 @@ import JPA.exceptions.PreexistingEntityException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -210,6 +211,28 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
+    public Usuario findUsuarioByNombre(String nombreUsuario) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Usuario> query = em.createQuery(
+                    "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombre",
+                    Usuario.class
+            );
+            query.setParameter("nombre", nombreUsuario);
+
+            List<Usuario> resultados = query.getResultList();
+
+            if (resultados.isEmpty()) {
+                return null; // No encontrado
+            } else {
+                return resultados.get(0); // Regresamos el primero
+            }
+
+        } finally {
+            em.close();
+        }
+    }
+
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -291,5 +314,5 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

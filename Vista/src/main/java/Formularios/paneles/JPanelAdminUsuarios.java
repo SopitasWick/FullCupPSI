@@ -4,8 +4,11 @@
  */
 package Formularios.paneles;
 
+import Entidades.Rol;
 import Entidades.Usuario;
 import Formularios.paneles.elementos.JPanelUsuario;
+import JPA.RolJpaController;
+import JPA.UsuarioJpaController;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -24,181 +27,117 @@ import utilerias.HintToTextField;
  * @author Sergio Arturo
  */
 public class JPanelAdminUsuarios extends javax.swing.JPanel {
-    
-    
-    
+
+    UsuarioJpaController ctrlUsuario = new UsuarioJpaController();
+    RolJpaController ctrlRol = new RolJpaController();
+    private int usuarioSeleccionadoId = -1;
+
     Dimension dimension = null;
-    
-    List <Usuario> listaUsuario;
-        
+
+    List<Usuario> listaUsuario;
 
     /**
      * Creates new form JPanelAdminCategorias
      */
     public JPanelAdminUsuarios() {
         initComponents();
-        
-        
+        cargarUsuario("Todos", ""); // ← ahora se cargan desde BD al iniciar
         cargarDiseno();
-        
-        
-        
-        
-        
-    }
-    
-    
-          
 
-    
-    private void cargarDiseno(){
-    
+    }
+
+    private void cargarDiseno() {
+
         HintToTextField.addHint(txtBuscarUsuario, "Buscar Usuario");
-        
-        
+
         pruebas();
-    
+
         btnAccion.setText("Guardar");
-               
+
     }
-    
-    
-    
-    
-    
-    
-    private void pruebas(){
-        
 
+    private void pruebas() {
 
-
-        int alturaProducto = 72; 
+        int alturaProducto = 72;
 
         Usuario prueba = new Usuario();
         prueba.setNombreUsuario("Usuario de prueba");
         prueba.setPassword("Contra1234");
-            
+
         JPanelUsuario usuario = new JPanelUsuario();
         usuario.setBounds(0, alturaProducto * 0, 474, 62);
         usuario.setAlignmentX(Component.LEFT_ALIGNMENT);
         usuario.setBackground(Color.decode("#FFFFFF"));
-                
-                
-                
+
         usuario.getJblNombreUsuario().setText(prueba.getNombreUsuario());
         usuario.getJblNombreRol().setText("Administrador");
-                
-                
-   
+
         usuario.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 txtNombreUsuario.setText(prueba.getNombreUsuario());
                 txtContraUsuario.setText(prueba.getPassword());
-                
-                
-                
+
                 txtNombreUsuario.setEditable(true);
                 txtContraUsuario.setEditable(true);
-                
+
                 jRadioAdmin.setEnabled(true);
                 jRadioAtendiente.setEnabled(true);
-                
+
                 btnAccion.setText("Editar");
-                
 
             }
 
             @Override
-            public void mouseEntered(MouseEvent e){
+            public void mouseEntered(MouseEvent e) {
                 usuario.setBackground(Color.decode("#E0E0E0"));
 
             }
 
             @Override
-            public void mouseExited(MouseEvent e){
+            public void mouseExited(MouseEvent e) {
                 usuario.setBackground(Color.decode("#FFFFFF"));
             }
 
         });
-                
-                
-        usuario.getJblEliminarUsuario().addMouseListener(new MouseAdapter(){
-                
+
+        usuario.getJblEliminarUsuario().addMouseListener(new MouseAdapter() {
+
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 txtNombreUsuario.setText(prueba.getNombreUsuario());
                 txtContraUsuario.setText(prueba.getPassword());
-                
+
                 txtNombreUsuario.setEditable(false);
                 txtContraUsuario.setEditable(false);
-                
+
                 jRadioAdmin.setEnabled(false);
                 jRadioAtendiente.setEnabled(false);
-                
+
                 btnAccion.setText("Eliminar");
-                        
+
             }
-                
+
         });
-              
-        
-                
-        
 
-
-
-        
         jPanelListaUsuarios.add(usuario);
 
         jPanelListaUsuarios.revalidate();
         jPanelListaUsuarios.repaint();
-        
-    
+
     }
-    
-    
-    
-    private void cargarUsuario(String rol, String textoBuscador){
-        
-        
+
+    private void cargarUsuario(String rol, String textoBuscador) {
+
         jPanelListaUsuarios.removeAll();
-        
+
         try {
-            
-            if(listaUsuario != null){
-                listaUsuario.clear();
-            }
-            
-            //aqui codigo para obtener todos los usuarios
-           // listaUsuario = fUsuario.obtenerTodosLosUsuarios();
-            
-            List<Usuario> listaProvicional = new ArrayList<>();
-            
-            
-            
-            
-            //Aqui se filtra por rol
-//            if(!categoria.equalsIgnoreCase("Todos")){
-//                listaProvicional.clear();
-//                
-//                for(int i = 0; i < listaProductos.size(); i++){
-//                    if(listaProductos.get(i).getIdCategoria().getNombre().equalsIgnoreCase(categoria)){
-//                        listaProvicional.add(listaProductos.get(i));
-//                    }
-//                }
-//                
-//            }
-//            
-//            else{
-//                listaProvicional = listaProductos;
-//            }
-            
-            
 
+            // TRAER TODOS LOS USUARIOS DE BD
+            List<Usuario> listaProvicional = ctrlUsuario.findUsuarioEntities();
 
+            // FILTRO DEL BUSCADOR
             if (!textoBuscador.trim().equalsIgnoreCase("")) {
-
                 String txt = textoBuscador.toLowerCase();
                 List<Usuario> listaFiltradaBuscador = new ArrayList<>();
 
@@ -208,110 +147,301 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                     }
                 }
 
-                // Cambiar la lista provisional al resultado del filtro
                 listaProvicional = listaFiltradaBuscador;
-            }            
-            
-            
-            
-            int alturaProducto = 72; 
+            }
 
-            
-            for(int i = 0; i < listaProvicional.size(); i++){
-                JPanelUsuario usuario = new JPanelUsuario();
-                usuario.setBounds(0, alturaProducto * i, 772, 62);
-                usuario.setAlignmentX(Component.LEFT_ALIGNMENT);
-                usuario.setBackground(Color.decode("#FFFFFF"));
-                
-                
-                
-               // usuario.getJblNombreUsuario().setText(listaProvicional.get(i).getNombreUsuario());
-               // usuario.getJblNombreRol().setText(listaProvicional.get(i).get.getNombreRol());
-                
-                
-   
-                usuario.addMouseListener(new MouseAdapter() {
+            int alturaProducto = 72;
+
+            for (int i = 0; i < listaProvicional.size(); i++) {
+
+                Usuario u = listaProvicional.get(i);
+
+                JPanelUsuario usuarioPanel = new JPanelUsuario();
+                usuarioPanel.setBounds(0, alturaProducto * i, 772, 62);
+                usuarioPanel.setBackground(Color.decode("#FFFFFF"));
+
+                usuarioPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                       
 
+                        if (e.getSource() == usuarioPanel.getJblEliminarUsuario()) {
+                            return;
+                        }
+
+                        usuarioSeleccionadoId = u.getIdUsuario();
+
+                        txtNombreUsuario.setText(u.getNombreUsuario());
+                        txtContraUsuario.setText(u.getPassword());
+
+                        txtNombreUsuario.setEditable(true);
+                        txtContraUsuario.setEditable(true);
+                        jRadioAdmin.setEnabled(true);
+                        jRadioAtendiente.setEnabled(true);
+
+                        if (!u.getRolList().isEmpty()) {
+                            String r = u.getRolList().get(0).getNombre();
+                            if (r.equalsIgnoreCase("Administrador")) {
+                                jRadioAdmin.setSelected(true);
+                            } else {
+                                jRadioAtendiente.setSelected(true);
+                            }
+                        }
+
+                        btnAccion.setText("Editar");
+                    }
+                });
+
+                // MOSTRAR NOMBRE
+                usuarioPanel.getJblNombreUsuario().setText(u.getNombreUsuario());
+
+                // MOSTRAR ROL DEL USUARIO
+                if (!u.getRolList().isEmpty()) {
+                    usuarioPanel.getJblNombreRol().setText(u.getRolList().get(0).getNombre());
+                } else {
+                    usuarioPanel.getJblNombreRol().setText("Sin rol");
+                }
+
+                usuarioPanel.getJblEliminarUsuario().addMouseListener(new MouseAdapter() {
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                        // PANEL DE CONFIRMACIÓN
+                        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                                null,
+                                "¿Seguro que deseas eliminar al usuario:\n\n  ➤ " + u.getNombreUsuario() + " ?",
+                                "Confirmar eliminación",
+                                javax.swing.JOptionPane.YES_NO_OPTION,
+                                javax.swing.JOptionPane.WARNING_MESSAGE
+                        );
+
+                        if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+
+                            try {
+                                // ELIMINAR ROL ASOCIADO
+                                for (Rol r : u.getRolList()) {
+                                    ctrlRol.destroy(r.getIdRol());
+                                }
+
+                                // ELIMINAR USUARIO
+                                ctrlUsuario.destroy(u.getIdUsuario());
+
+                                javax.swing.JOptionPane.showMessageDialog(
+                                        null,
+                                        "El usuario \"" + u.getNombreUsuario() + "\" ha sido eliminado correctamente.",
+                                        "Eliminado",
+                                        javax.swing.JOptionPane.INFORMATION_MESSAGE
+                                );
+
+                                // LIMPIAR CAMPOS DEL PANEL DERECHA
+                                txtNombreUsuario.setText("");
+                                txtContraUsuario.setText("");
+
+                                txtNombreUsuario.setEditable(true);
+                                txtContraUsuario.setEditable(true);
+                                jRadioAdmin.setEnabled(true);
+                                jRadioAtendiente.setEnabled(true);
+
+                                btnAccion.setText("Guardar");
+
+                                // RECARGAR LISTA LADO IZQUIERDO
+                                cargarUsuario("Todos", "");
+
+                            } catch (Exception ex) {
+                                javax.swing.JOptionPane.showMessageDialog(
+                                        null,
+                                        "Error al eliminar el usuario.",
+                                        "Error",
+                                        javax.swing.JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        }
                     }
 
                     @Override
-                    public void mouseEntered(MouseEvent e){
-                        usuario.setBackground(Color.decode("#E0E0E0"));
-
+                    public void mouseEntered(MouseEvent e) {
+                        usuarioPanel.setBackground(Color.decode("#F8D7DA")); // hover rojo suave
                     }
 
                     @Override
-                    public void mouseExited(MouseEvent e){
-                        usuario.setBackground(Color.decode("#FFFFFF"));
+                    public void mouseExited(MouseEvent e) {
+                        usuarioPanel.setBackground(Color.decode("#FFFFFF"));
                     }
 
                 });
-                
-                
-                usuario.getJblNombreUsuario().addMouseListener(new MouseAdapter(){
-                
-                    @Override
-                    public void mouseClicked(MouseEvent e){
-                        
-                        
-                    }
-                
-                });
-                
-                
-               
-                 if(jPanelListaUsuarios.getPreferredSize().height < alturaProducto * i){
-                    
-                    if(dimension == null){
-                        dimension = new Dimension();
-                    }
-                    
-                    dimension.setSize(jPanelListaUsuarios.getPreferredSize().width, alturaProducto * i);
-                    jPanelListaUsuarios.setPreferredSize(dimension);
 
-                }       
-                
-                jPanelListaUsuarios.add(usuario);
-
+                jPanelListaUsuarios.add(usuarioPanel);
             }
-         
-            
-           
 
-        jPanelListaUsuarios.revalidate();
-        jPanelListaUsuarios.repaint();
-            
-            
-        jblRolUsuario.setText("Productos: " + String.valueOf(listaProvicional.size()));
-            
+            jPanelListaUsuarios.revalidate();
+            jPanelListaUsuarios.repaint();
+
+            jblRolUsuario.setText("Usuarios: " + listaProvicional.size());
+
         } catch (Exception ex) {
-            Logger.getLogger(JPanelAdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
-        
     }
-    
-    
-    
-    
-    private void guardarUsuario(){
-    
+
+    private int generarIdUsuario() {
+        List<Usuario> lista = ctrlUsuario.findUsuarioEntities();
+        if (lista.isEmpty()) {
+            return 1;
+        }
+        return lista.stream()
+                .mapToInt(Usuario::getIdUsuario)
+                .max()
+                .getAsInt() + 1;
     }
-    
-    private void editarUsuario(){
-    
+
+    private int generarIdRol() {
+        List<Rol> lista = ctrlRol.findRolEntities();
+        if (lista.isEmpty()) {
+            return 1;
+        }
+        return lista.stream()
+                .mapToInt(Rol::getIdRol)
+                .max()
+                .getAsInt() + 1;
     }
-    
-    private void eliminarUsuario(){
-    
-        jPanelListaUsuarios.removeAll();
-        
-        jPanelListaUsuarios.revalidate();
-        jPanelListaUsuarios.repaint();
+
+    private void guardarUsuario() {
+
+        String nombre = txtNombreUsuario.getText().trim();
+        String pass = txtContraUsuario.getText().trim();
+        String rol = jRadioAdmin.isSelected() ? "Administrador" : "Atendiente";
+
+        if (nombre.isEmpty() || pass.isEmpty()) {
+            System.out.println("Campos vacíos.");
+            return;
+        }
+
+        try {
+            Usuario u = new Usuario();
+            u.setIdUsuario(generarIdUsuario());
+            u.setNombreUsuario(nombre);
+            u.setPassword(pass);
+
+            ctrlUsuario.create(u);
+
+            Rol r = new Rol();
+            r.setIdRol(generarIdRol());
+            r.setNombre(rol);
+            r.setIdUsuario(u);
+
+            ctrlRol.create(r);
+
+            cargarUsuario("Todos", "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+
+    private void editarUsuario() {
+
+        if (usuarioSeleccionadoId == -1) {
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Selecciona un usuario de la lista.",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+
+            Usuario u = ctrlUsuario.findUsuario(usuarioSeleccionadoId);
+
+            // DATOS ANTES
+            String nombreAntes = u.getNombreUsuario();
+            String passAntes = u.getPassword();
+            String rolAntes = u.getRolList().isEmpty() ? "Sin rol" : u.getRolList().get(0).getNombre();
+
+            // DATOS NUEVOS
+            String nombreNuevo = txtNombreUsuario.getText().trim();
+            String passNuevo = txtContraUsuario.getText().trim();
+            String rolNuevo = jRadioAdmin.isSelected() ? "Administrador" : "Atendiente";
+
+            // Confirmación
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                    null,
+                    "¿Deseas EDITAR este usuario?\n\n"
+                    + "ANTES:\n"
+                    + "• Nombre: " + nombreAntes + "\n"
+                    + "• Contraseña: " + passAntes + "\n"
+                    + "• Rol: " + rolAntes + "\n\n"
+                    + "DESPUÉS:\n"
+                    + "• Nombre: " + nombreNuevo + "\n"
+                    + "• Contraseña: " + passNuevo + "\n"
+                    + "• Rol: " + rolNuevo,
+                    "Confirmar edición",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm != javax.swing.JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            // EDITAR USUARIO
+            u.setNombreUsuario(nombreNuevo);
+            u.setPassword(passNuevo);
+            ctrlUsuario.edit(u);
+
+            // EDITAR ROL
+            Rol r = u.getRolList().get(0);
+            r.setNombre(rolNuevo);
+            ctrlRol.edit(r);
+
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Usuario editado correctamente.",
+                    "Completado",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            // RESET
+            usuarioSeleccionadoId = -1;
+            btnAccion.setText("Guardar");
+            txtNombreUsuario.setText("");
+            txtContraUsuario.setText("");
+
+            cargarUsuario("Todos", "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Error al editar el usuario.",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void eliminarUsuario() {
+
+        try {
+            String nombre = txtNombreUsuario.getText().trim();
+
+            Usuario u = ctrlUsuario.findUsuarioByNombre(nombre);
+
+            if (u == null) {
+                System.out.println("Usuario no encontrado");
+                return;
+            }
+
+            // Eliminar roles primero
+            for (Rol r : u.getRolList()) {
+                ctrlRol.destroy(r.getIdRol());
+            }
+
+            // Ahora eliminar usuario
+            ctrlUsuario.destroy(u.getIdUsuario());
+
+            cargarUsuario("Todos", "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -441,12 +571,17 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarUsuarioKeyTyped
-        // TODO add your handling code here:
-        
-        if (txtBuscarUsuario.isFocusOwner() && evt.getKeyChar() == '\n') {
-            
+
+        String texto = txtBuscarUsuario.getText().trim();
+
+        SwingUtilities.invokeLater(() -> {
+            cargarUsuario("Todos", texto);
+        });
+
+        if (evt.getKeyChar() == '\n') {
+            cargarUsuario("Todos", texto);
         }
-        
+
     }//GEN-LAST:event_txtBuscarUsuarioKeyTyped
 
     private void cbInactivasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbInactivasActionPerformed
@@ -456,26 +591,25 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         // TODO add your handling code here:
-        
-        
-        
+
+
     }//GEN-LAST:event_formMouseClicked
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         // TODO add your handling code here:
-        
-        if(btnAccion.getText().equalsIgnoreCase("Guardar")){
+
+        if (btnAccion.getText().equalsIgnoreCase("Guardar")) {
             guardarUsuario();
         }
-        
-        if(btnAccion.getText().equalsIgnoreCase("Editar")){
+
+        if (btnAccion.getText().equalsIgnoreCase("Editar")) {
             editarUsuario();
         }
-        
-        if(btnAccion.getText().equalsIgnoreCase("Eliminar")){
+
+        if (btnAccion.getText().equalsIgnoreCase("Eliminar")) {
             eliminarUsuario();
         }
-        
+
     }//GEN-LAST:event_btnAccionActionPerformed
 
 
