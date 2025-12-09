@@ -296,6 +296,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         });
         jPanelAdminExtra.setLayout(null);
 
+        jblIconExtra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/sugar-cubes.png"))); // NOI18N
         jblIconExtra.setPreferredSize(new java.awt.Dimension(20, 20));
         jPanelAdminExtra.add(jblIconExtra);
         jblIconExtra.setBounds(15, 12, 35, 35);
