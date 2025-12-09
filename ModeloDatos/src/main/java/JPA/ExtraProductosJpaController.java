@@ -86,7 +86,7 @@ public class ExtraProductosJpaController implements Serializable {
             }
             
             if (idDetalleComanda != null) {
-                idDetalleComanda.getExtrasProductosList().add(extraProducto);
+             //   idDetalleComanda.getExtrasProductosList().add(extraProducto);
                 idDetalleComanda = em.merge(idDetalleComanda);
             }
             
@@ -159,7 +159,7 @@ public class ExtraProductosJpaController implements Serializable {
             // Actualizar la lista de DetalleComanda
             Detallecomanda idDetalleComanda = extraProducto.getIdDetalleComanda();
             if (idDetalleComanda != null) {
-                idDetalleComanda.getExtrasProductosList().remove(extraProducto);
+             //   idDetalleComanda.getExtrasProductosList().remove(extraProducto);
                 idDetalleComanda = em.merge(idDetalleComanda);
             }
             

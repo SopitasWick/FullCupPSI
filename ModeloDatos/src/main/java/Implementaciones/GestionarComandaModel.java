@@ -50,8 +50,8 @@ public class GestionarComandaModel implements IFachadaComandasModel {
     }
 
     @Override
-    public void GuardarComanda(Comanda comanda) throws Exception {
-        jpaComanda.create(comanda);
+    public Comanda GuardarComanda(Comanda comanda) throws Exception {
+        return jpaComanda.create(comanda);
     }
 
     @Override
@@ -115,8 +115,8 @@ public class GestionarComandaModel implements IFachadaComandasModel {
     }
 
     @Override
-    public void EditarComanda(Comanda comanda) throws Exception {
-        jpaComanda.edit(comanda);
+    public Comanda EditarComanda(Comanda comanda) throws Exception {
+        return jpaComanda.edit(comanda);
     }
 
     @Override

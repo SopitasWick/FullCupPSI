@@ -76,7 +76,7 @@ public class FrmLogin extends javax.swing.JFrame {
     private void btnAtendienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtendienteActionPerformed
         // TODO add your handling code here:
         
-        Comandas comandas = new Comandas();
+        FrmComandas comandas = new FrmComandas();
         comandas.setVisible(true);
         this.setVisible(false);
         

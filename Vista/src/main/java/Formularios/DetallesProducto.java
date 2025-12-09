@@ -140,7 +140,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             jrbTamañoNo.setSelected(true);
 
             // Iterar sobre los extras guardados
-            List<ExtrasProductos> extras = detalle.getExtrasProductosList();
+            List<ExtrasProductos> extras = null;
             if (extras != null && !extras.isEmpty()) {
                 for (ExtrasProductos extra : extras) {
 
@@ -1327,15 +1327,15 @@ public class DetallesProducto extends javax.swing.JFrame {
 
             try {
                 // 1. Borrar solo los extras ANTIGUOS (hijos)
-                if (detalleParaGuardar.getExtrasProductosList() != null && !detalleParaGuardar.getExtrasProductosList().isEmpty()) {
-                    System.out.println("Eliminando extras antiguos...");
-                    // Crear una copia para evitar errores de modificación concurrente
-                    List<ExtrasProductos> extrasAntiguos = new ArrayList<>(detalleParaGuardar.getExtrasProductosList());
-
-                    for (ExtrasProductos extraAntiguo : extrasAntiguos) {
-                        fExtras.eliminarExtrasProductos(extraAntiguo.getIdExtraProducto());
-                    }
-                }
+//                if (detalleParaGuardar.getExtrasProductosList() != null && !detalleParaGuardar.getExtrasProductosList().isEmpty()) {
+//                    System.out.println("Eliminando extras antiguos...");
+//                    // Crear una copia para evitar errores de modificación concurrente
+//                    List<ExtrasProductos> extrasAntiguos = new ArrayList<>(detalleParaGuardar.getExtrasProductosList());
+//
+//                    for (ExtrasProductos extraAntiguo : extrasAntiguos) {
+//                        fExtras.eliminarExtrasProductos(extraAntiguo.getIdExtraProducto());
+//                    }
+//                }
 
                 // 2. Actualizar los campos del padre (Detallecomanda)
                 detalleParaGuardar.setNotadetalleComanda(nota);

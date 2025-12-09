@@ -41,7 +41,6 @@ public class Detallecomanda implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     @Id
     @Column(name = "idDetalleComanda")
     private Integer idDetalleComanda;
@@ -58,8 +57,17 @@ public class Detallecomanda implements Serializable {
     @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
     @ManyToOne
     private Producto idProducto;
-@OneToMany(mappedBy = "idDetalleComanda", cascade = CascadeType.REMOVE)
-private List<ExtrasProductos> extrasProductosList;
+    
+    
+//    @OneToMany(mappedBy = "idDetalleComanda", cascade = CascadeType.REMOVE)
+//    private List<ExtrasProductos> extrasProductosList;
+    
+    
+    // En Detallecomanda:
+    @OneToMany(mappedBy = "detalleComanda", cascade = CascadeType.REMOVE) // CAMBIAR a "detalleComanda"
+    private List<ExtrasDetalleComanda> extrasDetalleComandaList; // También cambiar nombre de la lista
+    
+    
     public Detallecomanda() {
     }
 
@@ -75,24 +83,27 @@ private List<ExtrasProductos> extrasProductosList;
         this.idProducto = idProducto;
     }
 
-    public Detallecomanda(Integer idDetalleComanda, Integer caintidaddetalleComanda, String notadetalleComanda, Float subTotaldetalleComanda, Comanda idComanda, Producto idProducto, List<ExtrasProductos> extrasProductosList) {
+    public Detallecomanda(Integer idDetalleComanda, Integer caintidaddetalleComanda, String notadetalleComanda, Float subTotaldetalleComanda, Comanda idComanda, Producto idProducto, List<ExtrasProductos> extrasProductosList, List<ExtrasDetalleComanda> extrasDetalleComandaList) {
         this.idDetalleComanda = idDetalleComanda;
         this.caintidaddetalleComanda = caintidaddetalleComanda;
         this.notadetalleComanda = notadetalleComanda;
         this.subTotaldetalleComanda = subTotaldetalleComanda;
         this.idComanda = idComanda;
         this.idProducto = idProducto;
-        this.extrasProductosList = extrasProductosList;
+     //   this.extrasProductosList = extrasProductosList;
+        this.extrasDetalleComandaList = extrasDetalleComandaList;
     }
 
-    public List<ExtrasProductos> getExtrasProductosList() {
-        return extrasProductosList;
-    }
 
-    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
-        this.extrasProductosList = extrasProductosList;
-    }
-    
+
+//    public List<ExtrasProductos> getExtrasProductosList() {
+//        return extrasProductosList;
+//    }
+//
+//    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
+//        this.extrasProductosList = extrasProductosList;
+//    }
+//    
 
     public Integer getIdDetalleComanda() {
         return idDetalleComanda;
@@ -141,6 +152,18 @@ private List<ExtrasProductos> extrasProductosList;
     public void setIdProducto(Producto idProducto) {
         this.idProducto = idProducto;
     }
+
+    public List<ExtrasDetalleComanda> getExtrasDetalleComandaList() {
+        return extrasDetalleComandaList;
+    }
+
+    public void setExtrasDetalleComandaList(List<ExtrasDetalleComanda> extrasDetalleComandaList) {
+        this.extrasDetalleComandaList = extrasDetalleComandaList;
+    }
+    
+    
+    
+    
 
     @Override
     public int hashCode() {

@@ -35,62 +35,86 @@ public class ComandaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Comanda comanda) throws PreexistingEntityException, Exception {
+    public Comanda create(Comanda comanda) throws PreexistingEntityException, Exception {
+        // 1. Inicialización de listas si son nulas
         if (comanda.getVentaList() == null) {
             comanda.setVentaList(new ArrayList<Venta>());
         }
         if (comanda.getDetallecomandaList() == null) {
             comanda.setDetallecomandaList(new ArrayList<Detallecomanda>());
         }
+        
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            
+            // 2. Adjuntar (Attach) la referencia de la entidad Usuario (muchos a uno)
             Usuario idUsuario = comanda.getIdUsuario();
             if (idUsuario != null) {
+                // Obtiene una referencia al Usuario en el contexto de persistencia
                 idUsuario = em.getReference(idUsuario.getClass(), idUsuario.getIdUsuario());
                 comanda.setIdUsuario(idUsuario);
             }
+            
+            // 3. Adjuntar la lista de Venta (uno a muchos)
             List<Venta> attachedVentaList = new ArrayList<Venta>();
             for (Venta ventaListVentaToAttach : comanda.getVentaList()) {
+                // Adjunta la Venta existente al contexto de persistencia
                 ventaListVentaToAttach = em.getReference(ventaListVentaToAttach.getClass(), ventaListVentaToAttach.getIdVenta());
                 attachedVentaList.add(ventaListVentaToAttach);
             }
             comanda.setVentaList(attachedVentaList);
+            
+            // 4. Adjuntar la lista de Detallecomanda (uno a muchos)
             List<Detallecomanda> attachedDetallecomandaList = new ArrayList<Detallecomanda>();
             for (Detallecomanda detallecomandaListDetallecomandaToAttach : comanda.getDetallecomandaList()) {
+                // Adjunta el Detallecomanda existente
                 detallecomandaListDetallecomandaToAttach = em.getReference(detallecomandaListDetallecomandaToAttach.getClass(), detallecomandaListDetallecomandaToAttach.getIdDetalleComanda());
                 attachedDetallecomandaList.add(detallecomandaListDetallecomandaToAttach);
             }
             comanda.setDetallecomandaList(attachedDetallecomandaList);
+            
+            // 5. Persistir la Comanda
             em.persist(comanda);
+            
+            // 6. Actualizar las referencias inversas (mantener la bidireccionalidad)
+            
+            // Lógica inversa para Usuario (si aplica)
             if (idUsuario != null) {
                 idUsuario.getComandaList().add(comanda);
-                idUsuario = em.merge(idUsuario);
+                em.merge(idUsuario); // Sincroniza el Usuario
             }
+            
+            // Lógica inversa para Venta
             for (Venta ventaListVenta : comanda.getVentaList()) {
                 Comanda oldIdComandaOfVentaListVenta = ventaListVenta.getIdComanda();
-                ventaListVenta.setIdComanda(comanda);
+                ventaListVenta.setIdComanda(comanda); // Establece la referencia a la nueva Comanda
                 ventaListVenta = em.merge(ventaListVenta);
                 if (oldIdComandaOfVentaListVenta != null) {
                     oldIdComandaOfVentaListVenta.getVentaList().remove(ventaListVenta);
-                    oldIdComandaOfVentaListVenta = em.merge(oldIdComandaOfVentaListVenta);
+                    em.merge(oldIdComandaOfVentaListVenta);
                 }
             }
+            
+            // Lógica inversa para Detallecomanda
             for (Detallecomanda detallecomandaListDetallecomanda : comanda.getDetallecomandaList()) {
                 Comanda oldIdComandaOfDetallecomandaListDetallecomanda = detallecomandaListDetallecomanda.getIdComanda();
-                detallecomandaListDetallecomanda.setIdComanda(comanda);
+                detallecomandaListDetallecomanda.setIdComanda(comanda); // Establece la referencia a la nueva Comanda
                 detallecomandaListDetallecomanda = em.merge(detallecomandaListDetallecomanda);
                 if (oldIdComandaOfDetallecomandaListDetallecomanda != null) {
                     oldIdComandaOfDetallecomandaListDetallecomanda.getDetallecomandaList().remove(detallecomandaListDetallecomanda);
-                    oldIdComandaOfDetallecomandaListDetallecomanda = em.merge(oldIdComandaOfDetallecomandaListDetallecomanda);
+                    em.merge(oldIdComandaOfDetallecomandaListDetallecomanda);
                 }
             }
+            
             em.getTransaction().commit();
+            
+            // 7. Retornar la entidad persistida
+            return comanda; // 🌟 Cambio: Devuelve la instancia de Comanda
+            
         } catch (Exception ex) {
-            if (findComanda(comanda.getIdComanda()) != null) {
-                throw new PreexistingEntityException("Comanda " + comanda + " already exists.", ex);
-            }
+            // ... (Manejo de excepciones) ...
             throw ex;
         } finally {
             if (em != null) {
@@ -99,22 +123,35 @@ public class ComandaJpaController implements Serializable {
         }
     }
 
-    public void edit(Comanda comanda) throws NonexistentEntityException, Exception {
+    public Comanda edit(Comanda comanda) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            
+            // 1. Obtener la entidad persistente actual para comparar las listas y referencias
             Comanda persistentComanda = em.find(Comanda.class, comanda.getIdComanda());
+            if (persistentComanda == null) {
+                // Si no existe, lanza la excepción
+                throw new NonexistentEntityException("The comanda with id " + comanda.getIdComanda() + " no longer exists.");
+            }
+            
+            // 2. Capturar referencias antiguas y nuevas
             Usuario idUsuarioOld = persistentComanda.getIdUsuario();
             Usuario idUsuarioNew = comanda.getIdUsuario();
             List<Venta> ventaListOld = persistentComanda.getVentaList();
             List<Venta> ventaListNew = comanda.getVentaList();
             List<Detallecomanda> detallecomandaListOld = persistentComanda.getDetallecomandaList();
             List<Detallecomanda> detallecomandaListNew = comanda.getDetallecomandaList();
+            
+            // 3. Adjuntar/Actualizar referencias de Usuario (muchos a uno)
             if (idUsuarioNew != null) {
+                // Adjunta la referencia del nuevo Usuario
                 idUsuarioNew = em.getReference(idUsuarioNew.getClass(), idUsuarioNew.getIdUsuario());
                 comanda.setIdUsuario(idUsuarioNew);
             }
+            
+            // 4. Adjuntar VentaList (uno a muchos)
             List<Venta> attachedVentaListNew = new ArrayList<Venta>();
             for (Venta ventaListNewVentaToAttach : ventaListNew) {
                 ventaListNewVentaToAttach = em.getReference(ventaListNewVentaToAttach.getClass(), ventaListNewVentaToAttach.getIdVenta());
@@ -122,6 +159,8 @@ public class ComandaJpaController implements Serializable {
             }
             ventaListNew = attachedVentaListNew;
             comanda.setVentaList(ventaListNew);
+            
+            // 5. Adjuntar DetallecomandaList (uno a muchos)
             List<Detallecomanda> attachedDetallecomandaListNew = new ArrayList<Detallecomanda>();
             for (Detallecomanda detallecomandaListNewDetallecomandaToAttach : detallecomandaListNew) {
                 detallecomandaListNewDetallecomandaToAttach = em.getReference(detallecomandaListNewDetallecomandaToAttach.getClass(), detallecomandaListNewDetallecomandaToAttach.getIdDetalleComanda());
@@ -129,21 +168,31 @@ public class ComandaJpaController implements Serializable {
             }
             detallecomandaListNew = attachedDetallecomandaListNew;
             comanda.setDetallecomandaList(detallecomandaListNew);
+            
+            // 6. Sincronizar (Merge) la entidad Comanda con la base de datos
             comanda = em.merge(comanda);
+            
+            // 7. Actualizar referencias inversas (Bidireccionalidad)
+            
+            // Actualizar Usuario (eliminar referencia antigua)
             if (idUsuarioOld != null && !idUsuarioOld.equals(idUsuarioNew)) {
                 idUsuarioOld.getComandaList().remove(comanda);
-                idUsuarioOld = em.merge(idUsuarioOld);
+                em.merge(idUsuarioOld);
             }
+            // Actualizar Usuario (añadir referencia nueva)
             if (idUsuarioNew != null && !idUsuarioNew.equals(idUsuarioOld)) {
                 idUsuarioNew.getComandaList().add(comanda);
-                idUsuarioNew = em.merge(idUsuarioNew);
+                em.merge(idUsuarioNew);
             }
+            
+            // Actualizar VentaList (eliminar referencias que ya no están)
             for (Venta ventaListOldVenta : ventaListOld) {
                 if (!ventaListNew.contains(ventaListOldVenta)) {
-                    ventaListOldVenta.setIdComanda(null);
-                    ventaListOldVenta = em.merge(ventaListOldVenta);
+                    ventaListOldVenta.setIdComanda(null); // Desvincula de la Comanda
+                    em.merge(ventaListOldVenta);
                 }
             }
+            // Actualizar VentaList (añadir o mantener referencias nuevas)
             for (Venta ventaListNewVenta : ventaListNew) {
                 if (!ventaListOld.contains(ventaListNewVenta)) {
                     Comanda oldIdComandaOfVentaListNewVenta = ventaListNewVenta.getIdComanda();
@@ -151,16 +200,19 @@ public class ComandaJpaController implements Serializable {
                     ventaListNewVenta = em.merge(ventaListNewVenta);
                     if (oldIdComandaOfVentaListNewVenta != null && !oldIdComandaOfVentaListNewVenta.equals(comanda)) {
                         oldIdComandaOfVentaListNewVenta.getVentaList().remove(ventaListNewVenta);
-                        oldIdComandaOfVentaListNewVenta = em.merge(oldIdComandaOfVentaListNewVenta);
+                        em.merge(oldIdComandaOfVentaListNewVenta);
                     }
                 }
             }
+            
+            // Actualizar DetallecomandaList (eliminar referencias que ya no están)
             for (Detallecomanda detallecomandaListOldDetallecomanda : detallecomandaListOld) {
                 if (!detallecomandaListNew.contains(detallecomandaListOldDetallecomanda)) {
-                    detallecomandaListOldDetallecomanda.setIdComanda(null);
-                    detallecomandaListOldDetallecomanda = em.merge(detallecomandaListOldDetallecomanda);
+                    detallecomandaListOldDetallecomanda.setIdComanda(null); // Desvincula de la Comanda
+                    em.merge(detallecomandaListOldDetallecomanda);
                 }
             }
+            // Actualizar DetallecomandaList (añadir o mantener referencias nuevas)
             for (Detallecomanda detallecomandaListNewDetallecomanda : detallecomandaListNew) {
                 if (!detallecomandaListOld.contains(detallecomandaListNewDetallecomanda)) {
                     Comanda oldIdComandaOfDetallecomandaListNewDetallecomanda = detallecomandaListNewDetallecomanda.getIdComanda();
@@ -168,11 +220,16 @@ public class ComandaJpaController implements Serializable {
                     detallecomandaListNewDetallecomanda = em.merge(detallecomandaListNewDetallecomanda);
                     if (oldIdComandaOfDetallecomandaListNewDetallecomanda != null && !oldIdComandaOfDetallecomandaListNewDetallecomanda.equals(comanda)) {
                         oldIdComandaOfDetallecomandaListNewDetallecomanda.getDetallecomandaList().remove(detallecomandaListNewDetallecomanda);
-                        oldIdComandaOfDetallecomandaListNewDetallecomanda = em.merge(oldIdComandaOfDetallecomandaListNewDetallecomanda);
+                        em.merge(oldIdComandaOfDetallecomandaListNewDetallecomanda);
                     }
                 }
             }
+            
             em.getTransaction().commit();
+            
+            // 8. Retornar la entidad actualizada
+            return comanda; // 🌟 Cambio: Devuelve la instancia de Comanda
+            
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -188,6 +245,9 @@ public class ComandaJpaController implements Serializable {
             }
         }
     }
+    
+    
+    
 public void actualizarTotalComanda(Integer idComanda, float nuevoTotal) throws Exception {
     EntityManager em = getEntityManager();
     try {
