@@ -19,9 +19,9 @@ public interface IFachadaComandasModel{
     public List<Producto> ObtenerListaProductos() throws Exception;
     public List<Producto> ObtenerListaProductosCategoria(int idCategoria) throws Exception;
     public List<ExtrasProductos> ObtenerDetallesProductos(Integer idProducto)throws Exception;
-    public void GuardarComanda(Comanda comanda)throws Exception;
+    public Comanda GuardarComanda(Comanda comanda)throws Exception;
     public void GuardarDetalleComanda(Detallecomanda detComanda) throws Exception;
-    public void EditarComanda(Comanda comanda) throws Exception;
+    public Comanda EditarComanda(Comanda comanda) throws Exception;
     public void EditarTotalComanda(Integer idComanda, float nuevoTotal)throws Exception;
     public void comandaCompletada (Integer idComanda)throws Exception;
     public Comanda obtenerComanda (Integer idComanda) throws Exception;

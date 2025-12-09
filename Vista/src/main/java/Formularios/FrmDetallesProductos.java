@@ -6,6 +6,7 @@ package Formularios;
 
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
+import Entidades.Extra;
 import Entidades.ExtrasProductos;
 import Entidades.Leche;
 import Entidades.Producto;
@@ -14,15 +15,18 @@ import Entidades.Valoropcion;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaComandasControlador;
 import Facades.IFachadaDetallesComandaControlador;
+import Facades.IFachadaExtraDetalleComandaControlador;
 import Facades.IFachadaExtrasControlador;
 import Facades.IFachadaLecheControlador;
 import Facades.IFachadaProductoControlador;
 import Facades.IFachadaTamanoVasosControlador;
 import static Formularios.FrmListaProductos.comanda;
 import static Formularios.FrmListaProductos.detalleComanda;
+import Formularios.paneles.elementos.JPanelExtra;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarDetallesComandaControlador;
+import Implementaciones.GestionarExtraDetalleComandaControlador;
 import Implementaciones.GestionarExtrasControlador;
 import Implementaciones.GestionarLecheControlador;
 import Implementaciones.GestionarProductoControlador;
@@ -71,13 +75,14 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     private final IFachadaLecheControlador fLeche = new GestionarLecheControlador();
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaExtrasControlador fExtras = new GestionarExtrasControlador();
-    private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
-    private final IFachadaTamanoVasosControlador fVasos = new GestionarTamanoVasosControlador();
     private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
+    private final IFachadaExtraDetalleComandaControlador fEDC = new GestionarExtraDetalleComandaControlador();
 
     
     
     Dimension dimension = null;
+    
+    List <Extra> listaExtras;
 
     
     
@@ -85,6 +90,9 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
     
     List<ExtrasProductos> extras = new ArrayList<>();
+    Extra extraVaso = null;
+    Extra extraLeche = null;
+    Extra extrao = null;
     
     
     FrmListaProductos pantallaProductos;
@@ -119,26 +127,31 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         this.soloLectura = soloLectura;
         
         jPanel13.setVisible(false); // visualizar jpanelpromociones---------------------------------------------------------
-        jblSoloLectura.setVisible(false);
-        if(soloLectura){
-            soloLectura();
-        }
+//        jblSoloLectura.setVisible(false);
+//        if(soloLectura){
+//            soloLectura();
+//        }
+//        
+//        if(detalle != null){
+//            System.out.println("detalle no es nulo");
+//            try {
+//                comanda = FComandas.obtenerComanda(this.detalle.getIdComanda().getIdComanda());
+//            } catch (Exception ex) {
+//                Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            cargarDatosEditar();
+//        }
+//        else{
+//            System.out.println("detalle es nulo");
+//            cargarDatos();
+//        }
+//        
+//        calcularTotal();
         
-        if(detalle != null){
-            System.out.println("detalle no es nulo");
-            try {
-                comanda = FComandas.obtenerComanda(this.detalle.getIdComanda().getIdComanda());
-            } catch (Exception ex) {
-                Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            cargarDatosEditar();
-        }
-        else{
-            System.out.println("detalle es nulo");
-            cargarDatos();
-        }
-        
-        calcularTotal();
+        cargarDatosw();
+        cargarExtraVasos();
+        cargarExtraLeches();
+        cargarExtraEx();
         
     }
     
@@ -163,16 +176,19 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         
         
         
-        if(detalle != null){
-            System.out.println("detalle no es nulo");
-            cargarDatosEditar();
-        }
-        else{
-            System.out.println("detalle es nulo");
-            cargarDatos();
-        }
-        calcularTotal();
-        jPanel13.setVisible(false);
+//        if(detalle != null){
+//            System.out.println("detalle no es nulo");
+//            cargarDatosEditar();
+//        }
+//        else{
+//            System.out.println("detalle es nulo");
+//            cargarDatos();
+//        }
+//        calcularTotal();
+//        jPanel13.setVisible(false);
+
+        cargarDatosw();
+        cargarExtraVasos();
         
     }
     
@@ -189,6 +205,351 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         
         
     }
+    
+    private void cargarDatosw(){
+        listaExtras = producto.getExtras();
+    }
+    
+    
+    private void cargarExtraVasos(){
+        
+        jPanelListaVasos.removeAll();
+ 
+        try{
+            
+            List<Extra> listaProvisional = new ArrayList<>();
+            if(!listaProvisional.isEmpty()){
+                listaProvisional.clear();
+            }
+            
+            for(int i = 0; i < listaExtras.size(); i++){
+                if(listaExtras.get(i).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
+                    listaProvisional.add(listaExtras.get(i));
+                }
+            }
+                 
+            int alturaProducto = 55; 
+                
+            for(int i = 0; i < listaProvisional.size(); i++){    
+                
+                JPanelExtra extra = new JPanelExtra();
+                
+                extra.setBounds(0, alturaProducto * i, 260, 45);
+
+                extra.setAlignmentX(Component.LEFT_ALIGNMENT);
+                extra.setBackground(Color.decode("#FFFFFF"));
+
+                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
+                
+                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
+                extra.getJblPrecioExtra().setLocation(extra.getJblNombreExtra().getBounds().x + 120, extra.getJblPrecioExtra().getBounds().y);
+
+                int iProvisional = i;        
+
+                extra.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        
+                        if(extraVaso != null ){
+                            if(extraVaso.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){
+                                extraVaso = null;
+                                extra.setSelecionado(false);
+                                System.out.println("vaso null");
+                            }
+                            else{
+                                extraVaso = listaProvisional.get(iProvisional);
+                                System.out.println("vaso no null");
+                                extra.setSelecionado(true);
+                            }
+                        
+                        }
+                        
+                        else{
+                            extraVaso = listaProvisional.get(iProvisional);
+                            extra.setSelecionado(true);
+                            extra.setBackground(Color.decode("#E0E0E0"));
+                        }
+
+                        
+                        calcularTotal();
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e){
+                        if(!extra.isSelecionado()){
+                            extra.setBackground(Color.decode("#E0E0E0"));
+                        }
+
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e){
+                        if(!extra.isSelecionado()){
+                            extra.setBackground(Color.decode("#FFFFFF"));
+                        }
+                    }
+
+                });
+
+
+                 extra.getJblEliminarExtra().setCursor(new Cursor(1));
+                 extra.getJblEliminarExtra().setVisible(false);
+
+                      
+               if(jPanelListaVasos.getPreferredSize().height < alturaProducto * i){
+                    
+                    if(dimension == null){
+                        dimension = new Dimension();
+                    }
+                    
+                    dimension.setSize(jPanelListaVasos.getPreferredSize().width, alturaProducto * i);
+                    jPanelListaVasos.setPreferredSize(dimension);
+               }
+                    
+                jPanelListaVasos.add(extra);
+  
+            }
+        
+        
+            jPanelListaVasos.revalidate();
+            jPanelListaVasos.repaint();
+        }
+        
+        
+        
+        catch(NumberFormatException e){
+        }
+    
+    
+    }
+    
+    
+    private void cargarExtraLeches(){
+
+            jPanelListaLeches.removeAll();
+
+            try{
+
+                List<Extra> listaProvisional = new ArrayList<>();
+                if(!listaProvisional.isEmpty()){
+                    listaProvisional.clear();
+                }
+
+                for(int i = 0; i < listaExtras.size(); i++){
+                    if(listaExtras.get(i).getTipoExtra().equalsIgnoreCase("Tipo leche")){
+                        listaProvisional.add(listaExtras.get(i));
+                    }
+                }
+
+                int alturaProducto = 55; 
+
+                for(int i = 0; i < listaProvisional.size(); i++){    
+
+                    JPanelExtra extra = new JPanelExtra();
+
+                    extra.setBounds(0, alturaProducto * i, 260, 45);
+
+                    extra.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    extra.setBackground(Color.decode("#FFFFFF"));
+
+                    extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
+
+                    extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
+                    extra.getJblPrecioExtra().setLocation(extra.getJblNombreExtra().getBounds().x + 120, extra.getJblPrecioExtra().getBounds().y);
+
+                    int iProvisional = i;        
+
+                    extra.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            if(extraLeche != null ){
+                                if(extraLeche.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){
+                                    extraLeche = null;
+                                    extra.setSelecionado(false);
+                                    System.out.println("vaso null");
+                                }
+                                else{
+                                    extraLeche = listaProvisional.get(iProvisional);
+                                    System.out.println("vaso no null");
+                                    extra.setSelecionado(true);
+                                }
+
+                            }
+
+                            else{
+                                extraLeche = listaProvisional.get(iProvisional);
+                                extra.setSelecionado(true);
+                                extra.setBackground(Color.decode("#E0E0E0"));
+                            }
+                            
+                            calcularTotal();
+
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e){
+                            if(!extra.isSelecionado()){
+                                extra.setBackground(Color.decode("#E0E0E0"));
+                            }
+
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e){
+                            if(!extra.isSelecionado()){
+                                extra.setBackground(Color.decode("#FFFFFF"));
+                            }
+                        }
+
+                    });
+
+
+                     extra.getJblEliminarExtra().setCursor(new Cursor(1));
+                     extra.getJblEliminarExtra().setVisible(false);
+
+
+                   if(jPanelListaLeches.getPreferredSize().height < alturaProducto * i){
+
+                        if(dimension == null){
+                            dimension = new Dimension();
+                        }
+
+                        dimension.setSize(jPanelListaLeches.getPreferredSize().width, alturaProducto * i);
+                        jPanelListaLeches.setPreferredSize(dimension);
+                   }
+
+                    jPanelListaLeches.add(extra);
+
+                }
+
+
+                jPanelListaLeches.revalidate();
+                jPanelListaLeches.repaint();
+            }
+
+
+
+            catch(NumberFormatException e){
+            }
+
+
+        }
+
+
+
+
+    private void cargarExtraEx(){
+
+            jPanelListaExtras.removeAll();
+
+            try{
+
+                List<Extra> listaProvisional = new ArrayList<>();
+                if(!listaProvisional.isEmpty()){
+                    listaProvisional.clear();
+                }
+
+                for(int i = 0; i < listaExtras.size(); i++){
+                    if(listaExtras.get(i).getTipoExtra().equalsIgnoreCase("Tipo extra")){
+                        listaProvisional.add(listaExtras.get(i));
+                    }
+                }
+
+                int alturaProducto = 55; 
+
+                for(int i = 0; i < listaProvisional.size(); i++){    
+
+                    JPanelExtra extra = new JPanelExtra();
+
+                    extra.setBounds(0, alturaProducto * i, 260, 45);
+
+                    extra.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    extra.setBackground(Color.decode("#FFFFFF"));
+
+                    extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
+
+                    extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
+                    extra.getJblPrecioExtra().setLocation(extra.getJblNombreExtra().getBounds().x + 120, extra.getJblPrecioExtra().getBounds().y);
+
+                    int iProvisional = i;        
+
+                    extra.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            if(extrao != null ){
+                                if(extrao.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){
+                                    extrao = null;
+                                    extra.setSelecionado(false);
+                                    System.out.println("vaso null");
+                                }
+                                else{
+                                    extrao = listaProvisional.get(iProvisional);
+                                    System.out.println("vaso no null");
+                                    extra.setSelecionado(true);
+                                }
+
+                            }
+
+                            else{
+                                extrao = listaProvisional.get(iProvisional);
+                                extra.setSelecionado(true);
+                                extra.setBackground(Color.decode("#E0E0E0"));
+                            }
+
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e){
+                            if(!extra.isSelecionado()){
+                                extra.setBackground(Color.decode("#E0E0E0"));
+                            }
+
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e){
+                            if(!extra.isSelecionado()){
+                                extra.setBackground(Color.decode("#FFFFFF"));
+                            }
+                        }
+
+                    });
+
+
+                     extra.getJblEliminarExtra().setCursor(new Cursor(1));
+                     extra.getJblEliminarExtra().setVisible(false);
+
+
+                   if(jPanelListaExtras.getPreferredSize().height < alturaProducto * i){
+
+                        if(dimension == null){
+                            dimension = new Dimension();
+                        }
+
+                        dimension.setSize(jPanelListaExtras.getPreferredSize().width, alturaProducto * i);
+                        jPanelListaExtras.setPreferredSize(dimension);
+                   }
+
+                    jPanelListaExtras.add(extra);
+
+                }
+
+
+                jPanelListaExtras.revalidate();
+                jPanelListaExtras.repaint();
+            }
+
+
+
+            catch(NumberFormatException e){
+            }
+
+
+        }
+    
+    
     
     
     
@@ -609,488 +970,488 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
 
 
 
-    
-    private void cargarDatosEditar() {
-
-        txtNombreProducto.setText(producto.getNombreProducto());
-        txtPrecioBase.setText("Precio: " + producto.getPrecioProducto());
-        txtProductoResumen.setText(producto.getNombreProducto());
-        txtDescripcion.setText(detalle.getNotadetalleComanda());
-        
-        List <ExtrasProductos> extrasEncontrados = detalle.getExtrasProductosList();//CEHCAR ESTA TABLA Y AGREGAR LO DE LAS CREPAS PARA QUE APAREZCA
-        System.out.println("extras en" + extrasEncontrados.size());
-        
-        
-        extrasSeleccionados.clear(); // Limpia antes de cargar
-
-        if (detalle != null && extrasEncontrados != null && !extrasEncontrados.isEmpty()) {
-            // Obtener todas las opciones del producto una sola vez
-            List<Valoropcion> opciones = null;
-            try {
-                opciones = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
-            } catch (Exception ex) {
-                Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            for (ExtrasProductos extra : extrasEncontrados) {
-                // Solo procesar los que sean "Extra bebidas"
-                for (Valoropcion vo : opciones) {
-                    if (vo.getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas") &&
-                        vo.getNombreValor().equalsIgnoreCase(extra.getNombreExtra())) {
-
-                        extrasSeleccionados.put(vo, extra.getCantidad());
-                        break;
-                    }
-                }
-            }
-    }
-        
-        
-        
-        if(extrasEncontrados != null && !extrasEncontrados.isEmpty()){
-            for(int i = 0; i < extrasEncontrados.size(); i++){
-                if(extrasEncontrados.get(i).getIdTamanoVaso() != null){
-                    vaso = extrasEncontrados.get(i).getIdTamanoVaso();
-                }
-                
-                if(extrasEncontrados.get(i).getIdLeche() != null){
-                    leche = extrasEncontrados.get(i).getIdLeche();
-                }
-                
-                
-                
-            }
-        }
-        
-        
-        try {
-            List<Valoropcion> opciones = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
-            jPanelExtras.removeAll();
-
-            // ====== Verificar qué opciones requiere el producto ======
-            boolean requiereVaso = false;
-            boolean requiereLeche = false;
-            boolean requieresBebidas = false; //extras
-            
-            
-            
-            
-            
-
-            for (Valoropcion vo : opciones) {
-                String nombreOpcion = vo.getIdOpcionProducto().getNombreOpcion().toLowerCase();
-                if (nombreOpcion.contains("tipo vaso")) requiereVaso = true;
-                if (nombreOpcion.contains("tipo leche")) requiereLeche = true;
-                if (nombreOpcion.contains("extra bebidas")) requieresBebidas = true;
-            }
-
-            // ====== Subpaneles ======
-            JPanel subPanelVaso = null;
-            JPanel subPanelLeche = null;
-           // JPanel subPanelExtras = null;
-
-            // ====== Panel de tipo vaso ======
-            if (requiereVaso) {
-                subPanelVaso = new JPanel();
-                subPanelVaso.setName("Tipo vaso");
-                subPanelVaso.setBackground(Color.WHITE);
-                subPanelVaso.setOpaque(false);
-                subPanelVaso.setBorder(new LineBorder(Color.GRAY));
-                subPanelVaso.setBounds(0, 0, 480, 160); // <- TUS bounds originales
-                subPanelVaso.setLayout(null);
-
-                JLabel jlabelTituloVaso = new JLabel();
-                jlabelTituloVaso.setBounds(subPanelVaso.getX(), 8, subPanelVaso.getWidth(), 20);
-                jlabelTituloVaso.setHorizontalAlignment(SwingConstants.CENTER);
-                jlabelTituloVaso.setFont(new java.awt.Font("Segoe UI", 1, 18));
-                jlabelTituloVaso.setText("Tipo de vaso");
-                subPanelVaso.add(jlabelTituloVaso);
-
-                JPanel jPanelElementosVasos = new JPanel();
-                jPanelElementosVasos.setBounds(10, 42, subPanelVaso.getWidth() - 20, subPanelVaso.getHeight() - 52);
-                jPanelElementosVasos.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
-
-                List<TamanoVaso> vasos = fVaso.obtenerTodosLosTamanosVasos();
-                List<JPanel> listaSubPanelesVasos = new ArrayList<>();
-
-                
-                for (int j = 0; j < vasos.size(); j++) {
-                    int idVaso = j;
-
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-                    panel.setBackground(Color.WHITE);
-                    panel.setPreferredSize(new Dimension(120, 80));
-
-                    JLabel lbl1 = new JLabel(vasos.get(j).getNombre(), SwingConstants.CENTER);
-                    JLabel lbl3 = new JLabel("$" + vasos.get(j).getPrecio(), SwingConstants.CENTER);
-
-                    lbl1.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    lbl3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-                    panel.add(Box.createVerticalGlue());
-                    panel.add(lbl1);
-                    panel.add(lbl3);
-                    panel.add(Box.createVerticalGlue());
-                    
-                    
-                    if(vaso != null && vaso.getNombre().equalsIgnoreCase(vasos.get(j).getNombre())){
-                        panel.setBackground(new Color(173, 216, 230));
-                        panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-                        vaso = vasos.get(idVaso);
-                        calcularTotal();
-                    }
-                    
-                    if(!soloLectura){
-                        
-                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                        panel.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                                for (JPanel p : listaSubPanelesVasos) {
-                                    p.setBackground(Color.WHITE);
-                                    p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-                                }
-                                panel.setBackground(new Color(173, 216, 230));
-                                panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-                                vaso = vasos.get(idVaso);
-                                System.out.println("Vaso: " + vaso.getNombre());
-                                calcularTotal();
-                                actualizarNota();
-                            }
-                        });
-                }
-
-                    listaSubPanelesVasos.add(panel);
-                    jPanelElementosVasos.add(panel);
-                }
-
-                
-                subPanelVaso.add(jPanelElementosVasos);
-                jPanelExtras.add(subPanelVaso);
-            }
-
-            // ====== Panel de tipo leche ======
-            if (requiereLeche) {
-                subPanelLeche = new JPanel();
-                subPanelLeche.setName("Tipo leche");
-                subPanelLeche.setBackground(Color.WHITE);
-                subPanelLeche.setOpaque(false);
-                subPanelLeche.setBorder(new LineBorder(Color.GRAY));
-
-                if (subPanelVaso != null) {
-                    subPanelLeche.setBounds(0, subPanelVaso.getHeight() + 20, 480, subPanelVaso.getHeight() + 20);
-                } else {
-                    subPanelLeche.setBounds(0, 0, 480, 180);
-                }
-                subPanelLeche.setLayout(null);
-
-                JLabel jlabelTituloLeche = new JLabel();
-                jlabelTituloLeche.setBounds(subPanelLeche.getX(), 8, subPanelLeche.getWidth(), 20);
-                jlabelTituloLeche.setHorizontalAlignment(SwingConstants.CENTER);
-                jlabelTituloLeche.setFont(new java.awt.Font("Segoe UI", 1, 18));
-                jlabelTituloLeche.setText("Tipo de leche");
-                subPanelLeche.add(jlabelTituloLeche);
-
-                JPanel jPanelElementosLeches = new JPanel();
-                jPanelElementosLeches.setBounds(10, 42, subPanelLeche.getWidth() - 20, subPanelLeche.getHeight() - 52);
-                jPanelElementosLeches.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-
-                List<Leche> leches = fLeche.obtenerTodasLasLeches();
-                List<JPanel> listaSubPanelesLeches = new ArrayList<>();
-
-                for (int j = 0; j < leches.size(); j++) {
-                    int idLeche = j;
-
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-                    panel.setBackground(Color.WHITE);
-                    panel.setPreferredSize(new Dimension(120, 40));
-                    
-
-                    JLabel lbl1 = new JLabel(leches.get(j).getNombre(), SwingConstants.CENTER);
-                    JLabel lbl3 = new JLabel("$" + leches.get(j).getPrecio(), SwingConstants.CENTER);
-
-                    lbl1.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    lbl3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-                    panel.add(Box.createVerticalGlue());
-                    panel.add(lbl1);
-                    panel.add(lbl3);
-                    panel.add(Box.createVerticalGlue());
-                    
-                    
-                    if(leche != null && leche.getNombre().equalsIgnoreCase(leches.get(j).getNombre())){
-                        panel.setBackground(new Color(173, 216, 230));
-                        panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-                        leche = leches.get(idLeche);
-                        calcularTotal();
-                    }
-                    
-                    
-                    if(!soloLectura){
-                        
-                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                        
-                        panel.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                                for (JPanel p : listaSubPanelesLeches) {
-                                    p.setBackground(Color.WHITE);
-                                    p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-                                }
-                                panel.setBackground(new Color(173, 216, 230));
-                                panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-                                leche = leches.get(idLeche);
-
-                                calcularTotal();
-                                actualizarNota();
-                            }
-                        });
-                    }
-                    
-
-                    listaSubPanelesLeches.add(panel);
-                    jPanelElementosLeches.add(panel);
-                }
-
-                subPanelLeche.add(jPanelElementosLeches);
-                
-                if(soloLectura){
-                subPanelLeche.setEnabled(false);
-                }
-                
-                jPanelExtras.add(subPanelLeche);
-            }
-            
-            
-            
-           // ====== Panel de tipo extras ======
-            if (requieresBebidas) {
-                JPanel subPanelExtras = new JPanel();
-                subPanelExtras.setName("Tipo extra");
-                subPanelExtras.setBackground(Color.WHITE);
-                subPanelExtras.setOpaque(false);
-                subPanelExtras.setBorder(new LineBorder(Color.GRAY));
-                subPanelExtras.setLayout(null);
-                subPanelExtras.setBounds(500, 0, 350, jPanelExtras.getHeight() - 42);
-
-                // --- Título ---
-                JLabel jlabelTituloExtra = new JLabel("Tipo de extra", SwingConstants.CENTER);
-                jlabelTituloExtra.setBounds(0, 8, subPanelExtras.getWidth(), 20);
-                jlabelTituloExtra.setFont(new Font("Segoe UI", Font.BOLD, 18));
-                subPanelExtras.add(jlabelTituloExtra);
-
-                // --- Panel interno con BoxLayout vertical ---
-                JPanel contenedorExtras = new JPanel();
-                contenedorExtras.setLayout(new BoxLayout(contenedorExtras, BoxLayout.Y_AXIS));
-                contenedorExtras.setBackground(Color.WHITE);
-
-                // --- Scroll ---
-                JScrollPane scrollExtras = new JScrollPane(contenedorExtras);
-                scrollExtras.setBounds(10, 40, subPanelExtras.getWidth() - 20, subPanelExtras.getHeight() - 50);
-                scrollExtras.setBorder(null);
-                scrollExtras.getVerticalScrollBar().setUnitIncrement(16);
-                scrollExtras.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                scrollExtras.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-                subPanelExtras.add(scrollExtras);
-
-                List<JPanel> listaSubPanelesExtras = new ArrayList<>();
-
-                for (int j = 0; j < opciones.size(); j++) {//**************************************************************************************** 
-
-                    if (opciones.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")) {
-
-                        Valoropcion extra = opciones.get(j);
-
-                        // PANEL CONTENEDOR PRINCIPAL
-                        JPanel panel = new JPanel();
-                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                        panel.setBorder(BorderFactory.createCompoundBorder(
-                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
-                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
-                        ));
-                        panel.setBackground(Color.WHITE);
-                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
-
-                        // ---------- Fila 1: Nombre + Precio ----------
-                        JPanel fila1 = new JPanel(new BorderLayout());
-                        fila1.setOpaque(false);
-
-                        JLabel lblNombre = new JLabel(extra.getNombreValor());
-                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
-
-                        fila1.add(lblNombre, BorderLayout.WEST);
-                        fila1.add(lblPrecio, BorderLayout.EAST);
-
-                        panel.add(fila1);
-                        panel.add(Box.createVerticalStrut(6));
-
-                        // ---------- Fila 2: Cantidad y Spinner ----------
-                        JPanel fila2 = new JPanel(new BorderLayout());
-                        fila2.setOpaque(false);
-
-                        JLabel lblCantidad = new JLabel("Cantidad:");
-
-                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
-                        spiner.setPreferredSize(new Dimension(60, 26));
-                        spiner.setMaximumSize(new Dimension(60, 26));
-
-                        fila2.add(lblCantidad, BorderLayout.WEST);
-                        fila2.add(spiner, BorderLayout.EAST);
-
-                        panel.add(fila2);
-                        panel.add(Box.createVerticalStrut(4));
-
-                        // SI EXISTEN EXTRAS PRE-SELECCIONADOS
-                        for (int i = 0; i < extrasEncontrados.size(); i++) {
-                            if (extra.getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())) {
-                                spiner.setValue(extrasEncontrados.get(i).getCantidad());
-                                calcularTotal();
-                            }
-                        }
-
-                        if (!soloLectura) {
-                            spiner.addChangeListener(e -> {
-                                int cantidad = (int) spiner.getValue();
-
-                                if (cantidad > 0) {
-                                    extrasSeleccionados.put(extra, cantidad);
-                                } else {
-                                    extrasSeleccionados.remove(extra);
-                                }
-
-                                calcularTotal();
-                                actualizarNota();
-                            });
-                        } else {
-                            spiner.setEnabled(false);
-                        }
-
-                        listaSubPanelesExtras.add(panel);
-                        contenedorExtras.add(panel);
-                        contenedorExtras.add(Box.createVerticalStrut(10));
-
-                        // AJUSTAR ALTURA DEL CONTENEDOR
-                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
-
-                        contenedorExtras.setPreferredSize(new Dimension(
-                                scrollExtras.getWidth() - 20,
-                                Math.max(alturaTotal, scrollExtras.getHeight())
-                        ));
-
-                        contenedorExtras.revalidate();
-                        contenedorExtras.repaint();
-                    }else{//***************************************************************************************
-                        Valoropcion extra = opciones.get(j);
-
-                        // PANEL CONTENEDOR PRINCIPAL
-                        JPanel panel = new JPanel();
-                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                        panel.setBorder(BorderFactory.createCompoundBorder(
-                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
-                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
-                        ));
-                        panel.setBackground(Color.WHITE);
-                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
-
-                        // ---------- Fila 1: Nombre + Precio ----------
-                        JPanel fila1 = new JPanel(new BorderLayout());
-                        fila1.setOpaque(false);
-
-                        JLabel lblNombre = new JLabel(extra.getNombreValor());
-                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
-
-                        fila1.add(lblNombre, BorderLayout.WEST);
-                        fila1.add(lblPrecio, BorderLayout.EAST);
-
-                        panel.add(fila1);
-                        panel.add(Box.createVerticalStrut(6));
-
-                        // ---------- Fila 2: Cantidad y Spinner ----------
-                        JPanel fila2 = new JPanel(new BorderLayout());
-                        fila2.setOpaque(false);
-
-                        JLabel lblCantidad = new JLabel("Cantidad:");
-
-                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
-                        spiner.setPreferredSize(new Dimension(60, 26));
-                        spiner.setMaximumSize(new Dimension(60, 26));
-
-                        fila2.add(lblCantidad, BorderLayout.WEST);
-                        fila2.add(spiner, BorderLayout.EAST);
-
-                        panel.add(fila2);
-                        panel.add(Box.createVerticalStrut(4));
-
-                        // SI EXISTEN EXTRAS PRE-SELECCIONADOS
-                        for (int i = 0; i < extrasEncontrados.size(); i++) {
-                            if (extra.getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())) {
-                                spiner.setValue(extrasEncontrados.get(i).getCantidad());
-                                calcularTotal();
-                            }
-                        }
-
-                        if (!soloLectura) {
-                            spiner.addChangeListener(e -> {
-                                int cantidad = (int) spiner.getValue();
-
-                                if (cantidad > 0) {
-                                    extrasSeleccionados.put(extra, cantidad);
-                                } else {
-                                    extrasSeleccionados.remove(extra);
-                                }
-
-                                calcularTotal();
-                                actualizarNota();
-                            });
-                        } else {
-                            spiner.setEnabled(false);
-                        }
-
-                        listaSubPanelesExtras.add(panel);
-                        contenedorExtras.add(panel);
-                        contenedorExtras.add(Box.createVerticalStrut(10));
-
-                        // AJUSTAR ALTURA DEL CONTENEDOR
-                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
-
-                        contenedorExtras.setPreferredSize(new Dimension(
-                                scrollExtras.getWidth() - 20,
-                                Math.max(alturaTotal, scrollExtras.getHeight())
-                        ));
-
-                        contenedorExtras.revalidate();
-                        contenedorExtras.repaint();
-                    }
-                }
-
-                if (soloLectura) subPanelExtras.setEnabled(false);
-
-                jPanelExtras.add(subPanelExtras);
-            }
-
-
-
-  
-            
-            
-            
-
-            // ====== Refrescar vista ======
-            jPanelExtras.revalidate();
-            jPanelExtras.repaint();
-            
-
-        } catch (Exception ex) {
-            Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    
+//    
+//    private void cargarDatosEditar() {
+//
+//        txtNombreProducto.setText(producto.getNombreProducto());
+//        txtPrecioBase.setText("Precio: " + producto.getPrecioProducto());
+//        txtProductoResumen.setText(producto.getNombreProducto());
+//        txtDescripcion.setText(detalle.getNotadetalleComanda());
+//        
+//        List <ExtrasProductos> extrasEncontrados = detalle.getExtrasProductosList();//CEHCAR ESTA TABLA Y AGREGAR LO DE LAS CREPAS PARA QUE APAREZCA
+//        System.out.println("extras en" + extrasEncontrados.size());
+//        
+//        
+//        extrasSeleccionados.clear(); // Limpia antes de cargar
+//
+//        if (detalle != null && extrasEncontrados != null && !extrasEncontrados.isEmpty()) {
+//            // Obtener todas las opciones del producto una sola vez
+//            List<Valoropcion> opciones = null;
+//            try {
+//                opciones = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
+//            } catch (Exception ex) {
+//                Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
+//            for (ExtrasProductos extra : extrasEncontrados) {
+//                // Solo procesar los que sean "Extra bebidas"
+//                for (Valoropcion vo : opciones) {
+//                    if (vo.getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas") &&
+//                        vo.getNombreValor().equalsIgnoreCase(extra.getNombreExtra())) {
+//
+//                        extrasSeleccionados.put(vo, extra.getCantidad());
+//                        break;
+//                    }
+//                }
+//            }
+//    }
+//        
+//        
+//        
+//        if(extrasEncontrados != null && !extrasEncontrados.isEmpty()){
+//            for(int i = 0; i < extrasEncontrados.size(); i++){
+//                if(extrasEncontrados.get(i).getIdTamanoVaso() != null){
+//                    vaso = extrasEncontrados.get(i).getIdTamanoVaso();
+//                }
+//                
+//                if(extrasEncontrados.get(i).getIdLeche() != null){
+//                    leche = extrasEncontrados.get(i).getIdLeche();
+//                }
+//                
+//                
+//                
+//            }
+//        }
+//        
+//        
+//        try {
+//            List<Valoropcion> opciones = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
+//            jPanelExtras.removeAll();
+//
+//            // ====== Verificar qué opciones requiere el producto ======
+//            boolean requiereVaso = false;
+//            boolean requiereLeche = false;
+//            boolean requieresBebidas = false; //extras
+//            
+//            
+//            
+//            
+//            
+//
+//            for (Valoropcion vo : opciones) {
+//                String nombreOpcion = vo.getIdOpcionProducto().getNombreOpcion().toLowerCase();
+//                if (nombreOpcion.contains("tipo vaso")) requiereVaso = true;
+//                if (nombreOpcion.contains("tipo leche")) requiereLeche = true;
+//                if (nombreOpcion.contains("extra bebidas")) requieresBebidas = true;
+//            }
+//
+//            // ====== Subpaneles ======
+//            JPanel subPanelVaso = null;
+//            JPanel subPanelLeche = null;
+//           // JPanel subPanelExtras = null;
+//
+//            // ====== Panel de tipo vaso ======
+//            if (requiereVaso) {
+//                subPanelVaso = new JPanel();
+//                subPanelVaso.setName("Tipo vaso");
+//                subPanelVaso.setBackground(Color.WHITE);
+//                subPanelVaso.setOpaque(false);
+//                subPanelVaso.setBorder(new LineBorder(Color.GRAY));
+//                subPanelVaso.setBounds(0, 0, 480, 160); // <- TUS bounds originales
+//                subPanelVaso.setLayout(null);
+//
+//                JLabel jlabelTituloVaso = new JLabel();
+//                jlabelTituloVaso.setBounds(subPanelVaso.getX(), 8, subPanelVaso.getWidth(), 20);
+//                jlabelTituloVaso.setHorizontalAlignment(SwingConstants.CENTER);
+//                jlabelTituloVaso.setFont(new java.awt.Font("Segoe UI", 1, 18));
+//                jlabelTituloVaso.setText("Tipo de vaso");
+//                subPanelVaso.add(jlabelTituloVaso);
+//
+//                JPanel jPanelElementosVasos = new JPanel();
+//                jPanelElementosVasos.setBounds(10, 42, subPanelVaso.getWidth() - 20, subPanelVaso.getHeight() - 52);
+//                jPanelElementosVasos.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+//
+//                List<TamanoVaso> vasos = fVaso.obtenerTodosLosTamanosVasos();
+//                List<JPanel> listaSubPanelesVasos = new ArrayList<>();
+//
+//                
+//                for (int j = 0; j < vasos.size(); j++) {
+//                    int idVaso = j;
+//
+//                    JPanel panel = new JPanel();
+//                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//                    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+//                    panel.setBackground(Color.WHITE);
+//                    panel.setPreferredSize(new Dimension(120, 80));
+//
+//                    JLabel lbl1 = new JLabel(vasos.get(j).getNombre(), SwingConstants.CENTER);
+//                    JLabel lbl3 = new JLabel("$" + vasos.get(j).getPrecio(), SwingConstants.CENTER);
+//
+//                    lbl1.setAlignmentX(Component.CENTER_ALIGNMENT);
+//                    lbl3.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//                    panel.add(Box.createVerticalGlue());
+//                    panel.add(lbl1);
+//                    panel.add(lbl3);
+//                    panel.add(Box.createVerticalGlue());
+//                    
+//                    
+//                    if(vaso != null && vaso.getNombre().equalsIgnoreCase(vasos.get(j).getNombre())){
+//                        panel.setBackground(new Color(173, 216, 230));
+//                        panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+//                        vaso = vasos.get(idVaso);
+//                        calcularTotal();
+//                    }
+//                    
+//                    if(!soloLectura){
+//                        
+//                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//                        panel.addMouseListener(new MouseAdapter() {
+//                            @Override
+//                            public void mouseClicked(MouseEvent e) {
+//                                for (JPanel p : listaSubPanelesVasos) {
+//                                    p.setBackground(Color.WHITE);
+//                                    p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+//                                }
+//                                panel.setBackground(new Color(173, 216, 230));
+//                                panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+//                                vaso = vasos.get(idVaso);
+//                                System.out.println("Vaso: " + vaso.getNombre());
+//                                calcularTotal();
+//                                actualizarNota();
+//                            }
+//                        });
+//                }
+//
+//                    listaSubPanelesVasos.add(panel);
+//                    jPanelElementosVasos.add(panel);
+//                }
+//
+//                
+//                subPanelVaso.add(jPanelElementosVasos);
+//                jPanelExtras.add(subPanelVaso);
+//            }
+//
+//            // ====== Panel de tipo leche ======
+//            if (requiereLeche) {
+//                subPanelLeche = new JPanel();
+//                subPanelLeche.setName("Tipo leche");
+//                subPanelLeche.setBackground(Color.WHITE);
+//                subPanelLeche.setOpaque(false);
+//                subPanelLeche.setBorder(new LineBorder(Color.GRAY));
+//
+//                if (subPanelVaso != null) {
+//                    subPanelLeche.setBounds(0, subPanelVaso.getHeight() + 20, 480, subPanelVaso.getHeight() + 20);
+//                } else {
+//                    subPanelLeche.setBounds(0, 0, 480, 180);
+//                }
+//                subPanelLeche.setLayout(null);
+//
+//                JLabel jlabelTituloLeche = new JLabel();
+//                jlabelTituloLeche.setBounds(subPanelLeche.getX(), 8, subPanelLeche.getWidth(), 20);
+//                jlabelTituloLeche.setHorizontalAlignment(SwingConstants.CENTER);
+//                jlabelTituloLeche.setFont(new java.awt.Font("Segoe UI", 1, 18));
+//                jlabelTituloLeche.setText("Tipo de leche");
+//                subPanelLeche.add(jlabelTituloLeche);
+//
+//                JPanel jPanelElementosLeches = new JPanel();
+//                jPanelElementosLeches.setBounds(10, 42, subPanelLeche.getWidth() - 20, subPanelLeche.getHeight() - 52);
+//                jPanelElementosLeches.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+//
+//                List<Leche> leches = fLeche.obtenerTodasLasLeches();
+//                List<JPanel> listaSubPanelesLeches = new ArrayList<>();
+//
+//                for (int j = 0; j < leches.size(); j++) {
+//                    int idLeche = j;
+//
+//                    JPanel panel = new JPanel();
+//                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//                    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+//                    panel.setBackground(Color.WHITE);
+//                    panel.setPreferredSize(new Dimension(120, 40));
+//                    
+//
+//                    JLabel lbl1 = new JLabel(leches.get(j).getNombre(), SwingConstants.CENTER);
+//                    JLabel lbl3 = new JLabel("$" + leches.get(j).getPrecio(), SwingConstants.CENTER);
+//
+//                    lbl1.setAlignmentX(Component.CENTER_ALIGNMENT);
+//                    lbl3.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//                    panel.add(Box.createVerticalGlue());
+//                    panel.add(lbl1);
+//                    panel.add(lbl3);
+//                    panel.add(Box.createVerticalGlue());
+//                    
+//                    
+//                    if(leche != null && leche.getNombre().equalsIgnoreCase(leches.get(j).getNombre())){
+//                        panel.setBackground(new Color(173, 216, 230));
+//                        panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+//                        leche = leches.get(idLeche);
+//                        calcularTotal();
+//                    }
+//                    
+//                    
+//                    if(!soloLectura){
+//                        
+//                        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//                        
+//                        panel.addMouseListener(new MouseAdapter() {
+//                            @Override
+//                            public void mouseClicked(MouseEvent e) {
+//                                for (JPanel p : listaSubPanelesLeches) {
+//                                    p.setBackground(Color.WHITE);
+//                                    p.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+//                                }
+//                                panel.setBackground(new Color(173, 216, 230));
+//                                panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+//                                leche = leches.get(idLeche);
+//
+//                                calcularTotal();
+//                                actualizarNota();
+//                            }
+//                        });
+//                    }
+//                    
+//
+//                    listaSubPanelesLeches.add(panel);
+//                    jPanelElementosLeches.add(panel);
+//                }
+//
+//                subPanelLeche.add(jPanelElementosLeches);
+//                
+//                if(soloLectura){
+//                subPanelLeche.setEnabled(false);
+//                }
+//                
+//                jPanelExtras.add(subPanelLeche);
+//            }
+//            
+//            
+//            
+//           // ====== Panel de tipo extras ======
+//            if (requieresBebidas) {
+//                JPanel subPanelExtras = new JPanel();
+//                subPanelExtras.setName("Tipo extra");
+//                subPanelExtras.setBackground(Color.WHITE);
+//                subPanelExtras.setOpaque(false);
+//                subPanelExtras.setBorder(new LineBorder(Color.GRAY));
+//                subPanelExtras.setLayout(null);
+//                subPanelExtras.setBounds(500, 0, 350, jPanelExtras.getHeight() - 42);
+//
+//                // --- Título ---
+//                JLabel jlabelTituloExtra = new JLabel("Tipo de extra", SwingConstants.CENTER);
+//                jlabelTituloExtra.setBounds(0, 8, subPanelExtras.getWidth(), 20);
+//                jlabelTituloExtra.setFont(new Font("Segoe UI", Font.BOLD, 18));
+//                subPanelExtras.add(jlabelTituloExtra);
+//
+//                // --- Panel interno con BoxLayout vertical ---
+//                JPanel contenedorExtras = new JPanel();
+//                contenedorExtras.setLayout(new BoxLayout(contenedorExtras, BoxLayout.Y_AXIS));
+//                contenedorExtras.setBackground(Color.WHITE);
+//
+//                // --- Scroll ---
+//                JScrollPane scrollExtras = new JScrollPane(contenedorExtras);
+//                scrollExtras.setBounds(10, 40, subPanelExtras.getWidth() - 20, subPanelExtras.getHeight() - 50);
+//                scrollExtras.setBorder(null);
+//                scrollExtras.getVerticalScrollBar().setUnitIncrement(16);
+//                scrollExtras.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//                scrollExtras.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//
+//                subPanelExtras.add(scrollExtras);
+//
+//                List<JPanel> listaSubPanelesExtras = new ArrayList<>();
+//
+//                for (int j = 0; j < opciones.size(); j++) {//**************************************************************************************** 
+//
+//                    if (opciones.get(j).getIdOpcionProducto().getNombreOpcion().equalsIgnoreCase("Extra bebidas")) {
+//
+//                        Valoropcion extra = opciones.get(j);
+//
+//                        // PANEL CONTENEDOR PRINCIPAL
+//                        JPanel panel = new JPanel();
+//                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//                        panel.setBorder(BorderFactory.createCompoundBorder(
+//                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
+//                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+//                        ));
+//                        panel.setBackground(Color.WHITE);
+//                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
+//
+//                        // ---------- Fila 1: Nombre + Precio ----------
+//                        JPanel fila1 = new JPanel(new BorderLayout());
+//                        fila1.setOpaque(false);
+//
+//                        JLabel lblNombre = new JLabel(extra.getNombreValor());
+//                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
+//
+//                        fila1.add(lblNombre, BorderLayout.WEST);
+//                        fila1.add(lblPrecio, BorderLayout.EAST);
+//
+//                        panel.add(fila1);
+//                        panel.add(Box.createVerticalStrut(6));
+//
+//                        // ---------- Fila 2: Cantidad y Spinner ----------
+//                        JPanel fila2 = new JPanel(new BorderLayout());
+//                        fila2.setOpaque(false);
+//
+//                        JLabel lblCantidad = new JLabel("Cantidad:");
+//
+//                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+//                        spiner.setPreferredSize(new Dimension(60, 26));
+//                        spiner.setMaximumSize(new Dimension(60, 26));
+//
+//                        fila2.add(lblCantidad, BorderLayout.WEST);
+//                        fila2.add(spiner, BorderLayout.EAST);
+//
+//                        panel.add(fila2);
+//                        panel.add(Box.createVerticalStrut(4));
+//
+//                        // SI EXISTEN EXTRAS PRE-SELECCIONADOS
+//                        for (int i = 0; i < extrasEncontrados.size(); i++) {
+//                            if (extra.getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())) {
+//                                spiner.setValue(extrasEncontrados.get(i).getCantidad());
+//                                calcularTotal();
+//                            }
+//                        }
+//
+//                        if (!soloLectura) {
+//                            spiner.addChangeListener(e -> {
+//                                int cantidad = (int) spiner.getValue();
+//
+//                                if (cantidad > 0) {
+//                                    extrasSeleccionados.put(extra, cantidad);
+//                                } else {
+//                                    extrasSeleccionados.remove(extra);
+//                                }
+//
+//                                calcularTotal();
+//                                actualizarNota();
+//                            });
+//                        } else {
+//                            spiner.setEnabled(false);
+//                        }
+//
+//                        listaSubPanelesExtras.add(panel);
+//                        contenedorExtras.add(panel);
+//                        contenedorExtras.add(Box.createVerticalStrut(10));
+//
+//                        // AJUSTAR ALTURA DEL CONTENEDOR
+//                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
+//
+//                        contenedorExtras.setPreferredSize(new Dimension(
+//                                scrollExtras.getWidth() - 20,
+//                                Math.max(alturaTotal, scrollExtras.getHeight())
+//                        ));
+//
+//                        contenedorExtras.revalidate();
+//                        contenedorExtras.repaint();
+//                    }else{//***************************************************************************************
+//                        Valoropcion extra = opciones.get(j);
+//
+//                        // PANEL CONTENEDOR PRINCIPAL
+//                        JPanel panel = new JPanel();
+//                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//                        panel.setBorder(BorderFactory.createCompoundBorder(
+//                                BorderFactory.createLineBorder(Color.GRAY, 1, true),
+//                                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+//                        ));
+//                        panel.setBackground(Color.WHITE);
+//                        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
+//
+//                        // ---------- Fila 1: Nombre + Precio ----------
+//                        JPanel fila1 = new JPanel(new BorderLayout());
+//                        fila1.setOpaque(false);
+//
+//                        JLabel lblNombre = new JLabel(extra.getNombreValor());
+//                        JLabel lblPrecio = new JLabel("$" + extra.getCosteAdicional());
+//
+//                        fila1.add(lblNombre, BorderLayout.WEST);
+//                        fila1.add(lblPrecio, BorderLayout.EAST);
+//
+//                        panel.add(fila1);
+//                        panel.add(Box.createVerticalStrut(6));
+//
+//                        // ---------- Fila 2: Cantidad y Spinner ----------
+//                        JPanel fila2 = new JPanel(new BorderLayout());
+//                        fila2.setOpaque(false);
+//
+//                        JLabel lblCantidad = new JLabel("Cantidad:");
+//
+//                        JSpinner spiner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+//                        spiner.setPreferredSize(new Dimension(60, 26));
+//                        spiner.setMaximumSize(new Dimension(60, 26));
+//
+//                        fila2.add(lblCantidad, BorderLayout.WEST);
+//                        fila2.add(spiner, BorderLayout.EAST);
+//
+//                        panel.add(fila2);
+//                        panel.add(Box.createVerticalStrut(4));
+//
+//                        // SI EXISTEN EXTRAS PRE-SELECCIONADOS
+//                        for (int i = 0; i < extrasEncontrados.size(); i++) {
+//                            if (extra.getNombreValor().equalsIgnoreCase(extrasEncontrados.get(i).getNombreExtra())) {
+//                                spiner.setValue(extrasEncontrados.get(i).getCantidad());
+//                                calcularTotal();
+//                            }
+//                        }
+//
+//                        if (!soloLectura) {
+//                            spiner.addChangeListener(e -> {
+//                                int cantidad = (int) spiner.getValue();
+//
+//                                if (cantidad > 0) {
+//                                    extrasSeleccionados.put(extra, cantidad);
+//                                } else {
+//                                    extrasSeleccionados.remove(extra);
+//                                }
+//
+//                                calcularTotal();
+//                                actualizarNota();
+//                            });
+//                        } else {
+//                            spiner.setEnabled(false);
+//                        }
+//
+//                        listaSubPanelesExtras.add(panel);
+//                        contenedorExtras.add(panel);
+//                        contenedorExtras.add(Box.createVerticalStrut(10));
+//
+//                        // AJUSTAR ALTURA DEL CONTENEDOR
+//                        int alturaTotal = (listaSubPanelesExtras.size() * 90) + (listaSubPanelesExtras.size() * 10);
+//
+//                        contenedorExtras.setPreferredSize(new Dimension(
+//                                scrollExtras.getWidth() - 20,
+//                                Math.max(alturaTotal, scrollExtras.getHeight())
+//                        ));
+//
+//                        contenedorExtras.revalidate();
+//                        contenedorExtras.repaint();
+//                    }
+//                }
+//
+//                if (soloLectura) subPanelExtras.setEnabled(false);
+//
+//                jPanelExtras.add(subPanelExtras);
+//            }
+//
+//
+//
+//  
+//            
+//            
+//            
+//
+//            // ====== Refrescar vista ======
+//            jPanelExtras.revalidate();
+//            jPanelExtras.repaint();
+//            
+//
+//        } catch (Exception ex) {
+//            Logger.getLogger(FrmDetallesProductos.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+//    
+//    
     
     
     
@@ -1102,14 +1463,14 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         float precioLeche = 0;
         float totalExtras = 0;
         
-        if(vaso != null ){
-            precioVaso = vaso.getPrecio();
+        if(extraVaso != null ){
+            precioVaso = extraVaso.getPrecio();
             txtPrecioProductoResumen.setText(String.valueOf(producto.getPrecioProducto() + precioVaso));
         }
         
-        if(leche != null){
-            precioLeche = leche.getPrecio();
-            txtLeche.setText(leche.getNombre());
+        if(extraLeche != null){
+            precioLeche = extraLeche.getPrecio();
+            txtLeche.setText(extraLeche.getNombreExtra());
             txtPrecioLeche.setText(String.valueOf(precioLeche));
         }
         
@@ -1262,7 +1623,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                 
                 List<ExtrasProductos> nuevaListaExtra = fExtras.obtenerTodosLosExtrasPorComandas(detalleCoEditada);
                 
-                detalleCoEditada.setExtrasProductosList(nuevaListaExtra);
+              //  detalleCoEditada.setExtrasProductosList(nuevaListaExtra);
                 
                 fDC.editarDetallesComandas(detalleCoEditada);
                 
@@ -1370,6 +1731,12 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         txtDescripcion = new javax.swing.JTextArea();
         txtPrecioBase = new javax.swing.JLabel();
         jPanelExtras = new javax.swing.JPanel();
+        jPanelListaExtras = new javax.swing.JPanel();
+        jPanelListaVasos = new javax.swing.JPanel();
+        jPanelListaLeches = new javax.swing.JPanel();
+        jblLeches = new javax.swing.JLabel();
+        jblExtras = new javax.swing.JLabel();
+        jblVaso = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         txtProductoResumen = new javax.swing.JLabel();
@@ -1452,16 +1819,51 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jPanel4.add(txtPrecioBase);
         txtPrecioBase.setBounds(20, 90, 210, 30);
 
-        javax.swing.GroupLayout jPanelExtrasLayout = new javax.swing.GroupLayout(jPanelExtras);
-        jPanelExtras.setLayout(jPanelExtrasLayout);
-        jPanelExtrasLayout.setHorizontalGroup(
-            jPanelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 850, Short.MAX_VALUE)
-        );
-        jPanelExtrasLayout.setVerticalGroup(
-            jPanelExtrasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
+        jPanelExtras.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelExtras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelExtras.setLayout(null);
+
+        jPanelListaExtras.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelListaExtras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelListaExtras.setMinimumSize(new java.awt.Dimension(300, 20));
+        jPanelListaExtras.setPreferredSize(new java.awt.Dimension(490, 380));
+        jPanelListaExtras.setLayout(null);
+        jPanelExtras.add(jPanelListaExtras);
+        jPanelListaExtras.setBounds(580, 50, 260, 339);
+
+        jPanelListaVasos.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelListaVasos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelListaVasos.setMinimumSize(new java.awt.Dimension(300, 20));
+        jPanelListaVasos.setPreferredSize(new java.awt.Dimension(490, 380));
+        jPanelListaVasos.setLayout(null);
+        jPanelExtras.add(jPanelListaVasos);
+        jPanelListaVasos.setBounds(10, 50, 260, 339);
+
+        jPanelListaLeches.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelListaLeches.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanelListaLeches.setMinimumSize(new java.awt.Dimension(300, 20));
+        jPanelListaLeches.setPreferredSize(new java.awt.Dimension(490, 380));
+        jPanelListaLeches.setLayout(null);
+        jPanelExtras.add(jPanelListaLeches);
+        jPanelListaLeches.setBounds(295, 50, 260, 339);
+
+        jblLeches.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        jblLeches.setForeground(new java.awt.Color(17, 24, 39));
+        jblLeches.setText("Tipo de leche");
+        jPanelExtras.add(jblLeches);
+        jblLeches.setBounds(295, 20, 130, 20);
+
+        jblExtras.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        jblExtras.setForeground(new java.awt.Color(17, 24, 39));
+        jblExtras.setText("Extras");
+        jPanelExtras.add(jblExtras);
+        jblExtras.setBounds(580, 20, 80, 20);
+
+        jblVaso.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        jblVaso.setForeground(new java.awt.Color(17, 24, 39));
+        jblVaso.setText("Vaso");
+        jPanelExtras.add(jblVaso);
+        jblVaso.setBounds(10, 20, 110, 20);
 
         jPanel4.add(jPanelExtras);
         jPanelExtras.setBounds(10, 130, 850, 400);
@@ -1754,15 +2156,21 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelExtras;
     private javax.swing.JPanel jPanelFondo;
+    private javax.swing.JPanel jPanelListaExtras;
+    private javax.swing.JPanel jPanelListaLeches;
+    private javax.swing.JPanel jPanelListaVasos;
     private javax.swing.JPanel jPanelNavegacion;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel jblExtras;
+    private javax.swing.JLabel jblLeches;
     private javax.swing.JLabel jblNavegacionComandas;
     private javax.swing.JLabel jblNavegacionComandas1;
     private javax.swing.JLabel jblNavegacionComandas2;
     private javax.swing.JLabel jblNavegacionSeparador1;
     private javax.swing.JLabel jblNavegacionSeparador2;
     private javax.swing.JLabel jblSoloLectura;
+    private javax.swing.JLabel jblVaso;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JLabel txtExtra;

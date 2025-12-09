@@ -7,8 +7,6 @@ package Formularios.paneles;
 import Entidades.Categoria;
 import Entidades.Extra;
 import Entidades.Producto;
-import Entidades.Productoopcion;
-import Entidades.Valoropcion;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaExtraModel2;
 import Facades.IFachadaProductoControlador;
@@ -38,14 +36,12 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import utilerias.ConstantesGUI;
-import utilerias.HintToTextField;
 import utilerias.NumberDecimalDocumentFilter;
 
 /**

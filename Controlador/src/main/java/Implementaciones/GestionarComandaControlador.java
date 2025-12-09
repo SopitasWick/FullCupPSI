@@ -35,8 +35,8 @@ public class GestionarComandaControlador implements IFachadaComandasControlador 
     }
 
     @Override
-    public void GuardarComanda(Comanda comanda) throws Exception {
-        FModel.GuardarComanda(comanda);
+    public Comanda GuardarComanda(Comanda comanda) throws Exception {
+        return FModel.GuardarComanda(comanda);
     }
 
     @Override
@@ -85,8 +85,8 @@ public class GestionarComandaControlador implements IFachadaComandasControlador 
     }
 
     @Override
-    public void EditarComanda(Comanda comanda) throws Exception {
-        FModel.EditarComanda(comanda);
+    public Comanda EditarComanda(Comanda comanda) throws Exception {
+        return FModel.EditarComanda(comanda);
     }
 
     @Override

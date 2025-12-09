@@ -10,12 +10,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.JLabel;
+import javax.swing.JSpinner;
 
 /**
  *
  * @author Sergio Arturo
  */
-public class JPanelExtra extends javax.swing.JPanel {
+public class JPanelExtra1 extends javax.swing.JPanel {
 
     
     private int radius = 20;
@@ -25,7 +26,7 @@ public class JPanelExtra extends javax.swing.JPanel {
     /**
      * Creates new form JPanelProducto
      */
-    public JPanelExtra() {
+    public JPanelExtra1() {
         initComponents();
         
         setOpaque(false); // importante para permitir bordes redondeados
@@ -71,8 +72,8 @@ public class JPanelExtra extends javax.swing.JPanel {
         return jblPrecioExtra;
     } 
     
-    public JLabel getJblEliminarExtra() {
-        return jblEliminar;
+    public JSpinner getJblSpinnerCantidad() {
+        return jSpinnerCantidad;
     } 
 
     public boolean isSelecionado() {
@@ -97,8 +98,8 @@ public class JPanelExtra extends javax.swing.JPanel {
     private void initComponents() {
 
         jblPrecioExtra = new javax.swing.JLabel();
-        jblEliminar = new javax.swing.JLabel();
         jblNombreExtra = new javax.swing.JLabel();
+        jSpinnerCantidad = new javax.swing.JSpinner();
 
         setPreferredSize(new java.awt.Dimension(530, 45));
         setLayout(null);
@@ -110,12 +111,7 @@ public class JPanelExtra extends javax.swing.JPanel {
         jblPrecioExtra.setAlignmentX(16.0F);
         jblPrecioExtra.setAlignmentY(0.0F);
         add(jblPrecioExtra);
-        jblPrecioExtra.setBounds(380, 10, 90, 30);
-
-        jblEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/btnEliminarProducto.png"))); // NOI18N
-        jblEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        add(jblEliminar);
-        jblEliminar.setBounds(480, 5, 40, 40);
+        jblPrecioExtra.setBounds(300, 10, 90, 30);
 
         jblNombreExtra.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jblNombreExtra.setForeground(new java.awt.Color(39, 24, 17));
@@ -124,11 +120,13 @@ public class JPanelExtra extends javax.swing.JPanel {
         jblNombreExtra.setAlignmentY(0.0F);
         add(jblNombreExtra);
         jblNombreExtra.setBounds(20, 10, 150, 30);
+        add(jSpinnerCantidad);
+        jSpinnerCantidad.setBounds(430, 15, 64, 22);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jblEliminar;
+    private javax.swing.JSpinner jSpinnerCantidad;
     private javax.swing.JLabel jblNombreExtra;
     private javax.swing.JLabel jblPrecioExtra;
     // End of variables declaration//GEN-END:variables

@@ -48,19 +48,27 @@ public class Producto implements Serializable {
     @Id
     @Column(name = "idProducto")
     private Integer idProducto;
+    
     @Column(name = "nombre_producto")
     private String nombreProducto;
+    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Column(name = "precio_producto")
     private Float precioProducto;
+    
     @Column(name = "cantidadDisponible_producto")
     private Integer cantidadDisponibleproducto;
+    
     @Column(name = "unidadMedida_producto")
     private String unidadMedidaproducto;
+    
     @OneToMany(mappedBy = "idProducto")
     private List<Promocion> promocionList;
+    
     @OneToMany(mappedBy = "idProducto")
     private List<Detallecomanda> detallecomandaList;
+    
     @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
     @ManyToOne
     private Categoria idCategoria;
@@ -83,11 +91,13 @@ public class Producto implements Serializable {
     private List<Extra> extras;
 
     
-
+//
 //    public void setExtrasProductosList(List<ExtrasProductos> extrasProductosList) {
 //        this.extrasProductosList = extrasProductosList;
 //    }
 
+    
+    
     public Producto() {
     }
 
