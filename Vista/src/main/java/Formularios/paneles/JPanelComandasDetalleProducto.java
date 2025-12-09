@@ -12,6 +12,7 @@ import Entidades.Producto;
 import Facades.IFachadaCategoriaControlador;
 import Facades.IFachadaComandasControlador;
 import Facades.IFachadaDetallesComandaControlador;
+import Facades.IFachadaExtraControlador;
 import Facades.IFachadaExtraDetalleComandaControlador;
 import Facades.IFachadaProductoControlador;
 import Formularios.FrmComandas;
@@ -20,6 +21,7 @@ import Formularios.paneles.elementos.JPanelExtra1;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
 import Implementaciones.GestionarDetallesComandaControlador;
+import Implementaciones.GestionarExtraControlador;
 import Implementaciones.GestionarExtraDetalleComandaControlador;
 import Implementaciones.GestionarProductoControlador;
 import dto.ExtraCantidadDTO;
@@ -33,6 +35,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import java.util.List;
 import java.util.Map;
@@ -57,6 +60,7 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
         
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaCategoriaControlador fCategoria = new GestionarCategoriaControlador();
+    private final IFachadaExtraControlador fExtra = new GestionarExtraControlador();
     private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
     private final IFachadaProductoControlador fProductos = new GestionarProductoControlador();
     private final IFachadaExtraDetalleComandaControlador fExtraDetalleComanda = new GestionarExtraDetalleComandaControlador();
@@ -910,8 +914,6 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                                 int nuevaCantidad = (int) extra.getJblSpinnerCantidad().getValue();
                                 actualizarItemEnComanda(extraCantidadDTO, nuevaCantidad);
 
-
-
                                 actualizarNota();
                                 calcularTotal();
 
@@ -954,53 +956,49 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
         }
     
     
-   private void actualizarItemEnComanda(ExtraCantidadDTO extraCantidadDTO, int nuevaCantidad) {
-    
-    // Obtenemos el nombre del DTO que estamos actualizando
-    String nombreBuscado = extraCantidadDTO.getNombre();
-    
-    // Bandera para saber si encontramos y actualizamos el ítem
-    boolean encontrado = false;
+    private void actualizarItemEnComanda(ExtraCantidadDTO extraCantidadDTO, int nuevaCantidad) {
+        String nombreBuscado = extraCantidadDTO.getNombre();
+        boolean encontrado = false;
+        boolean necesitaRecarga = false; // <-- Nueva Bandera
 
-    // 1. Recorrer la lista para encontrar una coincidencia por NOMBRE
-    for (ExtraCantidadDTO itemExistente : listaEx) {
-        if (itemExistente.getNombre().equalsIgnoreCase(nombreBuscado)) {
-            
-            // Hemos encontrado el ítem por nombre
-            encontrado = true;
-            itemExistente.setCantidad(nuevaCantidad);
-            
-            // 2. ELIMINAR si la cantidad es 0
-            if (nuevaCantidad == 0) {
-                listaEx.remove(itemExistente);
-                if(accion == ConstantesGUI.NUEVO){
-                    cargarExtras();
+        // 1. Recorrer la lista para encontrar una coincidencia
+        // (Usar un iterador es más seguro al eliminar dentro del bucle)
+        Iterator<ExtraCantidadDTO> iter = listaEx.iterator();
+        while (iter.hasNext()) {
+            ExtraCantidadDTO itemExistente = iter.next();
+            if (itemExistente.getNombre().equalsIgnoreCase(nombreBuscado)) {
+                encontrado = true;
+                itemExistente.setCantidad(nuevaCantidad);
+
+                // 2. ELIMINAR si la cantidad es 0
+                if (nuevaCantidad == 0) {
+                    iter.remove(); // Elimina de forma segura usando el iterador
+                    necesitaRecarga = true; // Necesitamos recargar la GUI (eliminamos un componente)
                 }
-                else{
-                    cargarExtrasEditar();
-                }
+                break; 
             }
-            break; // Salir del bucle una vez que encontramos y actualizamos
         }
-    }
 
-    // 3. AÑADIR si no se encontró y la cantidad es > 0
-    if (!encontrado && nuevaCantidad > 0) {
-        // Establecer la cantidad en el DTO antes de añadirlo
-        extraCantidadDTO.setCantidad(nuevaCantidad); 
-        listaEx.add(extraCantidadDTO);
-        if(accion == ConstantesGUI.NUEVO){
-            cargarExtras();
+        // 3. AÑADIR si no se encontró y la cantidad es > 0
+        if (!encontrado && nuevaCantidad > 0) {
+            extraCantidadDTO.setCantidad(nuevaCantidad); 
+            listaEx.add(extraCantidadDTO);
+            necesitaRecarga = true; // Necesitamos recargar la GUI (añadimos un componente)
         }
-        else{
-            cargarExtrasEditar();
-        }
+
+        // 4. Recargar la GUI SOLO si la estructura de la lista cambió
+//        if (necesitaRecarga) {
+//            if(accion == ConstantesGUI.NUEVO){
+//                cargarExtras();
+//            } else {
+//                cargarExtrasEditar();
+//            }
+//        }
+
+        // 5. Recalcular y actualizar notas SIEMPRE
+        actualizarNota();
+        calcularTotal();
     }
-    
-    // 4. Recalcular
-    actualizarNota();
-    calcularTotal();
-}
     
     
     private void eliminarItemDeComanda(JSpinner spiner, ExtraCantidadDTO extraCantidadDTO) {
@@ -1154,6 +1152,7 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
         detalle.setSubTotaldetalleComanda(Float.valueOf(txtTotal.getText()));
         
         Detallecomanda nuevaComanda = fDC.agregarDetallesComandas(detalle);
+        FrmComandas.detalleComanda = nuevaComanda;
         
         List <Detallecomanda> ll = new ArrayList<>();
         
@@ -1263,7 +1262,7 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                                 
                 float iva = precioTotal * 0.16f;
                 
-       FrmComandas.comanda.setTotalComanda(precioTotal + iva);
+        FrmComandas.comanda.setTotalComanda(precioTotal + iva);
                 
         
         Detallecomanda nuevaComanda = fDC.editarDetallesComandas(FrmComandas.detalleComanda);
@@ -1287,6 +1286,9 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
         
         
         
+        if(listaEx.isEmpty()){
+            fExtraDetalleComanda.eliminarExtraDetalleComanda(nuevaComanda);
+        }
         
         
         // aqui se guardan los extras
@@ -1294,8 +1296,8 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
             
             fExtraDetalleComanda.eliminarExtraDetalleComanda(FrmComandas.detalleComanda);
             
-            
-            
+            List<Extra> extTemp = fExtra.obtenerTodosLosExtras();
+                       
             
             for (int i = 0; i < listaEx.size(); i++) {
                 // 1. Obtener el extra agrupado actual
@@ -1378,13 +1380,26 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
 
         if (opcion == JOptionPane.YES_OPTION) {
             
+                fExtraDetalleComanda.eliminarExtraDetalleComanda(FrmComandas.detalleComanda);
 
                 fDC.eliminarDetallesComandas(FrmComandas.detalleComanda.getIdDetalleComanda());
+                FrmComandas.detalleComanda = null;
 
                 System.out.println("Elemento eliminado exitosamente.");
                 JOptionPane.showMessageDialog(null, "El elemento ha sido eliminado.");
                 
-                volverSeccionAnterior(ConstantesGUI.EDITAR);
+                
+                if (FrmComandas.comanda != null) {
+                FrmComandas.comanda = FComandas.obtenerComanda(FrmComandas.comanda.getIdComanda()); // Reemplaza fComanda por tu DAO/Service de Comanda
+                }
+                
+                List<Detallecomanda> listTemp = fDC.obtenerDetallesComandasPorComanda(FrmComandas.comanda);
+                if(listTemp == null || listTemp.isEmpty()){
+                    volverSeccionAnterior(ConstantesGUI.NUEVO);
+                }
+                else{
+                    volverSeccionAnterior(ConstantesGUI.EDITAR);
+                }
                                 
             
         }
