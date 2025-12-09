@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
+import Entidades.ExtrasDetalleComanda;
 import Entidades.Producto;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
@@ -170,6 +171,29 @@ public class DetallecomandaJpaController implements Serializable {
                 idProducto.getDetallecomandaList().remove(detallecomanda);
                 idProducto = em.merge(idProducto);
             }
+
+            
+            
+            
+            // 1. Cargar la lista de hijos (asegura que estén cargados en la sesión)
+            List<ExtrasDetalleComanda> extras = detallecomanda.getExtrasDetalleComandaList();
+
+            // 2. Eliminar explícitamente cada hijo
+            if(!extras.isEmpty()){
+            for (ExtrasDetalleComanda extra : extras) {
+                em.remove(extra); 
+            }
+
+            }
+            // 3. Opcional: limpiar la lista en el objeto (menos crucial si se eliminan de la DB)
+            detallecomanda.getExtrasDetalleComandaList().clear(); 
+
+            // 4. Forzar la sincronización de las eliminaciones de los hijos antes de eliminar el padre
+            em.flush(); 
+
+            // 5. Eliminar el padre (Ahora la DB ya no tiene restricciones activas)            
+            
+            
             em.remove(detallecomanda);
             em.getTransaction().commit();
         } finally {
