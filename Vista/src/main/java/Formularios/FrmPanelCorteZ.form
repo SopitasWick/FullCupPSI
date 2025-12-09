@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+              <Component id="txtMontoInicial" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="157" max="-2" attributes="0"/>
+              <Component id="txtVentasTotales" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="156" max="32767" attributes="0"/>
+              <Component id="txtDineroEsperado" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="txtEfectivo" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="txtMixto" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="txtMixtoMonto" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="txtTransferencia" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="txtTransferenciaMonto" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <Component id="lblMontoInicial" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="211" max="-2" attributes="0"/>
+                              <Component id="lblTotalVentas" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="lblMontoFinal" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="lblTotalEfectivo" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="txtTarjeta" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="lblTotalTarjeta" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
+              <Component id="txtMontoContadoEnCaja" min="-2" pref="144" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+              <Component id="btnCierreDeCaja" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtMontoInicial" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtVentasTotales" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtDineroEsperado" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lblMontoInicial" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="lblTotalVentas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblMontoFinal" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtEfectivo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalEfectivo" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtTarjeta" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalTarjeta" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtTransferencia" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtTransferenciaMonto" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtMixto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtMixtoMonto" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="47" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtMontoContadoEnCaja" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCierreDeCaja" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="txtMontoInicial">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Monto Inicial"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblMontoInicial">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtVentasTotales">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ventas totales"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalVentas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtDineroEsperado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Efectivo esperado"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblMontoFinal">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtEfectivo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Efectivo"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalEfectivo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalTarjeta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtTarjeta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tarjeta"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtTransferencia">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Transferencia"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtTransferenciaMonto">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtMixto">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mixto"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtMixtoMonto">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtMontoContadoEnCaja">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="$"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtMontoContadoEnCajaActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnCierreDeCaja">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cierre de caja"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCierreDeCajaActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

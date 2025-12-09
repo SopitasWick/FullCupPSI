@@ -13,6 +13,9 @@ import Entidades.Comanda;
 import Entidades.Venta;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,11 +29,29 @@ public class VentaJpaController implements Serializable {
 
     public VentaJpaController() {
     }
-    
+
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("itson.edu.mx_ModeloDatos_jar_1.0-FullCupSystemPU");
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+
+    public List<Venta> obtenerVentasDeHoy() {
+        EntityManager em = getEntityManager();
+
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime ini = hoy.atStartOfDay();
+        LocalDateTime fin = hoy.atTime(LocalTime.MAX);
+
+        try {
+            return em.createQuery(
+                    "SELECT v FROM Venta v WHERE v.fechaHora BETWEEN :ini AND :fin", Venta.class)
+                    .setParameter("ini", ini)
+                    .setParameter("fin", fin)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public void create(Venta venta) throws PreexistingEntityException, Exception {
@@ -170,5 +191,5 @@ public class VentaJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

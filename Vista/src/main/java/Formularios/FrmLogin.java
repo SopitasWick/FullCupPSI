@@ -4,6 +4,8 @@
  */
 package Formularios;
 
+import Entidades.Cajaefectivo;
+import JPA.CajaefectivoJpaController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -78,22 +80,70 @@ public class FrmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAtendienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtendienteActionPerformed
-        // TODO add your handling code here:
-        
+        CajaefectivoJpaController cajaController = new CajaefectivoJpaController();
+        Cajaefectivo cajaAbierta = cajaController.obtenerCajaAbierta();
+
+        if (cajaAbierta == null) {
+            // -----------------------
+            // NO EXISTE CAJA ABIERTA
+            // -----------------------
+            String montoStr = javax.swing.JOptionPane.showInputDialog(
+                    this,
+                    "Ingresa el monto inicial de la caja:",
+                    "Monto Inicial",
+                    javax.swing.JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (montoStr == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Debes ingresar un monto para continuar.");
+                return;
+            }
+
+            float montoInicial;
+            try {
+                montoInicial = Float.parseFloat(montoStr);
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingresa un valor numérico válido.");
+                return;
+            }
+
+            // Crear nueva caja
+            Cajaefectivo nuevaCaja = new Cajaefectivo();
+            nuevaCaja.setIdCorte((int) (System.currentTimeMillis() % Integer.MAX_VALUE)); // ID único
+            nuevaCaja.setMontoInicial(montoInicial);
+            nuevaCaja.setEstado((short) 0); // 0 = ABIERTA
+            nuevaCaja.setTipoCorte('X'); // Corte del día (puedes cambiar)
+            nuevaCaja.setIdUsuario(null); // Si quieres asignarle un usuario, aquí se coloca
+
+            try {
+                cajaController.create(nuevaCaja);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al crear caja.");
+                return;
+            }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Caja iniciada correctamente.");
+        } else {
+            // YA EXISTE CAJA ABIERTA → NO PEDIR MONTO
+            System.out.println("La caja ya estaba abierta, no se pide monto.");
+        }
+
+        // Entrar al sistema
         FrmComandas comandas = new FrmComandas();
         comandas.setVisible(true);
         this.setVisible(false);
-        
+
     }//GEN-LAST:event_btnAtendienteActionPerformed
 
     private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
         // TODO add your handling code here:
-        
+
         FrmPanelAdministrador admin = new FrmPanelAdministrador(this);
         admin.setVisible(true);
         this.setVisible(false);
-        
-        
+
+
     }//GEN-LAST:event_btnAdminActionPerformed
 
     /**
@@ -101,12 +151,9 @@ public class FrmLogin extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
 
-        
         try {
             javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-            
-            
-            
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmLogin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -116,8 +163,6 @@ public class FrmLogin extends javax.swing.JFrame {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(FrmLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

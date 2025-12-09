@@ -60,6 +60,22 @@ public class CajaefectivoJpaController implements Serializable {
         }
     }
 
+    public Cajaefectivo obtenerCajaAbierta() {
+
+        EntityManager em = getEntityManager();
+
+        try {
+            List<Cajaefectivo> lista = em.createQuery(
+                    "SELECT c FROM Cajaefectivo c WHERE c.estado = 0", Cajaefectivo.class)
+                    .getResultList();
+
+            return lista.isEmpty() ? null : lista.get(0);
+
+        } finally {
+            em.close();
+        }
+    }
+
     public void edit(Cajaefectivo cajaefectivo) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -169,5 +185,5 @@ public class CajaefectivoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
