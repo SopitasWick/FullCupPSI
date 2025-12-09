@@ -43,8 +43,18 @@ public class Usuario implements Serializable {
     private List<Comanda> comandaList;
     @OneToMany(mappedBy = "idUsuario")
     private List<Rol> rolList;
+    @Column(name = "estado")
+    private Integer estado;
 
     public Usuario() {
+    }
+
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
     }
 
     public Usuario(Integer idUsuario) {
@@ -123,5 +133,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "Entidades.Usuario[ idUsuario=" + idUsuario + " ]";
     }
-    
+
 }

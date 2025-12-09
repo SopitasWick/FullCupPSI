@@ -41,7 +41,7 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
      */
     public JPanelAdminUsuarios() {
         initComponents();
-        cargarUsuario("Todos", ""); // ← ahora se cargan desde BD al iniciar
+        cargarUsuario("Todos", "");
         cargarDiseno();
 
     }
@@ -152,6 +152,25 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
 
             int alturaProducto = 72;
 
+            // FILTRO ACTIVOS / INACTIVOS
+            List<Usuario> listaFiltradaEstado = new ArrayList<>();
+
+            boolean mostrarInactivos = cbInactivas.isSelected();
+
+            for (Usuario u : listaProvicional) {
+                if (mostrarInactivos) {
+                    if (u.getEstado() != null && u.getEstado() == 0) {
+                        listaFiltradaEstado.add(u);
+                    }
+                } else {
+                    if (u.getEstado() == null || u.getEstado() == 1) {
+                        listaFiltradaEstado.add(u);
+                    }
+                }
+            }
+
+            listaProvicional = listaFiltradaEstado;
+
             for (int i = 0; i < listaProvicional.size(); i++) {
 
                 Usuario u = listaProvicional.get(i);
@@ -160,12 +179,27 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                 usuarioPanel.setBounds(0, alturaProducto * i, 772, 62);
                 usuarioPanel.setBackground(Color.decode("#FFFFFF"));
 
+                if (u.getEstado() != null && u.getEstado() == 0) {
+
+                    // Fondo gris claro
+                    usuarioPanel.setBackground(Color.decode("#E0E0E0"));
+
+                    // Cambiar color del texto
+                    usuarioPanel.getJblNombreUsuario().setForeground(Color.decode("#555555"));
+                    usuarioPanel.getJblNombreRol().setForeground(Color.decode("#555555"));
+                }
+
                 usuarioPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
 
                         if (e.getSource() == usuarioPanel.getJblEliminarUsuario()) {
                             return;
+                        }
+                        if (u.getEstado() != null && u.getEstado() == 0) {
+                            btnAccion.setText("Activar");
+                        } else {
+                            btnAccion.setText("Editar");
                         }
 
                         usuarioSeleccionadoId = u.getIdUsuario();
@@ -218,13 +252,9 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
 
                             try {
-                                // ELIMINAR ROL ASOCIADO
-                                for (Rol r : u.getRolList()) {
-                                    ctrlRol.destroy(r.getIdRol());
-                                }
-
-                                // ELIMINAR USUARIO
-                                ctrlUsuario.destroy(u.getIdUsuario());
+                                // Eliminación lógica
+                                u.setEstado(0);
+                                ctrlUsuario.edit(u);
 
                                 javax.swing.JOptionPane.showMessageDialog(
                                         null,
@@ -260,17 +290,30 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        usuarioPanel.setBackground(Color.decode("#F8D7DA")); // hover rojo suave
+                        if (u.getEstado() != null && u.getEstado() == 0) {
+                            usuarioPanel.setBackground(Color.decode("#D6D6D6")); // gris más fuerte
+                        } else {
+                            usuarioPanel.setBackground(Color.decode("#E0E0E0"));
+                        }
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        usuarioPanel.setBackground(Color.decode("#FFFFFF"));
+                        if (u.getEstado() != null && u.getEstado() == 0) {
+                            usuarioPanel.setBackground(Color.decode("#E0E0E0")); // gris normal para inactivo
+                        } else {
+                            usuarioPanel.setBackground(Color.decode("#FFFFFF"));
+                        }
                     }
 
                 });
 
                 jPanelListaUsuarios.add(usuarioPanel);
+
+                jPanelListaUsuarios.setPreferredSize(new Dimension(
+                        jPanelListaUsuarios.getWidth(),
+                        listaProvicional.size() * 72
+                ));
             }
 
             jPanelListaUsuarios.revalidate();
@@ -280,6 +323,34 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void activarUsuario() {
+        try {
+            String nombre = txtNombreUsuario.getText().trim();
+
+            Usuario u = ctrlUsuario.findUsuarioByNombre(nombre);
+
+            if (u == null) {
+                System.out.println("Usuario no encontrado");
+                return;
+            }
+
+            u.setEstado(1);
+            ctrlUsuario.edit(u);
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    null,
+                    "Usuario reactivado correctamente.",
+                    "Reactivado",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+
+            cargarUsuario("Todos", "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -312,7 +383,26 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         String rol = jRadioAdmin.isSelected() ? "Administrador" : "Atendiente";
 
         if (nombre.isEmpty() || pass.isEmpty()) {
-            System.out.println("Campos vacíos.");
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Completa todos los campos.",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // CONFIRMACIÓN
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                null,
+                "¿Deseas GUARDAR este usuario?\n\n"
+                + "• Nombre: " + nombre + "\n"
+                + "• Contraseña: " + pass + "\n"
+                + "• Rol: " + rol,
+                "Confirmar registro",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) {
             return;
         }
 
@@ -321,6 +411,7 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
             u.setIdUsuario(generarIdUsuario());
             u.setNombreUsuario(nombre);
             u.setPassword(pass);
+            u.setEstado(1);
 
             ctrlUsuario.create(u);
 
@@ -330,6 +421,11 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
             r.setIdUsuario(u);
 
             ctrlRol.create(r);
+
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Usuario registrado correctamente.",
+                    "Completado",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
             cargarUsuario("Todos", "");
 
@@ -428,13 +524,17 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                 return;
             }
 
-            // Eliminar roles primero
-            for (Rol r : u.getRolList()) {
-                ctrlRol.destroy(r.getIdRol());
-            }
+            // Marcar como inactivo
+            u.setEstado(0);
 
-            // Ahora eliminar usuario
-            ctrlUsuario.destroy(u.getIdUsuario());
+            ctrlUsuario.edit(u);
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    null,
+                    "El usuario fue marcado como INACTIVO.",
+                    "Actualizado",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
 
             cargarUsuario("Todos", "");
 
@@ -585,7 +685,7 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuscarUsuarioKeyTyped
 
     private void cbInactivasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbInactivasActionPerformed
-        // TODO add your handling code here:
+        cargarUsuario("Todos", txtBuscarUsuario.getText().trim());
 
     }//GEN-LAST:event_cbInactivasActionPerformed
 
@@ -609,7 +709,9 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         if (btnAccion.getText().equalsIgnoreCase("Eliminar")) {
             eliminarUsuario();
         }
-
+        if (btnAccion.getText().equalsIgnoreCase("Activar")) {
+            activarUsuario();
+        }
     }//GEN-LAST:event_btnAccionActionPerformed
 
 
