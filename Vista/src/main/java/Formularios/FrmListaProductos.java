@@ -28,6 +28,7 @@ import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -999,7 +1000,9 @@ public class FrmListaProductos extends javax.swing.JFrame {
             FrmListaProductos.comanda.setDetallecomandaList(
                 fDC.obtenerDetallesComandasPorComanda(FrmListaProductos.comanda)
             );
-
+            
+            System.out.println("Asignando fecha a comanda");
+            FrmListaProductos.comanda.setFechaHoracomanda(new Date());
             System.out.println("Imprimir lista detalles comanda: " + detalleComanda);
 
             PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();

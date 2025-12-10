@@ -848,7 +848,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                 // El texto debe incluir "Cliente: "
                 String descripcion = nombre + ", " + paraLlevar;
 
-                FrmListaProductos.comanda.setDescripcionGeneral(descripcion);
+                FrmComandas.comanda.setDescripcionGeneral(descripcion);
 
                 // Actualizar el total EN LA BASE DE DATOS (ya trae IVA)
                 FComandas.EditarTotalComanda(FrmComandas.comanda.getIdComanda(), this.total);
@@ -863,8 +863,8 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
                 // IMPRIMIR **********************************************
                 // Imprimir ticket
-                FrmListaProductos.comanda.setDetallecomandaList(
-                    fDC.obtenerDetallesComandasPorComanda(FrmListaProductos.comanda)
+                FrmComandas.comanda.setDetallecomandaList(
+                    fDC.obtenerDetallesComandasPorComanda(FrmComandas.comanda)
                 );
 
                 System.out.println("Imprimir lista detalles comanda: " + detallesComandas);
@@ -873,7 +873,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                 if (defaultPrinter != null) {
                     PrinterJob job = PrinterJob.getPrinterJob();
                     job.setPrintService(defaultPrinter);
-                    job.setPrintable(new TicketPrinter(FrmListaProductos.comanda));
+                    job.setPrintable(new TicketPrinter(FrmComandas.comanda));
                     try {
                         job.print();
                     }

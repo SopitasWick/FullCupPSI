@@ -1,26 +1,26 @@
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaCategoriaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaComandasControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaDetallesComandaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtraControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtraDetalleComandaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtrasControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaLecheControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaProductoControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaProductoOpcionControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaTamanoVasosControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Facades\IFachadaValorOpcionControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarCategoriaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarComandaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarDetallesComandaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarExtraControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarExtraDetalleComandaControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarExtrasControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarLecheControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarProductoControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarProductoOpcionControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarTamanoVasosControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarValorOpcionControlador.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Pruebas\PruebaCategorias.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Pruebas\PruebaDetallesProducto.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Pruebas\PruebasExtra.java
-C:\Users\Orlando Leyva\Documents\GitHub\FullCupPSI\Controlador\src\main\java\Pruebas\PruebasTamañoVaso.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaDetallesComandaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaProductoOpcionControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaComandasControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaCategoriaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarValorOpcionControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarProductoOpcionControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Pruebas\PruebasTamañoVaso.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtrasControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaValorOpcionControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaTamanoVasosControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaProductoControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarProductoControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Pruebas\PruebasExtra.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarExtraDetalleComandaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Pruebas\PruebaCategorias.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarExtrasControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarLecheControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarDetallesComandaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtraDetalleComandaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarExtraControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Pruebas\PruebaDetallesProducto.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaExtraControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarComandaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarCategoriaControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Implementaciones\GestionarTamanoVasosControlador.java
+C:\Users\usuario\Documents\chuy itson\Proyecto de software integrador\2025\FullCupPSI\Controlador\src\main\java\Facades\IFachadaLecheControlador.java
