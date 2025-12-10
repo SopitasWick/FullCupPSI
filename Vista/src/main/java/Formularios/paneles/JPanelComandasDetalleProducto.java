@@ -84,6 +84,10 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
     Dimension dimension = null;
     
     
+    private boolean lectura = false;
+    
+    
+    
     /**
      * Creates new form JPanelComandas
      */
@@ -144,11 +148,16 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
         }
         
         
-        
         if (accion == ConstantesGUI.ELIMINAR){
             accionesEliminar();
             
         }
+        
+        if(accion == ConstantesGUI.SOLOLECTURA){
+            accionesSoloLectura();
+            btnGuardarCambios.setVisible(false);
+        }
+        
     }
     
     
@@ -229,6 +238,46 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
             
     }
     
+    
+    private void accionesSoloLectura(){
+         listaExtrasSeleccion = fExtraDetalleComanda.obtenerTodosLosExtrasPorDetalleComanda(FrmComandas.detalleComanda);
+            
+            for(int i = 0; i < listaExtrasSeleccion.size(); i++){
+                if(listaExtrasSeleccion.get(i).getExtra().getTipoExtra().equalsIgnoreCase("Tipo vaso")){
+                    extraVaso = listaExtrasSeleccion.get(i).getExtra();
+                }
+                
+                if(listaExtrasSeleccion.get(i).getExtra().getTipoExtra().equalsIgnoreCase("Tipo leche")){
+                    extraLeche = listaExtrasSeleccion.get(i).getExtra();
+                }
+           
+            }
+            
+            List <ExtrasDetalleComanda> listaTemp = new ArrayList<>();
+            
+            for(int i = 0; i < listaExtrasSeleccion.size(); i++){
+                if(!(listaExtrasSeleccion.get(i).getExtra().getTipoExtra().equalsIgnoreCase("Tipo leche") ||
+                   listaExtrasSeleccion.get(i).getExtra().getTipoExtra().equalsIgnoreCase("Tipo vaso"))){
+                    listaTemp.add(listaExtrasSeleccion.get(i));
+                }
+            }
+            
+            listaEx = agruparExtrasManualmente(listaTemp);
+            
+            
+            cargarExtraVasosEditar();
+            cargarExtraLechesEditar();
+            cargarExtrasEditar();
+            
+            txtDescripcion.setText(FrmComandas.detalleComanda.getNotadetalleComanda());
+            
+            btnGuardarCambios.setVisible(false);
+            txtDescripcion.setEditable(false);
+
+            
+            calcularTotal();
+    
+    }
     
     public List<ExtraCantidadDTO> agruparExtrasManualmente(List<ExtrasDetalleComanda> listaExtrasUnidades) {
     
@@ -636,7 +685,7 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                 }
                 
                 
-                if(!(accion == ConstantesGUI.ELIMINAR)){
+                if(accion != ConstantesGUI.ELIMINAR || accion != ConstantesGUI.SOLOLECTURA){
                     extra.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -756,7 +805,7 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                     }
                     
                     
-                    if(!(accion == ConstantesGUI.ELIMINAR)){
+                    if(accion != ConstantesGUI.ELIMINAR || accion != ConstantesGUI.SOLOLECTURA){
                         extra.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
@@ -891,11 +940,11 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                     
                     int iProvisional = i;   
                     
-                    if(accion == ConstantesGUI.ELIMINAR){
+                    if(accion == ConstantesGUI.ELIMINAR || accion == ConstantesGUI.SOLOLECTURA){
                         extra.getJblSpinnerCantidad().setEnabled(false);
                     }
 
-                    if(accion != ConstantesGUI.ELIMINAR){
+                    if(accion != ConstantesGUI.ELIMINAR || accion != ConstantesGUI.SOLOLECTURA){
                         extra.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
@@ -1103,6 +1152,10 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
     private void volverSeccionAnterior(ConstantesGUI acci){
         
         FrmComandas.jPanelSeccion.removeAll();
+        
+        if(lectura){
+            acci = ConstantesGUI.SOLOLECTURA;
+        }
         
         JPanelComandasListaProductos panelListaProductos = new JPanelComandasListaProductos(acci);
         
@@ -1421,9 +1474,21 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
             
         }
     }
-    
-    
 
+    
+    
+    
+    public boolean isLectura() {
+        return lectura;
+    }
+
+    public void setLectura(boolean lectura) {
+        this.lectura = lectura;
+    }
+    
+ 
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

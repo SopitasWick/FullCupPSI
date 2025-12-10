@@ -103,7 +103,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         
         cargarCategorias();
        
-        cargarProductos("Todos", "");
         
         if(FrmComandas.comanda != null){
             cargarPanelComanda();
@@ -130,7 +129,31 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         catch(Exception e){
             e.printStackTrace();
         }
+        
+        accionesConstantesGUI();
+        
+        
     }
+    
+    
+    private void accionesConstantesGUI(){
+        
+        if(accion == ConstantesGUI.SOLOLECTURA){
+            cbCategorias.setEnabled(false);
+            btnGuardar2.setVisible(false);
+            btnRegistrarVenta.setVisible(false);
+            
+            txtNombreCliente.setEditable(false);
+            txtBuscarProducto.setEditable(false);
+            rbParaLlevar.setEnabled(false);
+            
+        }
+        
+        else{        
+            cargarProductos("Todos", "");       
+        }
+    }
+    
     
     
     private void cargarCategorias() {
@@ -329,8 +352,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
         try {
             
-
-
         int margenY = 62;
         float subTota = 0;
 
@@ -371,6 +392,10 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
             subPanel.getJblEliminarProducto().setBounds(340, 8, 35, 35);
 
             
+            if(accion == ConstantesGUI.SOLOLECTURA){
+                subPanel.getJblEliminarProducto().setVisible(false);
+            }
+            
             subPanel.getJblNombreProducto().setVisible(false);
             subPanel.getJblNombreCategoria().setVisible(false);
             subPanel.getJblPrecioProducto().setVisible(false);
@@ -378,29 +403,33 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
             int id = i;
             Detallecomanda detalle = detallesComandas.get(i);
 
-                subPanel.getJblEliminarProducto().addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        
-                        
-                        FrmComandas.detalleComanda = detalle;
-                        
-                        JPanelComandasDetalleProducto panelComandaDetalle;
-                        FrmComandas.jPanelSeccion.removeAll();
+                if(accion != ConstantesGUI.SOLOLECTURA){
+                    subPanel.getJblEliminarProducto().addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
 
-                        panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.ELIMINAR, FrmComandas.comanda, detalle.getIdProducto());
-                                                            
-                        panelComandaDetalle.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
 
-                        FrmComandas.jPanelSeccion.add(panelComandaDetalle);
+                            FrmComandas.detalleComanda = detalle;
+
+                            JPanelComandasDetalleProducto panelComandaDetalle;
+                            FrmComandas.jPanelSeccion.removeAll();
+
+                            panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.ELIMINAR, FrmComandas.comanda, detalle.getIdProducto());
+
+                            panelComandaDetalle.setLectura(true);
                             
-                        FrmComandas.jPanelSeccion.revalidate();
-                        FrmComandas.jPanelSeccion.repaint();
+                            panelComandaDetalle.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
+
+                            FrmComandas.jPanelSeccion.add(panelComandaDetalle);
+
+                            FrmComandas.jPanelSeccion.revalidate();
+                            FrmComandas.jPanelSeccion.repaint();
 
 
-                    }
+                        }
 
-                });
+                    });
+                }
             
 
             subPanel.addMouseListener(new MouseAdapter() {
@@ -412,8 +441,14 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                         JPanelComandasDetalleProducto panelComandaDetalle;
                         FrmComandas.jPanelSeccion.removeAll();
 
-                        panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.EDITAR, FrmComandas.comanda, detalle.getIdProducto());
-                                                            
+                        if(accion == ConstantesGUI.SOLOLECTURA){
+                            panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.SOLOLECTURA, FrmComandas.comanda, detalle.getIdProducto());
+                        }
+                        else{
+                            panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.ELIMINAR, FrmComandas.comanda, detalle.getIdProducto());
+
+                        }
+                        
                         panelComandaDetalle.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
 
                         FrmComandas.jPanelSeccion.add(panelComandaDetalle);
@@ -437,10 +472,8 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
             });
             
-            
-            
-            
 
+            
             if (jPanelItems.getPreferredSize().height < margenY * (i + 1)) {
                 if (dimension == null) {
                     dimension = new Dimension();

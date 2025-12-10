@@ -47,13 +47,6 @@ public class FrmComandas extends javax.swing.JFrame {
     }
     
     
-    public FrmComandas() {
-        initComponents();
-                
-        cargarPanel();
-        
-    }
-    
     
     
     private void cargarPanel(){
@@ -127,6 +120,7 @@ public class FrmComandas extends javax.swing.JFrame {
         jPanelEncabezado = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jblSalir = new javax.swing.JLabel();
         jPanelSeccion = new javax.swing.JPanel();
         jPanelNavegacion = new javax.swing.JPanel();
         jblNavegacionSeparador1 = new javax.swing.JLabel();
@@ -176,6 +170,21 @@ public class FrmComandas extends javax.swing.JFrame {
         jLabel2.setAlignmentY(0.0F);
         jPanelEncabezado.add(jLabel2);
         jLabel2.setBounds(50, 15, 400, 24);
+
+        jblSalir.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jblSalir.setForeground(new java.awt.Color(39, 24, 17));
+        jblSalir.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jblSalir.setText("Salir");
+        jblSalir.setAlignmentX(16.0F);
+        jblSalir.setAlignmentY(0.0F);
+        jblSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jblSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jblSalirMouseClicked(evt);
+            }
+        });
+        jPanelEncabezado.add(jblSalir);
+        jblSalir.setBounds(1140, 15, 50, 24);
 
         jPanelFondo.add(jPanelEncabezado);
         jPanelEncabezado.setBounds(0, 0, 1216, 50);
@@ -268,8 +277,17 @@ public class FrmComandas extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jblNavegacionComandas1MouseClicked
 
+    private void jblSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblSalirMouseClicked
+        // TODO add your handling code here:
+        login.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_jblSalirMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelFondo;
@@ -281,5 +299,6 @@ public class FrmComandas extends javax.swing.JFrame {
     private javax.swing.JLabel jblNavegacionComandas2;
     private javax.swing.JLabel jblNavegacionSeparador1;
     private javax.swing.JLabel jblNavegacionSeparador2;
+    private javax.swing.JLabel jblSalir;
     // End of variables declaration//GEN-END:variables
 }

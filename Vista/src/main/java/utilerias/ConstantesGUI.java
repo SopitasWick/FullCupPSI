@@ -12,6 +12,7 @@ public enum ConstantesGUI {
     
     NUEVO,
     EDITAR,
-    ELIMINAR
+    ELIMINAR,
+    SOLOLECTURA
     
 }

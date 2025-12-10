@@ -130,7 +130,7 @@ public class FrmLogin extends javax.swing.JFrame {
         }
 
       
-        FrmComandas comandas = new FrmComandas();
+        FrmComandas comandas = new FrmComandas(this);
         comandas.setVisible(true);
         this.setVisible(false);
 

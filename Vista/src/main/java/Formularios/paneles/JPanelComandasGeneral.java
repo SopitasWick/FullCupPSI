@@ -13,6 +13,7 @@ import Formularios.paneles.elementos.JPanelExtra;
 import Implementaciones.GestionarComandaControlador;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import utilerias.ConstantesGUI;
 
 /**
@@ -30,16 +32,18 @@ import utilerias.ConstantesGUI;
 public class JPanelComandasGeneral extends javax.swing.JPanel {
 
     
-    private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
+    private final IFachadaComandasControlador fComandas = new GestionarComandaControlador();
 
     
     
     
     Dimension dimensionComActivas = null;
+    Dimension dimensionComCompletadas = null;
     
     JPanelComandasListaProductos panelListaProductos;
     
     List <Comanda> listaComandas;
+    List <Comanda> listaComandasCompletadas;
     
     
     /**
@@ -60,10 +64,14 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
     
     
     private void cargarDiseno(){
+        
         jScrollPaneComandasActivas.setOpaque(false);
         jScrollPaneComandasActivas.setBorder(null);
-        
         jPanelListaComandasActivas.setBorder(null);
+        
+        jScrollPaneComandasCompletadas.setOpaque(false);
+        jScrollPaneComandasCompletadas.setBorder(null);
+        jPanelListaComandasCompletadas.setBorder(null);
     }
     
     
@@ -71,10 +79,11 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
     private void cargarDatos(){
         try {
             
-            listaComandas = FComandas.obtenerComandasActivas();
-            System.out.println(listaComandas.size());
+            listaComandas = fComandas.obtenerComandasActivas();
+            listaComandasCompletadas = fComandas.obtenerComandasCompletadas();
             
             cargarComandasActivas();
+            cargarComandasCompletadas();
         }
         catch (Exception ex) {
             Logger.getLogger(JPanelComandasGeneral.class.getName()).log(Level.SEVERE, null, ex);
@@ -197,8 +206,7 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
     
     private void cargarComandasActivas(){
         
-        jPanelComandasCompletadasContenedor.removeAll();
-
+        jPanelListaComandasActivas.removeAll();
         
         try{
             
@@ -219,12 +227,16 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
                 panelComanda.setAlignmentX(Component.LEFT_ALIGNMENT);
                 panelComanda.setBackground(Color.decode("#FFFFFF"));
-
-
+                
 
                 panelComanda.getJblNombreComanda().setText("Comanda: " + i + " - " + listaProvisional.get(i).getFechaHoracomanda());
                 panelComanda.getJblNumProductos().setText("Productos: " + String.valueOf(listaProvisional.get(i).getDetallecomandaList().size()));
                 panelComanda.getJblPrecioProducto().setText("$ " + listaProvisional.get(i).getTotalComanda());
+                
+                
+                panelComanda.getJPanelEstado().setCursor(new Cursor(Cursor.HAND_CURSOR));
+                panelComanda.getJblEliminarComanda().setCursor(new Cursor(12));
+                
 
                 int iProvisional = i;
                 Comanda co = listaProvisional.get(i);
@@ -266,18 +278,95 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
                     @Override
                     public void mouseClicked(MouseEvent e){
+                        
+                        try{
+            
+                            int opcion = JOptionPane.showConfirmDialog(
+                            null, // Componente padre: null si es una ventana independiente
+                            "¿Estás seguro que deseas eliminar este elemento?", // Mensaje
+                            "Confirmar Eliminación", // Título de la ventana
+                            JOptionPane.YES_NO_OPTION, // Tipo de opciones (Sí/No)
+                            JOptionPane.QUESTION_MESSAGE // Icono (Signo de interrogación)
+                            );
+
+                            if (opcion == JOptionPane.YES_OPTION) {
+
+                                fComandas.comandaEliminada(co.getIdComanda());
+                                JOptionPane.showMessageDialog(null, "La comanda ha sido Eliminada");
+                                
+                                cargarComandasActivas();
 
 
+                            }
+                            else if (opcion == JOptionPane.NO_OPTION) {
+
+
+                            } 
+
+                            else if (opcion == JOptionPane.CLOSED_OPTION) {
+
+                            }  
+                        
+                        }
+                        
+                        catch(Exception ex){
+
+                        
+                        }
+                             
+                    }
+
+                });
+                
+
+                
+                panelComanda.getJPanelEstado().addMouseListener(new MouseAdapter(){
+
+                    @Override
+                    public void mouseClicked(MouseEvent e){
+                        
+                        try{
+            
+                            int opcion = JOptionPane.showConfirmDialog(
+                            null, // Componente padre: null si es una ventana independiente
+                            "¿Marcar la comanda como completada?", // Mensaje
+                            "Confirmar", // Título de la ventana
+                            JOptionPane.YES_NO_OPTION, // Tipo de opciones (Sí/No)
+                            JOptionPane.QUESTION_MESSAGE // Icono (Signo de interrogación)
+                            );
+
+                            if (opcion == JOptionPane.YES_OPTION) {
+
+                                fComandas.comandaCompletada(co.getIdComanda());                                
+                                cargarComandasActivas();
+                                cargarComandasCompletadas();
+
+
+                            }
+                            else if (opcion == JOptionPane.NO_OPTION) {
+
+
+                            } 
+
+                            else if (opcion == JOptionPane.CLOSED_OPTION) {
+
+                            }  
+                        
+                        }
+                        
+                        catch(Exception ex){
+
+                        
+                        }
+                             
                     }
 
                 });
                 
                 
-               // panelComanda.setRadiusPanelVerde();
                 
-
-              
-               
+                
+                
                if(jPanelListaComandasActivas.getPreferredSize().height < alturaProducto * i){
                     
                     if(dimensionComActivas == null){
@@ -309,6 +398,112 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
     }
     
     
+    
+    
+    private void cargarComandasCompletadas(){
+        
+        jPanelListaComandasCompletadas.removeAll();
+
+        
+        try{
+            
+            List<Comanda> listaProvisional = new ArrayList<>();
+            if(!listaProvisional.isEmpty()){
+                listaProvisional.clear();
+            }
+
+            listaProvisional = listaComandasCompletadas;
+            
+            int alturaProducto = 95; 
+                
+            for(int i = 0; i < listaProvisional.size(); i++){    
+                
+                JPanelComandas panelComanda = new JPanelComandas();
+                
+                panelComanda.setBounds(0, alturaProducto * i, 350, 80);
+
+                panelComanda.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panelComanda.setBackground(Color.decode("#FFFFFF"));
+
+
+
+                panelComanda.getJblNombreComanda().setText("Comanda: " + i + " - " + listaProvisional.get(i).getFechaHoracomanda());
+                panelComanda.getJblNumProductos().setText("Productos: " + String.valueOf(listaProvisional.get(i).getDetallecomandaList().size()));
+                panelComanda.getJblPrecioProducto().setText("$ " + listaProvisional.get(i).getTotalComanda());
+
+                panelComanda.getJPanelEstado().setVisible(false);
+                
+                int iProvisional = i;
+                Comanda co = listaProvisional.get(i);
+                
+                panelComanda.setBackground(Color.decode("#A2F274"));
+
+
+                panelComanda.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        
+                        FrmComandas.comanda = co;
+                        panelListaProductos = new JPanelComandasListaProductos(ConstantesGUI.SOLOLECTURA);
+                        
+                        FrmComandas.jPanelSeccion.removeAll();
+        
+
+                        panelListaProductos.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
+                        FrmComandas.jPanelSeccion.add(panelListaProductos);
+
+                        FrmComandas.jPanelSeccion.revalidate();
+                        FrmComandas.jPanelSeccion.repaint();
+
+
+                    }
+
+                });
+
+                panelComanda.getJblEliminarComanda().setVisible(false);
+//                panelComanda.getJblEliminarComanda().addMouseListener(new MouseAdapter(){
+//
+//                    @Override
+//                    public void mouseClicked(MouseEvent e){
+//
+//
+//                    }
+//
+//                });
+                
+               
+               if(jPanelListaComandasCompletadas.getPreferredSize().height < alturaProducto * i){
+                    
+                    if(dimensionComCompletadas == null){
+                        dimensionComCompletadas = new Dimension();
+                    }
+                    
+                    dimensionComCompletadas.setSize(jPanelListaComandasCompletadas.getPreferredSize().width, alturaProducto * i);
+                    jPanelListaComandasCompletadas.setPreferredSize(dimensionComCompletadas);
+               }
+                    
+                jPanelListaComandasCompletadas.add(panelComanda);
+
+            
+
+                
+            }
+        
+        
+            jPanelListaComandasCompletadas.revalidate();
+            jPanelListaComandasCompletadas.repaint();
+        }
+        
+        
+        
+        catch(NumberFormatException e){
+        }
+    
+    
+    }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -321,6 +516,7 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
         jPanelComandasCompletadasContenedor = new javax.swing.JPanel();
         jblComandasCompletadas = new javax.swing.JLabel();
+        jScrollPaneComandasCompletadas = new javax.swing.JScrollPane();
         jPanelListaComandasCompletadas = new javax.swing.JPanel();
         jPanelComandasActivasContenedor = new javax.swing.JPanel();
         jblComandasActivas = new javax.swing.JLabel();
@@ -346,10 +542,12 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
         jPanelListaComandasCompletadas.setBackground(new java.awt.Color(255, 255, 255));
         jPanelListaComandasCompletadas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanelListaComandasCompletadas.setMinimumSize(new java.awt.Dimension(300, 20));
-        jPanelListaComandasCompletadas.setPreferredSize(new java.awt.Dimension(490, 380));
+        jPanelListaComandasCompletadas.setPreferredSize(new java.awt.Dimension(360, 200));
         jPanelListaComandasCompletadas.setLayout(null);
-        jPanelComandasCompletadasContenedor.add(jPanelListaComandasCompletadas);
-        jPanelListaComandasCompletadas.setBounds(10, 60, 380, 340);
+        jScrollPaneComandasCompletadas.setViewportView(jPanelListaComandasCompletadas);
+
+        jPanelComandasCompletadasContenedor.add(jScrollPaneComandasCompletadas);
+        jScrollPaneComandasCompletadas.setBounds(10, 50, 380, 370);
 
         add(jPanelComandasCompletadasContenedor);
         jPanelComandasCompletadasContenedor.setBounds(720, 70, 400, 430);
@@ -416,6 +614,7 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelListaComandasActivas;
     private javax.swing.JPanel jPanelListaComandasCompletadas;
     private javax.swing.JScrollPane jScrollPaneComandasActivas;
+    private javax.swing.JScrollPane jScrollPaneComandasCompletadas;
     private javax.swing.JLabel jblComandasActivas;
     private javax.swing.JLabel jblComandasCompletadas;
     // End of variables declaration//GEN-END:variables
