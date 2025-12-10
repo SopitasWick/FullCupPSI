@@ -91,265 +91,314 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     
     
     
-    private void cargarExtras(){
-        
-        jPanelListaGeneral.removeAll();
+ private void cargarExtras(){
+    
+    jPanelListaGeneral.removeAll();
 
+    try{
         
-        try{
+        List<Extra> listaProvisional = new ArrayList<>();
+        if(!listaProvisional.isEmpty()){
+            listaProvisional.clear();
+        }
+        
+        // Filtrar por tipo de extra Y por estado (activo/inactivo)
+        for(int i = 0; i < listaExtras.size(); i++){
+            Extra extra = listaExtras.get(i);
             
-            List<Extra> listaProvisional = new ArrayList<>();
-            if(!listaProvisional.isEmpty()){
-                listaProvisional.clear();
+            // Verificar si coincide con el tipo seleccionado
+            boolean coincideTipo = extra.getTipoExtra().equalsIgnoreCase(seleccion);
+            
+            // Verificar el estado según el checkbox
+            boolean cumpleEstado;
+            if(cbInactivas.isSelected()){
+                // Si el checkbox está marcado, mostrar solo inactivos
+                cumpleEstado = "inactivo".equalsIgnoreCase(extra.getEstado());
+            } else {
+                // Si no está marcado, mostrar solo activos
+                cumpleEstado = "activo".equalsIgnoreCase(extra.getEstado());
             }
             
-            for(int i = 0; i < listaExtras.size(); i++){
-                if(listaExtras.get(i).getTipoExtra().equalsIgnoreCase(seleccion)){
-                    listaProvisional.add(listaExtras.get(i));
-                }
+            // Agregar a la lista provisional si cumple ambas condiciones
+            if(coincideTipo && cumpleEstado){
+                listaProvisional.add(extra);
             }
+        }
+        
+        int alturaProducto = 55; 
             
+        for(int i = 0; i < listaProvisional.size(); i++){    
             
-            int alturaProducto = 55; 
-                
-            for(int i = 0; i < listaProvisional.size(); i++){    
-                
-                JPanelExtra extra = new JPanelExtra();
-                
-                extra.setBounds(0, alturaProducto * i, 530, 45);
+            JPanelExtra extra = new JPanelExtra();
+            
+            extra.setBounds(0, alturaProducto * i, 530, 45);
 
-                extra.setAlignmentX(Component.LEFT_ALIGNMENT);
-                extra.setBackground(Color.decode("#FFFFFF"));
+            extra.setAlignmentX(Component.LEFT_ALIGNMENT);
+            extra.setBackground(Color.decode("#FFFFFF"));
 
+            extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
+            extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
 
+            int iProvisional = i;        
 
-                extra.getJblNombreExtra().setText(listaProvisional.get(i).getNombreExtra());
-                extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
+            extra.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    
+                    if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
+                        cbTipoExtras.setSelectedIndex(0);
+                    }
+                    
+                    if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo leche")){
+                        cbTipoExtras.setSelectedIndex(1);
+                    }
+                    
+                    if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo extra")){
+                        cbTipoExtras.setSelectedIndex(2);
+                    }
+                    
+                    txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
+                    jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
 
-                int iProvisional = i;        
+                    cbTipoExtras.setEnabled(true);
+                    txtNombreExtra.setEditable(true);
+                    jSpinnerPrecioExtra.setEnabled(true);
 
-                extra.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        
-                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
-                            cbTipoExtras.setSelectedIndex(0);
-                            
-                        }
-                        
-                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo leche")){
-                            cbTipoExtras.setSelectedIndex(1);
-                            
-                        }
-                        
-                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo extra")){
-                            cbTipoExtras.setSelectedIndex(2);
-                            
-                        }
-                        
-                        txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
-                        jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
-
-
-                        cbTipoExtras.setEnabled(true);
-                        txtNombreExtra.setEditable(true);
-                        jSpinnerPrecioExtra.setEnabled(true);
-
+                    // Si estamos viendo inactivos, cambiar el botón a "Reactivar"
+                    if(cbInactivas.isSelected()){
+                        btnAccion.setBackground(Color.decode("#10B981")); // Verde
+                        btnAccion.setText("Reactivar");
+                    } else {
                         btnAccion.setBackground(Color.decode("#111827"));
                         btnAccion.setText("Editar");
-                        
-                        extraEditar = listaProvisional.get(iProvisional);
-
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e){
-                        extra.setBackground(Color.decode("#E0E0E0"));
-
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e){
-                        extra.setBackground(Color.decode("#FFFFFF"));
-                    }
-
-                });
-
-
-                extra.getJblEliminarExtra().addMouseListener(new MouseAdapter(){
-
-                    @Override
-                    public void mouseClicked(MouseEvent e){
-                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
-                            cbTipoExtras.setSelectedIndex(0);
-                            
-                        }
-                        
-                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo leche")){
-                            cbTipoExtras.setSelectedIndex(1);
-                            
-                        }
-                        
-                        if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo extra")){
-                            cbTipoExtras.setSelectedIndex(2);
-                            
-                        }
-                        txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
-                        jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
-
-
-                        cbTipoExtras.setEnabled(false);
-                        txtNombreExtra.setEditable(false);
-                        jSpinnerPrecioExtra.setEnabled(false);
-                        
-                        btnAccion.setBackground(Color.red);
-
-
-                        btnAccion.setText("Eliminar");
-                        
-                        extraEditar = listaProvisional.get(iProvisional);
-
-                    }
-
-                });
-
-              
-               
-               if(jPanelListaGeneral.getPreferredSize().height < alturaProducto * i){
-                    
-                    if(dimension == null){
-                        dimension = new Dimension();
                     }
                     
-                    dimension.setSize(jPanelListaGeneral.getPreferredSize().width, alturaProducto * i);
-                    jPanelListaGeneral.setPreferredSize(dimension);
-               }
+                    extraEditar = listaProvisional.get(iProvisional);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e){
+                    extra.setBackground(Color.decode("#E0E0E0"));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e){
+                    extra.setBackground(Color.decode("#FFFFFF"));
+                }
+            });
+
+            extra.getJblEliminarExtra().addMouseListener(new MouseAdapter(){
+
+                @Override
+                public void mouseClicked(MouseEvent e){
+                    if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo vaso")){
+                        cbTipoExtras.setSelectedIndex(0);
+                    }
                     
-                jPanelListaGeneral.add(extra);
+                    if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo leche")){
+                        cbTipoExtras.setSelectedIndex(1);
+                    }
+                    
+                    if(listaProvisional.get(iProvisional).getTipoExtra().equalsIgnoreCase("Tipo extra")){
+                        cbTipoExtras.setSelectedIndex(2);
+                    }
+                    txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
+                    jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
 
-            
+                    cbTipoExtras.setEnabled(false);
+                    txtNombreExtra.setEditable(false);
+                    jSpinnerPrecioExtra.setEnabled(false);
+                    
+                    btnAccion.setBackground(Color.red);
+                    btnAccion.setText("Eliminar");
+                    
+                    extraEditar = listaProvisional.get(iProvisional);
+                }
+            });
 
+           if(jPanelListaGeneral.getPreferredSize().height < alturaProducto * i){
                 
-            }
-        
-        
-            jPanelListaGeneral.revalidate();
-            jPanelListaGeneral.repaint();
-        }
-        
-        
-        
-        catch(NumberFormatException e){
+                if(dimension == null){
+                    dimension = new Dimension();
+                }
+                
+                dimension.setSize(jPanelListaGeneral.getPreferredSize().width, alturaProducto * i);
+                jPanelListaGeneral.setPreferredSize(dimension);
+           }
+                
+            jPanelListaGeneral.add(extra);
         }
     
-    
+        jPanelListaGeneral.revalidate();
+        jPanelListaGeneral.repaint();
     }
-    
-   
-    
-    
-    private void guardarExtra(){
-        Extra extra = new Extra();
-        extra.setEstado("activo");
-        extra.setNombreExtra(txtNombreExtra.getText());
-        extra.setPrecio(((Number)jSpinnerPrecioExtra.getValue()).floatValue());
-        extra.setTipoExtra(String.valueOf(cbTipoExtras.getSelectedItem()));
-        
-        try{
-        
-            fExtras.agregarExtra(extra);
-            
-            JOptionPane.showMessageDialog(this, "Extra agregado");
-            
-            listaExtras = fExtras.obtenerTodosLosExtras();
-            cargarExtras();
-        }
-        
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        
-    
+    catch(NumberFormatException e){
     }
-    
-    private void editarExtra(){
-    
-        if(extraEditar != null){
-            extraEditar.setNombreExtra(txtNombreExtra.getText());
-            extraEditar.setPrecio(((Number)jSpinnerPrecioExtra.getValue()).floatValue());
-            extraEditar.setTipoExtra(String.valueOf(cbTipoExtras.getSelectedItem()));
-            
-            try{
-        
+}
+
+// También agrega este método para reactivar extras
+private void reactivarExtra(){
+    if(extraEditar != null){
+        int opcion = JOptionPane.showConfirmDialog(
+            null,
+            "¿Deseas reactivar este elemento?",
+            "Confirmar Reactivación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                extraEditar.setEstado("activo");
                 fExtras.actualizarExtra(extraEditar);
-                JOptionPane.showMessageDialog(this, "Extra editado");
+                
+                JOptionPane.showMessageDialog(null, "Extra reactivado exitosamente");
                 
                 listaExtras = fExtras.obtenerTodosLosExtras();
                 cargarExtras();
                 
+                // AGREGAR ESTA LÍNEA PARA LIMPIAR DESPUÉS DE REACTIVAR:
+                limpiarFormulario();
+                
+            } catch (Exception ex) {
+                Logger.getLogger(JPanelAdminExtras.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
-            catch(Exception e){
-                e.printStackTrace();
-            }
-            
         }
     }
+}
+
+
     
-    private void eliminarExtra(){
-        
-        try{
-        
-            extraEditar.setEstado("inactivo");
-            
-            
-            int opcion = JOptionPane.showConfirmDialog(
-            null, // Componente padre: null si es una ventana independiente
-            "¿Estás seguro que deseas eliminar este elemento?", // Mensaje
-            "Confirmar Eliminación", // Título de la ventana
-            JOptionPane.YES_NO_OPTION, // Tipo de opciones (Sí/No)
-            JOptionPane.QUESTION_MESSAGE // Icono (Signo de interrogación)
+    
+ /**
+ * Valida que el nombre del extra no esté vacío
+ * @return true si el nombre es válido, false en caso contrario
+ */
+private boolean validarNombreExtra() {
+    String nombre = txtNombreExtra.getText().trim();
+    
+    if (nombre.isEmpty()) {
+        JOptionPane.showMessageDialog(
+            null,
+            "El nombre del extra es obligatorio",
+            "Error de validación",
+            JOptionPane.ERROR_MESSAGE
         );
-
-            if (opcion == JOptionPane.YES_OPTION) {
-                
-                try {
-                    extraEditar.setEstado("inactivo");
-                    
-                    fExtras.actualizarExtra(extraEditar);
-                    
-                    System.out.println("Elemento eliminado exitosamente.");
-                    JOptionPane.showMessageDialog(null, "El elemento ha sido eliminado.");
-                    
-                    listaExtras = fExtras.obtenerTodosLosExtras();
-                    cargarExtras();
-
-
-                } catch (Exception ex) {
-                    Logger.getLogger(JPanelAdminProductosCRUD.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-
-
-            }
-            else if (opcion == JOptionPane.NO_OPTION) {
-
-
-            } 
-
-            else if (opcion == JOptionPane.CLOSED_OPTION) {
-
-            }
-                 
-                
-       }
-        
-            catch(Exception e){
-                e.printStackTrace();
-            }
-
+        txtNombreExtra.requestFocus();
+        return false;
     }
     
+    return true;
+}
+
+private void guardarExtra(){
+    
+    // Validación del nombre
+    if (!validarNombreExtra()) {
+        return;
+    }
+    
+    Extra extra = new Extra();
+    extra.setEstado("activo");
+    extra.setNombreExtra(txtNombreExtra.getText());
+    extra.setPrecio(((Number)jSpinnerPrecioExtra.getValue()).floatValue());
+    extra.setTipoExtra(String.valueOf(cbTipoExtras.getSelectedItem()));
+    
+    try{
+        fExtras.agregarExtra(extra);
+        
+        JOptionPane.showMessageDialog(null, "Extra agregado");
+        
+        listaExtras = fExtras.obtenerTodosLosExtras();
+        cargarExtras();
+        
+        // AGREGAR ESTAS LÍNEAS PARA LIMPIAR DESPUÉS DE GUARDAR:
+        limpiarFormulario();
+    }
+    catch(Exception e){
+        e.printStackTrace();
+    }
+}
+
+    
+    private void editarExtra(){
+    
+    if(extraEditar != null){
+        extraEditar.setNombreExtra(txtNombreExtra.getText());
+        extraEditar.setPrecio(((Number)jSpinnerPrecioExtra.getValue()).floatValue());
+        extraEditar.setTipoExtra(String.valueOf(cbTipoExtras.getSelectedItem()));
+        
+        try{
+            fExtras.actualizarExtra(extraEditar);
+            JOptionPane.showMessageDialog(this, "Extra editado");
+            
+            listaExtras = fExtras.obtenerTodosLosExtras();
+            cargarExtras();
+            
+            // AGREGAR ESTA LÍNEA PARA LIMPIAR DESPUÉS DE EDITAR:
+            limpiarFormulario();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+    
+    private void eliminarExtra(){
+    
+    try{
+        extraEditar.setEstado("inactivo");
+        
+        int opcion = JOptionPane.showConfirmDialog(
+            null,
+            "¿Estás seguro que deseas eliminar este elemento?",
+            "Confirmar Eliminación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            try {
+                extraEditar.setEstado("inactivo");
+                
+                fExtras.actualizarExtra(extraEditar);
+                
+                System.out.println("Elemento eliminado exitosamente.");
+                JOptionPane.showMessageDialog(null, "El elemento ha sido eliminado.");
+                
+                listaExtras = fExtras.obtenerTodosLosExtras();
+                cargarExtras();
+                
+                // AGREGAR ESTA LÍNEA PARA LIMPIAR DESPUÉS DE ELIMINAR:
+                limpiarFormulario();
+
+            } catch (Exception ex) {
+                Logger.getLogger(JPanelAdminProductosCRUD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    catch(Exception e){
+        e.printStackTrace();
+    }
+}
+    private void limpiarFormulario(){
+    // Habilitar todos los campos
+    cbTipoExtras.setEnabled(true);
+    txtNombreExtra.setEditable(true);
+    jSpinnerPrecioExtra.setEnabled(true);
+    
+    // Limpiar los campos
+    txtNombreExtra.setText("");
+    jSpinnerPrecioExtra.setValue(0);
+    cbTipoExtras.setSelectedIndex(0);
+    
+    // Configurar el botón para guardar
+    btnAccion.setText("Guardar");
+    btnAccion.setBackground(Color.decode("#111827"));
+    
+    // Limpiar la selección
+    extraEditar = null;
+}
     
     
     
@@ -600,6 +649,16 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuscarUsuarioKeyTyped
 
     private void cbInactivasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbInactivasActionPerformed
+
+            // Recargar la lista de extras cuando se cambia el estado del checkbox
+    try {
+        listaExtras = fExtras.obtenerTodosLosExtras();
+        dimension = null;
+        cargarExtras();
+    } catch (Exception ex) {
+        Logger.getLogger(JPanelAdminExtras.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
         // TODO add your handling code here:
 
     }//GEN-LAST:event_cbInactivasActionPerformed
@@ -614,17 +673,22 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         // TODO add your handling code here:
         
-        if(btnAccion.getText().equalsIgnoreCase("Guardar")){
-            guardarExtra();
-        }
-        
-        if(btnAccion.getText().equalsIgnoreCase("Editar")){
-            editarExtra();
-        }
-        
-        if(btnAccion.getText().equalsIgnoreCase("Eliminar")){
-            eliminarExtra();
-        }
+      if(btnAccion.getText().equalsIgnoreCase("Guardar")){
+        guardarExtra();
+    }
+    
+    if(btnAccion.getText().equalsIgnoreCase("Editar")){
+        editarExtra();
+    }
+    
+    if(btnAccion.getText().equalsIgnoreCase("Eliminar")){
+        eliminarExtra();
+    }
+    
+    // AGREGAR ESTA NUEVA CONDICIÓN:
+    if(btnAccion.getText().equalsIgnoreCase("Reactivar")){
+        reactivarExtra();
+    }
         
     }//GEN-LAST:event_btnAccionActionPerformed
 

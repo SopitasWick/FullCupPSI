@@ -2021,7 +2021,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         jblNavegacionComandas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jblNavegacionComandas.setForeground(new java.awt.Color(102, 102, 102));
         jblNavegacionComandas.setText("Detalle Comanda\n");
-        jblNavegacionComandas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jblNavegacionComandas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jblNavegacionComandas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jblNavegacionComandasMouseClicked(evt);

@@ -454,57 +454,83 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
     } 
      
      
-    private void agregarProducto(){
+    /**
+ * Valida que el nombre del producto no esté vacío
+ * @return true si el nombre es válido, false en caso contrario
+ */
+private boolean validarNombreProducto() {
+    String nombre = txtNombreProducto1.getText().trim();
     
-        try{
-        
-            String nombre = txtNombreProducto1.getText();
-            float precio = ((Number)jSpinnerPrecioProducto.getValue()).floatValue();
-            Categoria categoria = fCategoria.obtenerCategoriaPorNombre((String)cbCategorias.getSelectedItem());
-            
-            //Validaciones
-            
-            
-            Producto producto = new Producto();
-            producto.setNombreProducto(nombre);
-            producto.setIdCategoria(categoria);
-            producto.setPrecioProducto(precio);
-            producto.setEstado("activo");
-            
-            //Aqui se guardan los extras
-            if(!extrasSeleccionados.isEmpty()){
-                
-               List <Extra> listaExtrasGuardar = new ArrayList<>();
-               
-               for(int i = 0; i < extrasSeleccionados.size(); i++){ 
-                   Extra extraGuardar = new Extra();
-                   extraGuardar.setIdExtra(extrasSeleccionados.get(i).getIdExtra());
-                   extraGuardar.setEstado("activo");
-                   extraGuardar.setNombreExtra(extrasSeleccionados.get(i).getNombreExtra());
-                   extraGuardar.setPrecio(extrasSeleccionados.get(i).getPrecio());
-                   extraGuardar.setTipoExtra(extrasSeleccionados.get(i).getTipoExtra());
-                   
-                   listaExtrasGuardar.add(extraGuardar);
-               }
-               
-                producto.setExtras(listaExtrasGuardar);
-       
-            }
-            
-            Producto nuevoProducto = fProducto.agregarProducto(producto);
-            
-            
-            JOptionPane.showMessageDialog(this, "Producto agregado");
-            
-            volverSecccionAnterior();
-        }
-        
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        
+    if (nombre.isEmpty()) {
+        JOptionPane.showMessageDialog(
+            null,
+            "El nombre del producto es obligatorio",
+            "Error de validación",
+            JOptionPane.ERROR_MESSAGE
+        );
+        txtNombreProducto1.requestFocus();
+        return false;
     }
+    
+    return true;
+}
+
+private void agregarProducto(){
+    
+    try{
+        
+        // Validación del nombre
+        if (!validarNombreProducto()) {
+            return;
+        }
+        
+        String nombre = txtNombreProducto1.getText();
+        float precio = ((Number)jSpinnerPrecioProducto.getValue()).floatValue();
+        Categoria categoria = fCategoria.obtenerCategoriaPorNombre((String)cbCategorias.getSelectedItem());
+        
+        //Validaciones
+        
+        
+        Producto producto = new Producto();
+        producto.setNombreProducto(nombre);
+        producto.setIdCategoria(categoria);
+        producto.setPrecioProducto(precio);
+        producto.setEstado("activo");
+        
+        //Aqui se guardan los extras
+        if(!extrasSeleccionados.isEmpty()){
+            
+           List <Extra> listaExtrasGuardar = new ArrayList<>();
+           
+           for(int i = 0; i < extrasSeleccionados.size(); i++){ 
+               Extra extraGuardar = new Extra();
+               extraGuardar.setIdExtra(extrasSeleccionados.get(i).getIdExtra());
+               extraGuardar.setEstado("activo");
+               extraGuardar.setNombreExtra(extrasSeleccionados.get(i).getNombreExtra());
+               extraGuardar.setPrecio(extrasSeleccionados.get(i).getPrecio());
+               extraGuardar.setTipoExtra(extrasSeleccionados.get(i).getTipoExtra());
+               
+               listaExtrasGuardar.add(extraGuardar);
+           }
+           
+            producto.setExtras(listaExtrasGuardar);
+   
+        }
+        
+        Producto nuevoProducto = fProducto.agregarProducto(producto);
+        
+        
+        JOptionPane.showMessageDialog(null, "Producto agregado");
+        
+        volverSecccionAnterior();
+    }
+    
+    catch(Exception e){
+        e.printStackTrace();
+    }
+    
+    
+}
     
     private void editarProducto(){
         

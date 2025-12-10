@@ -177,7 +177,7 @@ public class FrmComandas extends javax.swing.JFrame {
         jblSalir.setText("Salir");
         jblSalir.setAlignmentX(16.0F);
         jblSalir.setAlignmentY(0.0F);
-        jblSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jblSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jblSalir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jblSalirMouseClicked(evt);
@@ -211,7 +211,7 @@ public class FrmComandas extends javax.swing.JFrame {
         jblNavegacionComandas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jblNavegacionComandas.setForeground(new java.awt.Color(102, 102, 102));
         jblNavegacionComandas.setText("Detalle Comanda\n");
-        jblNavegacionComandas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jblNavegacionComandas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jblNavegacionComandas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jblNavegacionComandasMouseClicked(evt);
@@ -286,8 +286,6 @@ public class FrmComandas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelFondo;

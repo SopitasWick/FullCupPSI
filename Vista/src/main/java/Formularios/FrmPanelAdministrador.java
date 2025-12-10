@@ -181,7 +181,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jLabel2.setText("Salir");
         jLabel2.setAlignmentX(16.0F);
         jLabel2.setAlignmentY(0.0F);
-        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
@@ -208,7 +208,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jPanelAdminUsuario.setBackground(new java.awt.Color(255, 255, 255));
         jPanelAdminUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanelAdminUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanelAdminUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanelAdminUsuarioMouseClicked(evt);
@@ -238,7 +238,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jPanelAdminProductos1.setBackground(new java.awt.Color(255, 255, 255));
         jPanelAdminProductos1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanelAdminProductos1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminProductos1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanelAdminProductos1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanelAdminProductos1MouseClicked(evt);
@@ -267,7 +267,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jPanelAdminCategoria.setBackground(new java.awt.Color(255, 255, 255));
         jPanelAdminCategoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanelAdminCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanelAdminCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanelAdminCategoriaMouseClicked(evt);
@@ -298,7 +298,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jPanelAdminExtra.setBackground(new java.awt.Color(255, 255, 255));
         jPanelAdminExtra.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanelAdminExtra.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanelAdminExtra.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanelAdminExtra.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanelAdminExtraMouseClicked(evt);
