@@ -32,8 +32,8 @@ public class Detalleopcion implements Serializable {
     @Column(name = "idDetalleOpcion")
     private Integer idDetalleOpcion;
     @JoinColumn(name = "idDetalleComanda", referencedColumnName = "idDetalleComanda")
-    @ManyToOne(optional = false)
-    private Detallecomanda idDetalleComanda;
+//    @ManyToOne(optional = false)
+//    private Detallecomanda idDetalleComanda;
     @JoinColumn(name = "idValorOpcion", referencedColumnName = "idValorOpcion")
     @ManyToOne(optional = false)
     private Valoropcion idValorOpcion;
@@ -53,13 +53,13 @@ public class Detalleopcion implements Serializable {
         this.idDetalleOpcion = idDetalleOpcion;
     }
 
-    public Detallecomanda getIdDetalleComanda() {
-        return idDetalleComanda;
-    }
-
-    public void setIdDetalleComanda(Detallecomanda idDetalleComanda) {
-        this.idDetalleComanda = idDetalleComanda;
-    }
+//    public Detallecomanda getIdDetalleComanda() {
+//        return idDetalleComanda;
+//    }
+//
+//    public void setIdDetalleComanda(Detallecomanda idDetalleComanda) {
+//        this.idDetalleComanda = idDetalleComanda;
+//    }
 
     public Valoropcion getIdValorOpcion() {
         return idValorOpcion;

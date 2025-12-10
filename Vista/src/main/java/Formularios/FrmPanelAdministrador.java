@@ -126,6 +126,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanelEncabezado = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jblTitulo = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanelAdminUsuario = new javax.swing.JPanel();
         jblIconUsuario = new javax.swing.JLabel();
@@ -176,11 +177,26 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(39, 24, 17));
-        jLabel2.setText("Full Cup: Panel Administrador");
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Salir");
         jLabel2.setAlignmentX(16.0F);
         jLabel2.setAlignmentY(0.0F);
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
         jPanelEncabezado.add(jLabel2);
-        jLabel2.setBounds(50, 15, 400, 24);
+        jLabel2.setBounds(1140, 15, 50, 24);
+
+        jblTitulo.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jblTitulo.setForeground(new java.awt.Color(39, 24, 17));
+        jblTitulo.setText("Full Cup: Panel Administrador");
+        jblTitulo.setAlignmentX(16.0F);
+        jblTitulo.setAlignmentY(0.0F);
+        jPanelEncabezado.add(jblTitulo);
+        jblTitulo.setBounds(50, 15, 400, 24);
 
         jPanelFondo.add(jPanelEncabezado);
         jPanelEncabezado.setBounds(0, 0, 1216, 50);
@@ -454,6 +470,13 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jPanelAdminUsuarioMouseExited
 
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // TODO add your handling code here:
+        login.setVisible(true);
+        this.dispose();
+        
+    }//GEN-LAST:event_jLabel2MouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
@@ -473,5 +496,6 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jblIconExtra;
     private javax.swing.JLabel jblIconProducto;
     private javax.swing.JLabel jblIconUsuario;
+    private javax.swing.JLabel jblTitulo;
     // End of variables declaration//GEN-END:variables
 }

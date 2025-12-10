@@ -86,7 +86,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         
         cargarDiseno();
         
-       // pruebas();
         
     }
     
@@ -99,6 +98,9 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
             jLabelCategorias.requestFocusInWindow(); // El foco se va al label
         });
        
+        
+        inicializarDatos();
+        
         cargarCategorias();
        
         cargarProductos("Todos", "");
@@ -113,6 +115,21 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         
         calcularTotal();
         
+    }
+    
+    
+    private void inicializarDatos(){
+        
+        try{
+            if(detallesComandas != null){
+                detallesComandas.clear();
+            }
+            detallesComandas = fDC.obtenerDetallesComandasPorComanda(FrmComandas.comanda);
+        }
+        
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     
@@ -311,8 +328,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         jPanelItems.removeAll();
 
         try {
-            detallesComandas = fDC.obtenerDetallesComandasPorComanda(FrmComandas.comanda);
-            System.out.println(detallesComandas.get(0).getIdProducto().getNombreProducto());
+            
 
 
         int margenY = 62;
@@ -360,18 +376,19 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
             subPanel.getJblPrecioProducto().setVisible(false);
 
             int id = i;
+            Detallecomanda detalle = detallesComandas.get(i);
 
                 subPanel.getJblEliminarProducto().addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         
                         
-                        FrmComandas.detalleComanda = detallesComandas.get(id);
+                        FrmComandas.detalleComanda = detalle;
                         
                         JPanelComandasDetalleProducto panelComandaDetalle;
                         FrmComandas.jPanelSeccion.removeAll();
 
-                        panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.ELIMINAR, FrmComandas.comanda, detallesComandas.get(id).getIdProducto());
+                        panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.ELIMINAR, FrmComandas.comanda, detalle.getIdProducto());
                                                             
                         panelComandaDetalle.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
 
@@ -390,12 +407,12 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                         
-                    FrmComandas.detalleComanda = detallesComandas.get(id);
+                    FrmComandas.detalleComanda = detalle;
                         
                         JPanelComandasDetalleProducto panelComandaDetalle;
                         FrmComandas.jPanelSeccion.removeAll();
 
-                        panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.EDITAR, FrmComandas.comanda, detallesComandas.get(id).getIdProducto());
+                        panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.EDITAR, FrmComandas.comanda, detalle.getIdProducto());
                                                             
                         panelComandaDetalle.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
 
@@ -655,7 +672,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         txtimpuestos.setBounds(300, 10, 60, 16);
 
         txtSubtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtSubtotal.setText("$7.75");
+        txtSubtotal.setText("$0.00");
         jPanelTotal.add(txtSubtotal);
         txtSubtotal.setBounds(300, 30, 60, 16);
 
@@ -680,7 +697,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
         txtTotal.setFont(new java.awt.Font("Helvetica Neue", 1, 15)); // NOI18N
         txtTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtTotal.setText("$8.53");
+        txtTotal.setText("$0.00");
         jPanelTotal.add(txtTotal);
         txtTotal.setBounds(280, 70, 90, 20);
 
