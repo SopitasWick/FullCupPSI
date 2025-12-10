@@ -9,6 +9,7 @@ import Entidades.Detallecomanda;
 import java.awt.*;
 import java.awt.print.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TicketPrinter implements Printable {
 
@@ -46,7 +47,7 @@ public class TicketPrinter implements Printable {
         // ===== INFO GENERAL =====
         g2d.drawString("Comanda ID: " + comanda.getIdComanda(), 10, y);
         y += 15;
-        g2d.drawString("Fecha: " + sdf.format(comanda.getFechaHoracomanda()), 10, y);
+        g2d.drawString("Fecha: " + sdf.format(new Date()), 10, y);
         y += 15;
         g2d.drawString("Estado: " + comanda.getEstadoComanda(), 10, y);
         y += 15;
