@@ -109,11 +109,11 @@ public class FrmLogin extends javax.swing.JFrame {
 
             // Crear nueva caja
             Cajaefectivo nuevaCaja = new Cajaefectivo();
-            nuevaCaja.setIdCorte((int) (System.currentTimeMillis() % Integer.MAX_VALUE)); // ID único
+            nuevaCaja.setIdCorte((int) (System.currentTimeMillis() % Integer.MAX_VALUE));
             nuevaCaja.setMontoInicial(montoInicial);
             nuevaCaja.setEstado((short) 0); // 0 = ABIERTA
-            nuevaCaja.setTipoCorte('X'); // Corte del día (puedes cambiar)
-            nuevaCaja.setIdUsuario(null); // Si quieres asignarle un usuario, aquí se coloca
+            nuevaCaja.setTipoCorte('X'); // Corte del día
+            nuevaCaja.setIdUsuario(null);
 
             try {
                 cajaController.create(nuevaCaja);
@@ -125,11 +125,11 @@ public class FrmLogin extends javax.swing.JFrame {
 
             javax.swing.JOptionPane.showMessageDialog(this, "Caja iniciada correctamente.");
         } else {
-            // YA EXISTE CAJA ABIERTA → NO PEDIR MONTO
+
             System.out.println("La caja ya estaba abierta, no se pide monto.");
         }
 
-        // Entrar al sistema
+      
         FrmComandas comandas = new FrmComandas();
         comandas.setVisible(true);
         this.setVisible(false);
