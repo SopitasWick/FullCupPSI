@@ -54,12 +54,15 @@ public class FrmComandas extends javax.swing.JFrame {
         
         panelComandaGeneral = new JPanelComandasGeneral();
         
-        panelComandaGeneral.setBounds(0,0,1210, 560);
+        panelComandaGeneral.setBounds(0,0,jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
         
         jPanelSeccion.add(panelComandaGeneral);
         
         jPanelSeccion.revalidate();
         jPanelSeccion.repaint();
+        
+        
+        jPanelNavegacion.setVisible(false);
         
         
     }

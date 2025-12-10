@@ -5,23 +5,29 @@
 package Formularios.paneles;
 
 import Entidades.Comanda;
+import Entidades.Detallecomanda;
 import Entidades.Extra;
 import Facades.IFachadaComandasControlador;
+import Facades.IFachadaDetallesComandaControlador;
 import Formularios.FrmComandas;
 import Formularios.paneles.elementos.JPanelComandas;
 import Formularios.paneles.elementos.JPanelExtra;
 import Implementaciones.GestionarComandaControlador;
+import Implementaciones.GestionarDetallesComandaControlador;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import utilerias.ConstantesGUI;
 
@@ -33,9 +39,11 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
     
     private final IFachadaComandasControlador fComandas = new GestionarComandaControlador();
+    private final IFachadaDetallesComandaControlador fDC = new GestionarDetallesComandaControlador();
+
 
     
-    
+    SimpleDateFormat formato = new SimpleDateFormat("HH:mm dd/MM/yyyy");
     
     Dimension dimensionComActivas = null;
     Dimension dimensionComCompletadas = null;
@@ -204,6 +212,18 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
     
     
     
+    public static boolean esHoy(Date fecha) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(fecha);
+
+        Calendar calHoy = Calendar.getInstance();
+
+        return cal1.get(Calendar.YEAR) == calHoy.get(Calendar.YEAR) &&
+               cal1.get(Calendar.DAY_OF_YEAR) == calHoy.get(Calendar.DAY_OF_YEAR);
+    }
+    
+    
+    
     private void cargarComandasActivas(){
         
         jPanelListaComandasActivas.removeAll();
@@ -217,9 +237,17 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
             listaProvisional = listaComandas;
             
+            
+            List<Comanda> comandasDeHoy = listaProvisional.stream()
+            .filter(c -> esHoy(c.getFechaHoracomanda()))
+            .sorted((a, b) -> b.getFechaHoracomanda().compareTo(a.getFechaHoracomanda())) // más reciente primero
+            .collect(Collectors.toList());
+            
+            
+            
             int alturaProducto = 95; 
                 
-            for(int i = 0; i < listaProvisional.size(); i++){    
+            for(int i = 0; i < comandasDeHoy.size(); i++){    
                 
                 JPanelComandas panelComanda = new JPanelComandas();
                 
@@ -229,9 +257,9 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
                 panelComanda.setBackground(Color.decode("#FFFFFF"));
                 
 
-                panelComanda.getJblNombreComanda().setText("Comanda: " + i + " - " + listaProvisional.get(i).getFechaHoracomanda());
-                panelComanda.getJblNumProductos().setText("Productos: " + String.valueOf(listaProvisional.get(i).getDetallecomandaList().size()));
-                panelComanda.getJblPrecioProducto().setText("$ " + listaProvisional.get(i).getTotalComanda());
+                panelComanda.getJblNombreComanda().setText("Comanda: " + i + " - " + formato.format(comandasDeHoy.get(i).getFechaHoracomanda()));
+                panelComanda.getJblNumProductos().setText("Productos: " + String.valueOf(comandasDeHoy.get(i).getDetallecomandaList().size()));
+                panelComanda.getJblPrecioProducto().setText("$ " + comandasDeHoy.get(i).getTotalComanda());
                 
                 
                 panelComanda.getJPanelEstado().setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -239,7 +267,7 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
                 
 
                 int iProvisional = i;
-                Comanda co = listaProvisional.get(i);
+                Comanda co = comandasDeHoy.get(i);
 
                 panelComanda.addMouseListener(new MouseAdapter() {
                     @Override
@@ -294,6 +322,7 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
                                 fComandas.comandaEliminada(co.getIdComanda());
                                 JOptionPane.showMessageDialog(null, "La comanda ha sido Eliminada");
                                 
+                                cargarDatos();
                                 cargarComandasActivas();
 
 
@@ -337,7 +366,8 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
                             if (opcion == JOptionPane.YES_OPTION) {
 
-                                fComandas.comandaCompletada(co.getIdComanda());                                
+                                fComandas.comandaCompletada(co.getIdComanda());  
+                                cargarDatos();
                                 cargarComandasActivas();
                                 cargarComandasCompletadas();
 
@@ -414,9 +444,18 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
 
             listaProvisional = listaComandasCompletadas;
             
+            
+            List<Comanda> comandasDeHoy = listaProvisional.stream()
+            .filter(c -> esHoy(c.getFechaHoracomanda()))
+            .sorted((a, b) -> b.getFechaHoracomanda().compareTo(a.getFechaHoracomanda())) // más reciente primero
+            .collect(Collectors.toList());
+            
+            
+            
+            
             int alturaProducto = 95; 
                 
-            for(int i = 0; i < listaProvisional.size(); i++){    
+            for(int i = 0; i < comandasDeHoy.size(); i++){    
                 
                 JPanelComandas panelComanda = new JPanelComandas();
                 
@@ -425,16 +464,21 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
                 panelComanda.setAlignmentX(Component.LEFT_ALIGNMENT);
                 panelComanda.setBackground(Color.decode("#FFFFFF"));
 
+                List<Detallecomanda> numDetalle = new ArrayList<>();
+                try {
+                    numDetalle = fDC.obtenerDetallesComandasPorComanda(comandasDeHoy.get(i));
+                } catch (Exception ex) {
+                    Logger.getLogger(JPanelComandasGeneral.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
-
-                panelComanda.getJblNombreComanda().setText("Comanda: " + i + " - " + listaProvisional.get(i).getFechaHoracomanda());
-                panelComanda.getJblNumProductos().setText("Productos: " + String.valueOf(listaProvisional.get(i).getDetallecomandaList().size()));
-                panelComanda.getJblPrecioProducto().setText("$ " + listaProvisional.get(i).getTotalComanda());
+                panelComanda.getJblNombreComanda().setText("Comanda: " + i + " - " + formato.format(comandasDeHoy.get(i).getFechaHoracomanda()));
+                panelComanda.getJblNumProductos().setText("Productos: " + String.valueOf(numDetalle.size()));
+                panelComanda.getJblPrecioProducto().setText("$ " + comandasDeHoy.get(i).getTotalComanda());
 
                 panelComanda.getJPanelEstado().setVisible(false);
                 
                 int iProvisional = i;
-                Comanda co = listaProvisional.get(i);
+                Comanda co = comandasDeHoy.get(i);
                 
                 panelComanda.setBackground(Color.decode("#A2F274"));
 
@@ -461,15 +505,6 @@ public class JPanelComandasGeneral extends javax.swing.JPanel {
                 });
 
                 panelComanda.getJblEliminarComanda().setVisible(false);
-//                panelComanda.getJblEliminarComanda().addMouseListener(new MouseAdapter(){
-//
-//                    @Override
-//                    public void mouseClicked(MouseEvent e){
-//
-//
-//                    }
-//
-//                });
                 
                
                if(jPanelListaComandasCompletadas.getPreferredSize().height < alturaProducto * i){

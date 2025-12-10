@@ -140,7 +140,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         
         if(accion == ConstantesGUI.SOLOLECTURA){
             cbCategorias.setEnabled(false);
-            btnGuardar2.setVisible(false);
             btnRegistrarVenta.setVisible(false);
             
             txtNombreCliente.setEditable(false);
@@ -445,7 +444,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                             panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.SOLOLECTURA, FrmComandas.comanda, detalle.getIdProducto());
                         }
                         else{
-                            panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.ELIMINAR, FrmComandas.comanda, detalle.getIdProducto());
+                            panelComandaDetalle = new JPanelComandasDetalleProducto(ConstantesGUI.EDITAR, FrmComandas.comanda, detalle.getIdProducto());
 
                         }
                         
@@ -538,12 +537,15 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
     
    private void volverSeccionAnterior(){
         
+        FrmComandas.comanda = null;
+        FrmComandas.detalleComanda = null;
+        
         FrmComandas.jPanelSeccion.removeAll();
         
-        JPanelComandas panelComandas = new JPanelComandas();
+        JPanelComandasGeneral panelGeneral = new JPanelComandasGeneral();
         
-        panelComandas.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
-        FrmComandas.jPanelSeccion.add(panelComandas);
+        panelGeneral.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
+        FrmComandas.jPanelSeccion.add(panelGeneral);
 
         FrmComandas.jPanelSeccion.revalidate();
         FrmComandas.jPanelSeccion.repaint();
@@ -576,7 +578,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         txtimpuestos = new javax.swing.JLabel();
         txtSubtotal = new javax.swing.JLabel();
-        btnGuardar2 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         txtTotal = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -677,7 +678,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
         btnCancelar.setBackground(new java.awt.Color(242, 243, 245));
         btnCancelar.setForeground(new java.awt.Color(55, 65, 81));
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setText("Volver");
         btnCancelar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnCancelar.setMaximumSize(new java.awt.Dimension(180, 40));
         btnCancelar.setPreferredSize(new java.awt.Dimension(180, 40));
@@ -687,7 +688,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
             }
         });
         jPanelTotal.add(btnCancelar);
-        btnCancelar.setBounds(220, 150, 150, 40);
+        btnCancelar.setBounds(30, 150, 150, 40);
 
         jLabel5.setForeground(new java.awt.Color(75, 85, 99));
         jLabel5.setText("Subtotal:");
@@ -708,20 +709,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
         txtSubtotal.setText("$0.00");
         jPanelTotal.add(txtSubtotal);
         txtSubtotal.setBounds(300, 30, 60, 16);
-
-        btnGuardar2.setBackground(new java.awt.Color(242, 243, 245));
-        btnGuardar2.setForeground(new java.awt.Color(55, 65, 81));
-        btnGuardar2.setText("Guardar");
-        btnGuardar2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar2.setMaximumSize(new java.awt.Dimension(180, 40));
-        btnGuardar2.setPreferredSize(new java.awt.Dimension(180, 40));
-        btnGuardar2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardar2ActionPerformed(evt);
-            }
-        });
-        jPanelTotal.add(btnGuardar2);
-        btnGuardar2.setBounds(30, 150, 150, 40);
 
         jLabel8.setFont(new java.awt.Font("Helvetica Neue", 1, 17)); // NOI18N
         jLabel8.setText("Total:");
@@ -793,30 +780,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
     private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
         // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        
-        FrmComandas.comanda = null;
-        FrmComandas.detalleComanda = null;
-        
-        FrmComandas.jPanelSeccion.removeAll();
-        
-        JPanelComandasGeneral panelGeneral = new JPanelComandasGeneral();
-        
-        panelGeneral.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
-        FrmComandas.jPanelSeccion.add(panelGeneral);
-
-        FrmComandas.jPanelSeccion.revalidate();
-        FrmComandas.jPanelSeccion.repaint();
-        
-        
-
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnGuardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar2ActionPerformed
         if (FrmComandas.comanda != null && !detallesComandas.isEmpty()) {
             try {
                 // Reiniciar el total para evitar acumulación en múltiples clics
@@ -886,6 +849,9 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                     System.err.println("⚠️ No se encontró una impresora predeterminada.");
                 }
 
+                
+                FComandas.comandaCompletada(FrmComandas.comanda.getIdComanda());
+                
                 // Cerrar ventana actual y volver a la lista de comandas
                 volverSeccionAnterior();
 
@@ -900,7 +866,15 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                 "Debe seleccionar al menos un producto",
                 "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnGuardar2ActionPerformed
+        
+
+    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        volverSeccionAnterior();
+      
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void cbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriasActionPerformed
         // TODO add your handling code here:}
@@ -933,7 +907,6 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar2;
     private javax.swing.JButton btnRegistrarVenta;
     private javax.swing.JComboBox<String> cbCategorias;
     private javax.swing.JLabel jLabel2;

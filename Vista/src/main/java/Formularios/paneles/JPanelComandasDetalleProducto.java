@@ -331,7 +331,10 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
             }
                  
             int alturaProducto = 55; 
-                
+               
+            
+            final List<JPanelExtra> panelesExtras = new ArrayList<>();
+
             for(int i = 0; i < listaProvisional.size(); i++){    
                 
                 JPanelExtra extra = new JPanelExtra();
@@ -346,11 +349,20 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                 extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
                 extra.getJblPrecioExtra().setLocation(extra.getJblNombreExtra().getBounds().x + 120, extra.getJblPrecioExtra().getBounds().y);
 
-                int iProvisional = i;        
+                int iProvisional = i;      
+                
+                panelesExtras.add(extra);
 
                 extra.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        
+                        for (JPanelExtra p : panelesExtras) {
+                            if (p != extra) {
+                                p.setSelecionado(false);
+                                p.setBackground(Color.decode("#FFFFFF"));
+                            }
+                        }
                         
                         if(extraVaso != null ){
                             if(extraVaso.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){
@@ -444,6 +456,8 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                 }
 
                 int alturaProducto = 55; 
+                
+                final List<JPanelExtra> panelesExtras = new ArrayList<>();
 
                 for(int i = 0; i < listaProvisional.size(); i++){    
 
@@ -459,11 +473,21 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                     extra.getJblPrecioExtra().setText(String.valueOf(listaProvisional.get(i).getPrecio()));
                     extra.getJblPrecioExtra().setLocation(extra.getJblNombreExtra().getBounds().x + 120, extra.getJblPrecioExtra().getBounds().y);
 
-                    int iProvisional = i;        
+                    int iProvisional = i;       
+                    
+                    panelesExtras.add(extra);
+                    
 
                     extra.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
+                            
+                            for (JPanelExtra p : panelesExtras) {
+                                if (p != extra) {
+                                    p.setSelecionado(false);
+                                    p.setBackground(Color.decode("#FFFFFF"));
+                                }
+                            }
 
                             if(extraLeche != null ){
                                 if(extraLeche.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){
@@ -662,6 +686,8 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
             }
                  
             int alturaProducto = 55; 
+            
+            final List<JPanelExtra> panelesExtras = new ArrayList<>();
                 
             for(int i = 0; i < listaProvisional.size(); i++){    
                 
@@ -681,14 +707,25 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
 
                 
                 if(extraVaso != null){
-                    extra.setBackground(Color.decode("#E0E0E0"));
+                    if(extra.getJblNombreExtra().getText().equalsIgnoreCase(extraVaso.getNombreExtra())){
+                        extra.setBackground(Color.decode("#E0E0E0"));
+                   }
                 }
                 
+                panelesExtras.add(extra);
                 
-                if(accion != ConstantesGUI.ELIMINAR || accion != ConstantesGUI.SOLOLECTURA){
+                
+                if(!(accion == ConstantesGUI.ELIMINAR || accion == ConstantesGUI.SOLOLECTURA)){
                     extra.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
+                            
+                            for (JPanelExtra p : panelesExtras) {
+                                if (p != extra) {
+                                    p.setSelecionado(false);
+                                    p.setBackground(Color.decode("#FFFFFF"));
+                                }
+                            }
 
                             if(extraVaso != null ){
                                 if(extraVaso.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){
@@ -783,6 +820,9 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                 }
 
                 int alturaProducto = 55; 
+                
+                final List<JPanelExtra> panelesExtras = new ArrayList<>();
+                
 
                 for(int i = 0; i < listaProvisional.size(); i++){    
 
@@ -801,14 +841,25 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
                     int iProvisional = i;   
                     
                     if(extraLeche != null){
-                        extra.setBackground(Color.decode("#E0E0E0"));
+                        if(extra.getJblNombreExtra().getText().equalsIgnoreCase(extraLeche.getNombreExtra())){
+                            extra.setBackground(Color.decode("#E0E0E0"));
+                        }
                     }
                     
+                    panelesExtras.add(extra);
                     
-                    if(accion != ConstantesGUI.ELIMINAR || accion != ConstantesGUI.SOLOLECTURA){
+                    
+                    if(!(accion == ConstantesGUI.ELIMINAR || accion == ConstantesGUI.SOLOLECTURA)){
                         extra.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
+                                
+                                for (JPanelExtra p : panelesExtras) {
+                                if (p != extra) {
+                                    p.setSelecionado(false);
+                                    p.setBackground(Color.decode("#FFFFFF"));
+                                }
+                            }
 
                                 if(extraLeche != null ){
                                     if(extraLeche.getIdExtra().toString().equalsIgnoreCase(listaProvisional.get(iProvisional).getIdExtra().toString())){

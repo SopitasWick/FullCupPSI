@@ -72,7 +72,7 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
     
         HintToTextField.addHint(txtBuscarUsuario, "Buscar Usuario");
         
-        
+        cbTipoExtras.setEnabled(false);
        
     
         btnAccion.setText("Guardar");
@@ -160,7 +160,7 @@ public class JPanelAdminExtras extends javax.swing.JPanel {
                     txtNombreExtra.setText(listaProvisional.get(iProvisional).getNombreExtra());
                     jSpinnerPrecioExtra.setValue(listaProvisional.get(iProvisional).getPrecio());
 
-                    cbTipoExtras.setEnabled(true);
+                    cbTipoExtras.setEnabled(false);
                     txtNombreExtra.setEditable(true);
                     jSpinnerPrecioExtra.setEnabled(true);
 
@@ -381,16 +381,17 @@ private void guardarExtra(){
         e.printStackTrace();
     }
 }
+    
+    
     private void limpiarFormulario(){
     // Habilitar todos los campos
-    cbTipoExtras.setEnabled(true);
+    cbTipoExtras.setEnabled(false);
     txtNombreExtra.setEditable(true);
     jSpinnerPrecioExtra.setEnabled(true);
     
     // Limpiar los campos
     txtNombreExtra.setText("");
     jSpinnerPrecioExtra.setValue(0);
-    cbTipoExtras.setSelectedIndex(0);
     
     // Configurar el botón para guardar
     btnAccion.setText("Guardar");
@@ -697,6 +698,9 @@ private void guardarExtra(){
         
         seleccion = "Tipo vaso";
         
+        cbTipoExtras.setSelectedIndex(0);
+        cbTipoExtras.setEnabled(false);
+        
         comprobarSeleccion();
         
         dimension = null;
@@ -708,6 +712,9 @@ private void guardarExtra(){
         // TODO add your handling code here:
         
         seleccion = "Tipo leche";
+        
+        cbTipoExtras.setSelectedIndex(1);
+        cbTipoExtras.setEnabled(false);
         
         comprobarSeleccion();
         
@@ -721,6 +728,9 @@ private void guardarExtra(){
         seleccion = "Tipo extra";
         
         comprobarSeleccion();
+        
+        cbTipoExtras.setSelectedIndex(2);
+        cbTipoExtras.setEnabled(false);
         
         dimension = null;
         cargarExtras();
@@ -738,6 +748,7 @@ private void guardarExtra(){
         if(!seleccion.equalsIgnoreCase("Tipo vaso")){
             jPanelSeccionVasos.setBackground(colorNoSeleccion);
         }
+        comprobarSeleccion();
     }//GEN-LAST:event_jPanelSeccionVasosMouseExited
 
     private void jPanelSeccionLechesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionLechesMouseEntered
@@ -752,6 +763,7 @@ private void guardarExtra(){
         if(!seleccion.equalsIgnoreCase("Tipo leche")){
             jPanelSeccionLeches.setBackground(colorNoSeleccion);
         }
+        comprobarSeleccion();
     }//GEN-LAST:event_jPanelSeccionLechesMouseExited
 
     private void jPanelSeccionExtrasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSeccionExtrasMouseEntered
@@ -767,6 +779,7 @@ private void guardarExtra(){
         if(!seleccion.equalsIgnoreCase("Extra bebidas")){
             jPanelSeccionExtras.setBackground(colorNoSeleccion);
         }
+        comprobarSeleccion();
     }//GEN-LAST:event_jPanelSeccionExtrasMouseExited
 
     private void btnAccionNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionNuevoActionPerformed

@@ -1002,7 +1002,7 @@ private void agregarProducto(){
         jblResumenCategoria.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jblResumenCategoria.setText("Categoria");
         jPanelResumenProducto.add(jblResumenCategoria);
-        jblResumenCategoria.setBounds(110, 140, 70, 30);
+        jblResumenCategoria.setBounds(110, 140, 130, 30);
 
         jblResumenNombre1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jblResumenNombre1.setText("Nombre");
