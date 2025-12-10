@@ -16,6 +16,8 @@ import JPA.exceptions.PreexistingEntityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -43,11 +45,15 @@ public class VentaJpaController implements Serializable {
         LocalDateTime ini = hoy.atStartOfDay();
         LocalDateTime fin = hoy.atTime(LocalTime.MAX);
 
+        // Convertir LocalDateTime → java.util.Date
+        Date iniDate = Date.from(ini.atZone(ZoneId.systemDefault()).toInstant());
+        Date finDate = Date.from(fin.atZone(ZoneId.systemDefault()).toInstant());
+
         try {
             return em.createQuery(
                     "SELECT v FROM Venta v WHERE v.fechaHora BETWEEN :ini AND :fin", Venta.class)
-                    .setParameter("ini", ini)
-                    .setParameter("fin", fin)
+                    .setParameter("ini", iniDate)
+                    .setParameter("fin", finDate)
                     .getResultList();
         } finally {
             em.close();

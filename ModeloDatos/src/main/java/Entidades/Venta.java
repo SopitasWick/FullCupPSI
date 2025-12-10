@@ -45,6 +45,13 @@ public class Venta implements Serializable {
     private Float total;
     @Column(name = "metodoPago")
     private String metodoPago;
+    @Column(name = "pagoEfectivo")
+    private Float pagoEfectivo;
+    @Column(name = "pagoTransferencia")
+    private Float pagoTransferencia;
+
+    @Column(name = "pagoTarjeta")
+    private Float pagoTarjeta;
     @JoinColumn(name = "idComanda", referencedColumnName = "idComanda")
     @ManyToOne
     private Comanda idComanda;
@@ -66,6 +73,30 @@ public class Venta implements Serializable {
 
     public Date getFechaHora() {
         return fechaHora;
+    }
+
+    public Float getPagoTransferencia() {
+        return pagoTransferencia;
+    }
+
+    public void setPagoTransferencia(Float pagoTransferencia) {
+        this.pagoTransferencia = pagoTransferencia;
+    }
+
+    public Float getPagoEfectivo() {
+        return pagoEfectivo;
+    }
+
+    public void setPagoEfectivo(Float pagoEfectivo) {
+        this.pagoEfectivo = pagoEfectivo;
+    }
+
+    public Float getPagoTarjeta() {
+        return pagoTarjeta;
+    }
+
+    public void setPagoTarjeta(Float pagoTarjeta) {
+        this.pagoTarjeta = pagoTarjeta;
     }
 
     public void setFechaHora(Date fechaHora) {
@@ -120,5 +151,5 @@ public class Venta implements Serializable {
     public String toString() {
         return "Entidades.Venta[ idVenta=" + idVenta + " ]";
     }
-    
+
 }

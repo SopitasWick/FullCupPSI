@@ -6,6 +6,8 @@ package Formularios;
 
 import Entidades.Cajaefectivo;
 import Entidades.Venta;
+import JPA.HistorialcorteJpaController;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -17,6 +19,10 @@ public class FrmPanelCorteZ extends javax.swing.JFrame {
 
     JPA.VentaJpaController ctrlVenta = new JPA.VentaJpaController();
     JPA.CajaefectivoJpaController ctrlCaja = new JPA.CajaefectivoJpaController();
+    double totalEfectivo = 0;
+    double totalTarjeta = 0;
+    double totalTransferencia = 0;
+    double totalMixto = 0;
 
     /**
      * Creates new form FrmPanelCorteZ
@@ -29,31 +35,45 @@ public class FrmPanelCorteZ extends javax.swing.JFrame {
     private void cargarDatosCorteZ() {
 
         try {
-
             List<Venta> ventas = ctrlVenta.obtenerVentasDeHoy();
 
             double totalEfectivo = 0;
             double totalTarjeta = 0;
+            double totalTransferencia = 0;
+            double totalMixto = 0;
 
             for (Venta v : ventas) {
 
-                if (v.getMetodoPago().equalsIgnoreCase("EFECTIVO")) {
-                    totalEfectivo += v.getTotal();
-                }
+                switch (v.getMetodoPago().toUpperCase()) {
+                    case "EFECTIVO":
+                        totalEfectivo += v.getTotal();
+                        break;
 
-                if (v.getMetodoPago().equalsIgnoreCase("TARJETA")) {
-                    totalTarjeta += v.getTotal();
+                    case "TARJETA":
+                        totalTarjeta += v.getTotal();
+                        break;
+
+                    case "TRANSFERENCIA":
+                        totalTransferencia += v.getTotal();
+                        break;
+
+                    case "MIXTO":
+                        totalMixto += v.getTotal();
+                        break;
                 }
             }
 
-            double totalVentas = totalEfectivo + totalTarjeta;
+            double totalVentas = totalEfectivo + totalTarjeta + totalTransferencia + totalMixto;
 
             Cajaefectivo caja = ctrlCaja.obtenerCajaAbierta();
 
             lblMontoInicial.setText("$ " + caja.getMontoInicial());
             lblTotalEfectivo.setText("$ " + totalEfectivo);
             lblTotalTarjeta.setText("$ " + totalTarjeta);
+            txtTransferenciaMonto.setText("$ " + totalTransferencia);
+            txtMixtoMonto.setText("$ " + totalMixto);
             lblTotalVentas.setText("$ " + totalVentas);
+
             lblMontoFinal.setText("$ " + (caja.getMontoInicial() + totalEfectivo));
 
         } catch (Exception e) {
@@ -73,8 +93,10 @@ public class FrmPanelCorteZ extends javax.swing.JFrame {
 
         lblTotalEfectivo.setText("$" + efectivo);
         lblTotalTarjeta.setText("$" + tarjeta);
-        txtTransferenciaMonto.setText("$" + transferencia);
-        txtMixtoMonto.setText("$" + mixto);
+
+        txtTransferenciaMonto.setText("$ " + totalTransferencia);
+        txtMixtoMonto.setText("$ " + totalMixto);
+
     }
 
     /**
@@ -243,50 +265,42 @@ public class FrmPanelCorteZ extends javax.swing.JFrame {
 
     private void btnCierreDeCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCierreDeCajaActionPerformed
         try {
+            String texto = txtMontoContadoEnCaja.getText().replace("$", "").trim();
+            double montoContado = Double.parseDouble(texto);
 
-            Cajaefectivo caja = ctrlCaja.obtenerCajaAbierta();
-            if (caja == null) {
-                JOptionPane.showMessageDialog(null, "No hay caja abierta.");
+            Cajaefectivo cajaActual = ctrlCaja.obtenerCajaAbierta();
+
+            if (cajaActual == null) {
+                JOptionPane.showMessageDialog(this, "No hay caja abierta.");
                 return;
             }
 
-            // Valores calculados previamente
-            double montoFinal = caja.getMontoInicial() + Double.parseDouble(lblTotalEfectivo.getText().replace("$ ", ""));
+            double esperado = cajaActual.getMontoInicial() + totalEfectivo;
+            double diferencia = montoContado - esperado;
 
-            caja.setMontoFinal((float) montoFinal);
-            caja.setEstado((short) 1);
-            caja.setTipoCorte('Z');
+            cajaActual.setEstado((short) 1);
+            cajaActual.setFechaHoraCorte(new Date());
+            cajaActual.setMontoFinal((float) montoContado);
+            cajaActual.setDiferencia((float) diferencia);
+            cajaActual.setTipoCorte('Z');
 
-            ctrlCaja.edit(caja);
+            ctrlCaja.edit(cajaActual);
 
-            JOptionPane.showMessageDialog(null,
-                    "Corte Z generado correctamente.\n"
-                    + "Monto Final: $" + montoFinal,
-                    "Corte Z", JOptionPane.INFORMATION_MESSAGE);
+            // ---- GUARDAR HISTORIAL ----
+            HistorialcorteJpaController ctrlHist = new HistorialcorteJpaController();
+            ctrlHist.registrarHistorial(cajaActual, 'Z');
+
+            JOptionPane.showMessageDialog(this,
+                    "Corte Z realizado correctamente.\nDiferencia final: $" + diferencia);
 
             this.dispose();
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al hacer corte Z: " + ex.getMessage());
         }
 
     }//GEN-LAST:event_btnCierreDeCajaActionPerformed
-
-    private void cerrarCaja() {
-        double contado = Double.parseDouble(txtMontoContadoEnCaja.getText().replace("$", ""));
-
-        double esperado = Double.parseDouble(lblMontoFinal.getText().replace("$", ""));
-
-        double diferencia = contado - esperado;
-
-        JOptionPane.showMessageDialog(this,
-                "Cierre realizado\n"
-                + "Esperado: $" + esperado + "\n"
-                + "Contado: $" + contado + "\n"
-                + "Diferencia: " + diferencia);
-
-        // Aquí llamas a tu DAO para registrar y reiniciar montos
-    }
 
     /**
      * @param args the command line arguments

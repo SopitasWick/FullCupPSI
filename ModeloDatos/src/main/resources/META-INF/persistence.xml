@@ -23,6 +23,7 @@
     <class>Entidades.ExtraDetalleComanda</class>
     <class>Entidades.Extra</class>
     <class>Entidades.ExtrasDetalleComanda</class>
+    <class>Entidades.Historialcorte</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/fullcup?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;serverTimezone=America/Mazatlan "/>
       <property name="javax.persistence.jdbc.user" value="root"/>

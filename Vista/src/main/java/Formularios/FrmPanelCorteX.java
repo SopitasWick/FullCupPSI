@@ -6,7 +6,10 @@ package Formularios;
 
 import Entidades.Cajaefectivo;
 import Entidades.Venta;
+import JPA.HistorialcorteJpaController;
+import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +21,10 @@ public class FrmPanelCorteX extends javax.swing.JFrame {
      * Creates new form FrmPanelCorteZ
      */
     JPA.VentaJpaController ctrlVenta = new JPA.VentaJpaController();
+    double totalEfectivo = 0;
+    double totalTarjeta = 0;
+    double totalTransferencia = 0;
+    double totalMixto = 0;
 
     public FrmPanelCorteX() {
         initComponents();
@@ -31,26 +38,36 @@ public class FrmPanelCorteX extends javax.swing.JFrame {
             // 1. Obtener ventas del día (o fecha seleccionada)
             List<Venta> ventas = ctrlVenta.obtenerVentasDeHoy();
 
-            double totalEfectivo = 0;
-            double totalTarjeta = 0;
-
             for (Venta v : ventas) {
 
-                if (v.getMetodoPago().equalsIgnoreCase("EFECTIVO")) {
-                    totalEfectivo += v.getTotal();
-                }
+                switch (v.getMetodoPago().toUpperCase()) {
 
-                if (v.getMetodoPago().equalsIgnoreCase("TARJETA")) {
-                    totalTarjeta += v.getTotal();
+                    case "EFECTIVO":
+                        totalEfectivo += v.getTotal();
+                        break;
+
+                    case "TARJETA":
+                        totalTarjeta += v.getTotal();
+                        break;
+
+                    case "TRANSFERENCIA":
+                        totalTransferencia += v.getTotal();
+                        break;
+
+                    case "MIXTO":
+                        totalMixto += v.getTotal();
+                        break;
                 }
             }
 
-            double totalVentas = totalEfectivo + totalTarjeta;
+            double totalVentas = totalEfectivo + totalTarjeta + totalTransferencia + totalMixto;
 
             // 2. Mostrar en pantalla
             lblTotalVentas.setText("$ " + totalVentas);
             lblTotalEfectivo.setText("$ " + totalEfectivo);
             lblTotalTarjeta.setText("$ " + totalTarjeta);
+            txtTransferenciaMonto.setText("$ " + totalTransferencia);
+            txtMixtoMonto.setText("$ " + totalMixto);
 
             // 3. Calcular monto estimado en caja
             double montoInicial = obtenerMontoInicialDelDia();
@@ -91,6 +108,7 @@ public class FrmPanelCorteX extends javax.swing.JFrame {
         lblTotalTarjeta.setText("$" + tarjeta);
         txtTransferenciaMonto.setText("$" + transferencia);
         txtMixtoMonto.setText("$" + mixto);
+
     }
 
     /**
@@ -258,7 +276,40 @@ public class FrmPanelCorteX extends javax.swing.JFrame {
     }//GEN-LAST:event_txtMontoContadoEnCajaActionPerformed
 
     private void btnCorteDeCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorteDeCajaActionPerformed
-        calcularCorteX();
+        try {
+            String texto = txtMontoContadoEnCaja.getText().replace("$", "").trim();
+            double montoContado = Double.parseDouble(texto);
+            JPA.CajaefectivoJpaController ctrlCaja = new JPA.CajaefectivoJpaController();
+            Cajaefectivo cajaActual = ctrlCaja.obtenerCajaAbierta();
+
+            if (cajaActual == null) {
+                JOptionPane.showMessageDialog(this, "No hay caja abierta.");
+                return;
+            }
+
+            double esperado = cajaActual.getMontoInicial();
+            double diferencia = montoContado - esperado;
+
+            cajaActual.setMontoFinal((float) montoContado);
+            cajaActual.setDiferencia((float) diferencia);
+            cajaActual.setFechaHoraCorte(new Date());
+            cajaActual.setTipoCorte('X');
+            cajaActual.setEstado((short) 0);
+
+            ctrlCaja.edit(cajaActual);
+
+            // ---- GUARDAR HISTORIAL ----
+            HistorialcorteJpaController ctrlHist = new HistorialcorteJpaController();
+            ctrlHist.registrarHistorial(cajaActual, 'X');
+
+            JOptionPane.showMessageDialog(this,
+                    "Corte X realizado.\nDiferencia: $" + diferencia);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al hacer corte X: " + ex.getMessage());
+        }
+
     }//GEN-LAST:event_btnCorteDeCajaActionPerformed
 
     /**

@@ -4,7 +4,7 @@ Implementaciones\GestionarDetallesComandaControlador.class
 Implementaciones\GestionarProductoControlador.class
 Pruebas\PruebasExtra.class
 Implementaciones\GestionarComandaControlador.class
-Pruebas\PruebasTamaÃ±oVaso.class
+Pruebas\PruebasTamañoVaso.class
 Facades\IFachadaDetallesComandaControlador.class
 Facades\IFachadaExtraDetalleComandaControlador.class
 Implementaciones\GestionarCategoriaControlador.class

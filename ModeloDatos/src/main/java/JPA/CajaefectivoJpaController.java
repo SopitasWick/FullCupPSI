@@ -61,18 +61,28 @@ public class CajaefectivoJpaController implements Serializable {
     }
 
     public Cajaefectivo obtenerCajaAbierta() {
-
         EntityManager em = getEntityManager();
-
         try {
+            // Traer SOLO la última caja con estado = 0 (ABIERTA)
             List<Cajaefectivo> lista = em.createQuery(
-                    "SELECT c FROM Cajaefectivo c WHERE c.estado = 0", Cajaefectivo.class)
+                    "SELECT c FROM Cajaefectivo c WHERE c.estado = 0 ORDER BY c.idCorte DESC", Cajaefectivo.class)
+                    .setMaxResults(1)
                     .getResultList();
 
             return lista.isEmpty() ? null : lista.get(0);
-
         } finally {
             em.close();
+        }
+    }
+
+    public Cajaefectivo obtenerUltimoCorte() {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT c FROM Cajaefectivo c ORDER BY c.idCorte DESC", Cajaefectivo.class)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
         }
     }
 
