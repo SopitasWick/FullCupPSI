@@ -181,15 +181,18 @@ public class JPanelAdminProductosCRUD extends javax.swing.JPanel {
         
         if(accion == ConstantesGUI.NUEVO){
             btnAccion.setText("Guardar");
+            jblAdminProductos.setText("Guardar Producto");
         }
         
         if(accion == ConstantesGUI.EDITAR){
             accionesEditar();
+            jblAdminProductos.setText("Editar Producto");
         }
         
         if(accion == ConstantesGUI.ELIMINAR){
             System.out.println("producto extras: " + producto.getExtras().size());
             accionesEliminar();
+            jblAdminProductos.setText("Eliminar Producto");
         }
         
         

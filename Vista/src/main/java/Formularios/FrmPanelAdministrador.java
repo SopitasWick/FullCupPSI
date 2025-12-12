@@ -5,10 +5,13 @@
 package Formularios;
 
 import Formularios.paneles.JPanelAdminCategorias;
+import Formularios.paneles.JPanelAdminCortes;
 import Formularios.paneles.JPanelAdminExtras;
 import Formularios.paneles.JPanelAdminProductos;
 import Formularios.paneles.JPanelAdminUsuarios;
 import java.awt.Color;
+import java.net.URL;
+import javax.swing.ImageIcon;
 
 
 /**
@@ -18,12 +21,13 @@ import java.awt.Color;
 public class FrmPanelAdministrador extends javax.swing.JFrame {
 
   
-    FrmLogin login;
+    FrmComandas comand;
     
     JPanelAdminProductos panelProductos = new JPanelAdminProductos();
     JPanelAdminCategorias panelCategorias = new JPanelAdminCategorias();
     JPanelAdminUsuarios panelUsuarios = new JPanelAdminUsuarios();
     JPanelAdminExtras panelExtras = new JPanelAdminExtras();
+    JPanelAdminCortes panelCortes = new JPanelAdminCortes();
     
     
     Color colorSeleccion = Color.decode("#E0E0E0");
@@ -37,10 +41,10 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
     /**
      * Creates new form FrmDetallesProductos
      */
-    public FrmPanelAdministrador(FrmLogin login) {
+    public FrmPanelAdministrador(FrmComandas comand) {
         initComponents();
         
-        this.login = login;
+        this.comand = comand;
         
         cargarDiseno();
     }
@@ -51,11 +55,12 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         
         switch (seleccion) {
             case "productos" -> {
-                jPanelAdminProductos1.setBackground(colorSeleccion);
+                jPanelAdminProductos.setBackground(colorSeleccion);
                 
                 jPanelAdminCategoria.setBackground(colorNoSeleccion);
                 jPanelAdminExtra.setBackground(colorNoSeleccion);
                 jPanelAdminUsuario.setBackground(colorNoSeleccion);
+                jPanelAdminCortes.setBackground(colorNoSeleccion);
                 
             }
             
@@ -63,17 +68,19 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
                 jPanelAdminExtra.setBackground(colorSeleccion);
                 
                 jPanelAdminCategoria.setBackground(colorNoSeleccion);
-                jPanelAdminProductos1.setBackground(colorNoSeleccion);
+                jPanelAdminProductos.setBackground(colorNoSeleccion);
                 jPanelAdminUsuario.setBackground(colorNoSeleccion);
+                jPanelAdminCortes.setBackground(colorNoSeleccion);
                 
             }
                 
             case "categorias" -> {
                 jPanelAdminCategoria.setBackground(colorSeleccion);
                 
-                jPanelAdminProductos1.setBackground(colorNoSeleccion);
+                jPanelAdminProductos.setBackground(colorNoSeleccion);
                 jPanelAdminExtra.setBackground(colorNoSeleccion);
                 jPanelAdminUsuario.setBackground(colorNoSeleccion);
+                jPanelAdminCortes.setBackground(colorNoSeleccion);
             }
             
             case "usuarios" -> {
@@ -81,7 +88,17 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
                 
                 jPanelAdminCategoria.setBackground(colorNoSeleccion);
                 jPanelAdminExtra.setBackground(colorNoSeleccion);
-                jPanelAdminProductos1.setBackground(colorNoSeleccion);
+                jPanelAdminProductos.setBackground(colorNoSeleccion);
+                jPanelAdminCortes.setBackground(colorNoSeleccion);
+            }
+            
+            case "cortes" -> {
+                jPanelAdminCortes.setBackground(colorSeleccion);
+                
+                jPanelAdminCategoria.setBackground(colorNoSeleccion);
+                jPanelAdminExtra.setBackground(colorNoSeleccion);
+                jPanelAdminProductos.setBackground(colorNoSeleccion);
+                jPanelAdminUsuario.setBackground(colorNoSeleccion);
             }
             
             
@@ -96,7 +113,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
     
     private void cargarDiseno(){
     
-        jPanelAdminProductos1.setBackground(colorSeleccion);
+        jPanelAdminProductos.setBackground(colorSeleccion);
         
         
         
@@ -107,6 +124,10 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
         jPanelSeccion.revalidate();
         jPanelSeccion.repaint();
+        
+        
+        
+        
     }
     
     
@@ -131,7 +152,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanelAdminUsuario = new javax.swing.JPanel();
         jblIconUsuario = new javax.swing.JLabel();
         jblAdminUsuarios = new javax.swing.JLabel();
-        jPanelAdminProductos1 = new javax.swing.JPanel();
+        jPanelAdminProductos = new javax.swing.JPanel();
         jblIconProducto = new javax.swing.JLabel();
         jblAdminProductos = new javax.swing.JLabel();
         jPanelAdminCategoria = new javax.swing.JPanel();
@@ -140,6 +161,9 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanelAdminExtra = new javax.swing.JPanel();
         jblIconExtra = new javax.swing.JLabel();
         jblAdminExtras = new javax.swing.JLabel();
+        jPanelAdminCortes = new javax.swing.JPanel();
+        jblIconCorte = new javax.swing.JLabel();
+        jblAdminCortes = new javax.swing.JLabel();
         jPanelSeccion = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -176,12 +200,12 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanel3.setBounds(10, 10, 32, 32);
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(39, 24, 17));
+        jLabel2.setForeground(new java.awt.Color(255, 51, 51));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Salir");
         jLabel2.setAlignmentX(16.0F);
         jLabel2.setAlignmentY(0.0F);
-        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
@@ -236,34 +260,34 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanel4.add(jPanelAdminUsuario);
         jPanelAdminUsuario.setBounds(0, 180, 260, 60);
 
-        jPanelAdminProductos1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelAdminProductos1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanelAdminProductos1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanelAdminProductos1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jPanelAdminProductos.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelAdminProductos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelAdminProductos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanelAdminProductos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanelAdminProductos1MouseClicked(evt);
+                jPanelAdminProductosMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jPanelAdminProductos1MouseEntered(evt);
+                jPanelAdminProductosMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jPanelAdminProductos1MouseExited(evt);
+                jPanelAdminProductosMouseExited(evt);
             }
         });
-        jPanelAdminProductos1.setLayout(null);
+        jPanelAdminProductos.setLayout(null);
 
         jblIconProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/coffee.png"))); // NOI18N
         jblIconProducto.setPreferredSize(new java.awt.Dimension(20, 20));
-        jPanelAdminProductos1.add(jblIconProducto);
+        jPanelAdminProductos.add(jblIconProducto);
         jblIconProducto.setBounds(15, 12, 35, 35);
 
         jblAdminProductos.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jblAdminProductos.setText("Administrar Productos");
-        jPanelAdminProductos1.add(jblAdminProductos);
+        jPanelAdminProductos.add(jblAdminProductos);
         jblAdminProductos.setBounds(60, 18, 170, 22);
 
-        jPanel4.add(jPanelAdminProductos1);
-        jPanelAdminProductos1.setBounds(0, 0, 260, 60);
+        jPanel4.add(jPanelAdminProductos);
+        jPanelAdminProductos.setBounds(0, 0, 260, 60);
 
         jPanelAdminCategoria.setBackground(new java.awt.Color(255, 255, 255));
         jPanelAdminCategoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -325,6 +349,35 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanel4.add(jPanelAdminExtra);
         jPanelAdminExtra.setBounds(0, 60, 260, 60);
 
+        jPanelAdminCortes.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelAdminCortes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelAdminCortes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanelAdminCortes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanelAdminCortesMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanelAdminCortesMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPanelAdminCortesMouseExited(evt);
+            }
+        });
+        jPanelAdminCortes.setLayout(null);
+
+        jblIconCorte.setText("jLabel1");
+        jblIconCorte.setPreferredSize(new java.awt.Dimension(20, 20));
+        jPanelAdminCortes.add(jblIconCorte);
+        jblIconCorte.setBounds(15, 12, 35, 35);
+
+        jblAdminCortes.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblAdminCortes.setText("Administrar Cortes");
+        jPanelAdminCortes.add(jblAdminCortes);
+        jblAdminCortes.setBounds(60, 18, 180, 22);
+
+        jPanel4.add(jPanelAdminCortes);
+        jPanelAdminCortes.setBounds(0, 240, 260, 60);
+
         jPanelFondo.add(jPanel4);
         jPanel4.setBounds(0, 50, 260, 620);
 
@@ -362,7 +415,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jPanelAdminCategoriaMouseClicked
 
-    private void jPanelAdminProductos1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductos1MouseClicked
+    private void jPanelAdminProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductosMouseClicked
         // TODO add your handling code here:
         
         seleccion = "productos";
@@ -381,7 +434,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanelSeccion.repaint();
         
         
-    }//GEN-LAST:event_jPanelAdminProductos1MouseClicked
+    }//GEN-LAST:event_jPanelAdminProductosMouseClicked
 
     private void jPanelAdminExtraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminExtraMouseClicked
         // TODO add your handling code here:
@@ -414,19 +467,19 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jPanelAdminUsuarioMouseClicked
 
-    private void jPanelAdminProductos1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductos1MouseEntered
+    private void jPanelAdminProductosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductosMouseEntered
         // TODO add your handling code here:
         if(!seleccion.equalsIgnoreCase("productos")){
-            jPanelAdminProductos1.setBackground(colorHover);
+            jPanelAdminProductos.setBackground(colorHover);
         }
-    }//GEN-LAST:event_jPanelAdminProductos1MouseEntered
+    }//GEN-LAST:event_jPanelAdminProductosMouseEntered
 
-    private void jPanelAdminProductos1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductos1MouseExited
+    private void jPanelAdminProductosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminProductosMouseExited
         // TODO add your handling code here:
         if(!seleccion.equalsIgnoreCase("productos")){
-            jPanelAdminProductos1.setBackground(colorNoSeleccion);
+            jPanelAdminProductos.setBackground(colorNoSeleccion);
         }
-    }//GEN-LAST:event_jPanelAdminProductos1MouseExited
+    }//GEN-LAST:event_jPanelAdminProductosMouseExited
 
     private void jPanelAdminExtraMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminExtraMouseEntered
         // TODO add your handling code here:
@@ -472,27 +525,58 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:
-        login.setVisible(true);
+        comand.setVisible(true);
         this.dispose();
         
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jPanelAdminCortesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminCortesMouseClicked
+        // TODO add your handling code here:
+           seleccion = "cortes";
+            
+            comprobarSeleccion();
+            
+            jPanelSeccion.removeAll();
+            panelCortes.setBounds(0, 0, jPanelSeccion.getWidth(), jPanelSeccion.getHeight());
+            jPanelSeccion.add(panelCortes);
+
+            jPanelSeccion.revalidate();
+            jPanelSeccion.repaint();
+    }//GEN-LAST:event_jPanelAdminCortesMouseClicked
+
+    private void jPanelAdminCortesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminCortesMouseEntered
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("cortes")){
+            jPanelAdminCortes.setBackground(colorHover);
+        }
+    }//GEN-LAST:event_jPanelAdminCortesMouseEntered
+
+    private void jPanelAdminCortesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelAdminCortesMouseExited
+        // TODO add your handling code here:
+        if(!seleccion.equalsIgnoreCase("cortes")){
+            jPanelAdminCortes.setBackground(colorNoSeleccion);
+        }
+    }//GEN-LAST:event_jPanelAdminCortesMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelAdminCategoria;
+    private javax.swing.JPanel jPanelAdminCortes;
     private javax.swing.JPanel jPanelAdminExtra;
-    private javax.swing.JPanel jPanelAdminProductos1;
+    private javax.swing.JPanel jPanelAdminProductos;
     private javax.swing.JPanel jPanelAdminUsuario;
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelFondo;
     public static javax.swing.JPanel jPanelSeccion;
     private javax.swing.JLabel jblAdminCategorias;
+    private javax.swing.JLabel jblAdminCortes;
     private javax.swing.JLabel jblAdminExtras;
     private javax.swing.JLabel jblAdminProductos;
     private javax.swing.JLabel jblAdminUsuarios;
     private javax.swing.JLabel jblIconCategorias;
+    private javax.swing.JLabel jblIconCorte;
     private javax.swing.JLabel jblIconExtra;
     private javax.swing.JLabel jblIconProducto;
     private javax.swing.JLabel jblIconUsuario;

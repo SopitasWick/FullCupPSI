@@ -31,6 +31,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.mindrot.jbcrypt.BCrypt;
 import utilerias.HintToTextField;
+import utilerias.IconUtils;
 
 /**
  *
@@ -297,6 +298,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 FrmComandas comandas = new FrmComandas(this, usuario);
                 comandas.setVisible(true);
                 
+                IconUtils.applyIcon(comandas);
                 
                 txtNombreUsuario.setText("");
                 pwdContra.setText("");
@@ -357,14 +359,7 @@ public class FrmLogin extends javax.swing.JFrame {
            public void run() {
                FrmLogin login = new FrmLogin();
 
-               // Cargar icono
-               URL url = login.getClass().getResource("/iconos/cafeIcon.png");
-               if (url != null) {
-                   ImageIcon icon = new ImageIcon(url);
-                   login.setIconImage(icon.getImage());
-               } else {
-                   System.err.println("No se encontró el recurso");
-               }
+               IconUtils.applyIcon(login);
 
                login.setVisible(true);
            }

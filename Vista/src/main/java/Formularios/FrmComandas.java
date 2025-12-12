@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import utilerias.IconUtils;
 
 
 /**
@@ -80,6 +81,7 @@ public class FrmComandas extends javax.swing.JFrame {
         }
 
         jblUsuario.setText(usuario.getNombreUsuario());
+                
         
     }
     
@@ -138,7 +140,7 @@ public class FrmComandas extends javax.swing.JFrame {
         jblUsuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Full Cup: Panel Administrador");
+        setTitle("Full Cup: Ventas");
         setMinimumSize(new java.awt.Dimension(875, 566));
         setPreferredSize(new java.awt.Dimension(1230, 707));
         setResizable(false);
@@ -259,7 +261,8 @@ public class FrmComandas extends javax.swing.JFrame {
 
     private void jblConfiguaracionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblConfiguaracionMouseClicked
         // TODO add your handling code here:
-        FrmPanelAdministrador administrador = new FrmPanelAdministrador(login);
+        FrmPanelAdministrador administrador = new FrmPanelAdministrador(this);
+        IconUtils.applyIcon(administrador);
         administrador.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jblConfiguaracionMouseClicked
