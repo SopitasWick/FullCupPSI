@@ -125,6 +125,7 @@ public class FrmPanelAdministrador extends javax.swing.JFrame {
         jPanelSeccion.revalidate();
         jPanelSeccion.repaint();
         
+        jPanelAdminCortes.setVisible(false);
         
         
         
