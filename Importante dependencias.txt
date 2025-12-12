@@ -1,0 +1,1 @@
+El archivo svg-salamander-1.1.5.3 debe de ser agregado en las dependencias del vista para que pueda funcionar el login
