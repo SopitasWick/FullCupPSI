@@ -1,5 +1,6 @@
-package Formularios;
+package Formularios.BETA;
 
+import Formularios.BETA.BETAComandas;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.Producto;
@@ -27,7 +28,7 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class ListaProductosBeta extends javax.swing.JFrame {
+public class BETAListaProductos extends javax.swing.JFrame {
 
     
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
@@ -42,7 +43,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
     public static Comanda comanda = new Comanda();
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
 
-    DetallesProducto detalle;
+    BETADetallesProducto detalle;
     
     static Integer idComanda;
 
@@ -51,7 +52,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
      * Creates new form frmListaProductos
      * @param comandaEditar utilizada para editar, null en caso de ser nueva comanda
      */
-    public ListaProductosBeta(Comandas comand, Integer idComanda) throws Exception {
+    public BETAListaProductos(BETAComandas comand, Integer idComanda) throws Exception {
         initComponents();
 
         //this.comand = comand;
@@ -74,7 +75,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         int margenY = 70;
@@ -121,14 +122,14 @@ public class ListaProductosBeta extends javax.swing.JFrame {
              jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            int confirm = JOptionPane.showConfirmDialog(ListaProductosBeta.this, "¿Seguro que deseas eliminar este item?",
+                            int confirm = JOptionPane.showConfirmDialog(BETAListaProductos.this, "¿Seguro que deseas eliminar este item?",
                                 "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
                         if (confirm == JOptionPane.YES_OPTION) {
                             try {
                                 fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
                                 cargarPanelComanda();
                             } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(ListaProductosBeta.this, "Error al eliminar: " + ex.getMessage());
+                                JOptionPane.showMessageDialog(BETAListaProductos.this, "Error al eliminar: " + ex.getMessage());
                                 ex.printStackTrace();
                             }
                         }
@@ -141,7 +142,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
             subPanel.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mouseClicked(MouseEvent e){
-                    JOptionPane.showMessageDialog(ListaProductosBeta.this, "No programado aun, pero seria editar cuando se haga");
+                    JOptionPane.showMessageDialog(BETAListaProductos.this, "No programado aun, pero seria editar cuando se haga");
                 }
             
             
@@ -201,7 +202,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
             }
             
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
@@ -288,8 +289,17 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+//        if(idComanda != 0){
+//            
+//            detalleComanda = comandaEditar.getDetallecomandaList();
+//        }
+//
+//        else{
+//            System.out.println("Es nula");
+//        }
         
 //        if(idComanda != 0){
 //            
@@ -955,7 +965,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(9);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnProductosUnitariosActionPerformed
 
@@ -963,7 +973,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(7);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleCrepasSaladasActionPerformed
 
@@ -971,7 +981,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(8);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleEmparedadosActionPerformed
 
@@ -979,7 +989,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(6);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleCrepasDulcesActionPerformed
 
@@ -987,7 +997,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(5);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleSmothiesActionPerformed
 
@@ -995,7 +1005,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(4);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleEspecialesActionPerformed
 
@@ -1003,7 +1013,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(3);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleFrappeRocasActionPerformed
 
@@ -1011,7 +1021,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(2);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleTonicActionPerformed
 
@@ -1019,7 +1029,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
         try {
             this.buscarProductosPorCategoria(1);
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleBCalientesActionPerformed
 
@@ -1028,7 +1038,7 @@ public class ListaProductosBeta extends javax.swing.JFrame {
             // TODO add your handling code here:
             this.buscarProductos();
         } catch (Exception ex) {
-            Logger.getLogger(ListaProductosBeta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_toggleTodosActionPerformed
 

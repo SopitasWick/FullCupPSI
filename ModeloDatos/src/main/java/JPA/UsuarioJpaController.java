@@ -17,10 +17,13 @@ import Entidades.Rol;
 import Entidades.Usuario;
 import JPA.exceptions.NonexistentEntityException;
 import JPA.exceptions.PreexistingEntityException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -46,57 +49,73 @@ public class UsuarioJpaController implements Serializable {
         if (usuario.getRolList() == null) {
             usuario.setRolList(new ArrayList<Rol>());
         }
+
+        // ⭐ ENCRIPTAR LA CONTRASEÑA ANTES DE GUARDAR
+        if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
+            String hash = BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt());
+            usuario.setPassword(hash);
+        }
+
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Cajaefectivo> attachedCajaefectivoList = new ArrayList<Cajaefectivo>();
-            for (Cajaefectivo cajaefectivoListCajaefectivoToAttach : usuario.getCajaefectivoList()) {
-                cajaefectivoListCajaefectivoToAttach = em.getReference(cajaefectivoListCajaefectivoToAttach.getClass(), cajaefectivoListCajaefectivoToAttach.getIdCorte());
-                attachedCajaefectivoList.add(cajaefectivoListCajaefectivoToAttach);
+
+            List<Cajaefectivo> attachedCajaefectivoList = new ArrayList<>();
+            for (Cajaefectivo ce : usuario.getCajaefectivoList()) {
+                ce = em.getReference(ce.getClass(), ce.getIdCorte());
+                attachedCajaefectivoList.add(ce);
             }
             usuario.setCajaefectivoList(attachedCajaefectivoList);
-            List<Comanda> attachedComandaList = new ArrayList<Comanda>();
-            for (Comanda comandaListComandaToAttach : usuario.getComandaList()) {
-                comandaListComandaToAttach = em.getReference(comandaListComandaToAttach.getClass(), comandaListComandaToAttach.getIdComanda());
-                attachedComandaList.add(comandaListComandaToAttach);
+
+            List<Comanda> attachedComandaList = new ArrayList<>();
+            for (Comanda c : usuario.getComandaList()) {
+                c = em.getReference(c.getClass(), c.getIdComanda());
+                attachedComandaList.add(c);
             }
             usuario.setComandaList(attachedComandaList);
-            List<Rol> attachedRolList = new ArrayList<Rol>();
-            for (Rol rolListRolToAttach : usuario.getRolList()) {
-                rolListRolToAttach = em.getReference(rolListRolToAttach.getClass(), rolListRolToAttach.getIdRol());
-                attachedRolList.add(rolListRolToAttach);
+
+            List<Rol> attachedRolList = new ArrayList<>();
+            for (Rol r : usuario.getRolList()) {
+                r = em.getReference(r.getClass(), r.getIdRol());
+                attachedRolList.add(r);
             }
             usuario.setRolList(attachedRolList);
+
             em.persist(usuario);
-            for (Cajaefectivo cajaefectivoListCajaefectivo : usuario.getCajaefectivoList()) {
-                Usuario oldIdUsuarioOfCajaefectivoListCajaefectivo = cajaefectivoListCajaefectivo.getIdUsuario();
-                cajaefectivoListCajaefectivo.setIdUsuario(usuario);
-                cajaefectivoListCajaefectivo = em.merge(cajaefectivoListCajaefectivo);
-                if (oldIdUsuarioOfCajaefectivoListCajaefectivo != null) {
-                    oldIdUsuarioOfCajaefectivoListCajaefectivo.getCajaefectivoList().remove(cajaefectivoListCajaefectivo);
-                    oldIdUsuarioOfCajaefectivoListCajaefectivo = em.merge(oldIdUsuarioOfCajaefectivoListCajaefectivo);
+
+            for (Cajaefectivo ce : usuario.getCajaefectivoList()) {
+                Usuario old = ce.getIdUsuario();
+                ce.setIdUsuario(usuario);
+                ce = em.merge(ce);
+                if (old != null) {
+                    old.getCajaefectivoList().remove(ce);
+                    em.merge(old);
                 }
             }
-            for (Comanda comandaListComanda : usuario.getComandaList()) {
-                Usuario oldIdUsuarioOfComandaListComanda = comandaListComanda.getIdUsuario();
-                comandaListComanda.setIdUsuario(usuario);
-                comandaListComanda = em.merge(comandaListComanda);
-                if (oldIdUsuarioOfComandaListComanda != null) {
-                    oldIdUsuarioOfComandaListComanda.getComandaList().remove(comandaListComanda);
-                    oldIdUsuarioOfComandaListComanda = em.merge(oldIdUsuarioOfComandaListComanda);
+
+            for (Comanda c : usuario.getComandaList()) {
+                Usuario old = c.getIdUsuario();
+                c.setIdUsuario(usuario);
+                c = em.merge(c);
+                if (old != null) {
+                    old.getComandaList().remove(c);
+                    em.merge(old);
                 }
             }
-            for (Rol rolListRol : usuario.getRolList()) {
-                Usuario oldIdUsuarioOfRolListRol = rolListRol.getIdUsuario();
-                rolListRol.setIdUsuario(usuario);
-                rolListRol = em.merge(rolListRol);
-                if (oldIdUsuarioOfRolListRol != null) {
-                    oldIdUsuarioOfRolListRol.getRolList().remove(rolListRol);
-                    oldIdUsuarioOfRolListRol = em.merge(oldIdUsuarioOfRolListRol);
+
+            for (Rol r : usuario.getRolList()) {
+                Usuario old = r.getIdUsuario();
+                r.setIdUsuario(usuario);
+                r = em.merge(r);
+                if (old != null) {
+                    old.getRolList().remove(r);
+                    em.merge(old);
                 }
             }
+
             em.getTransaction().commit();
+
         } catch (Exception ex) {
             if (findUsuario(usuario.getIdUsuario()) != null) {
                 throw new PreexistingEntityException("Usuario " + usuario + " already exists.", ex);
@@ -109,107 +128,58 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void edit(Usuario usuario) throws NonexistentEntityException, Exception {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
-            List<Cajaefectivo> cajaefectivoListOld = persistentUsuario.getCajaefectivoList();
-            List<Cajaefectivo> cajaefectivoListNew = usuario.getCajaefectivoList();
-            List<Comanda> comandaListOld = persistentUsuario.getComandaList();
-            List<Comanda> comandaListNew = usuario.getComandaList();
-            List<Rol> rolListOld = persistentUsuario.getRolList();
-            List<Rol> rolListNew = usuario.getRolList();
-            List<Cajaefectivo> attachedCajaefectivoListNew = new ArrayList<Cajaefectivo>();
-            for (Cajaefectivo cajaefectivoListNewCajaefectivoToAttach : cajaefectivoListNew) {
-                cajaefectivoListNewCajaefectivoToAttach = em.getReference(cajaefectivoListNewCajaefectivoToAttach.getClass(), cajaefectivoListNewCajaefectivoToAttach.getIdCorte());
-                attachedCajaefectivoListNew.add(cajaefectivoListNewCajaefectivoToAttach);
-            }
-            cajaefectivoListNew = attachedCajaefectivoListNew;
-            usuario.setCajaefectivoList(cajaefectivoListNew);
-            List<Comanda> attachedComandaListNew = new ArrayList<Comanda>();
-            for (Comanda comandaListNewComandaToAttach : comandaListNew) {
-                comandaListNewComandaToAttach = em.getReference(comandaListNewComandaToAttach.getClass(), comandaListNewComandaToAttach.getIdComanda());
-                attachedComandaListNew.add(comandaListNewComandaToAttach);
-            }
-            comandaListNew = attachedComandaListNew;
-            usuario.setComandaList(comandaListNew);
-            List<Rol> attachedRolListNew = new ArrayList<Rol>();
-            for (Rol rolListNewRolToAttach : rolListNew) {
-                rolListNewRolToAttach = em.getReference(rolListNewRolToAttach.getClass(), rolListNewRolToAttach.getIdRol());
-                attachedRolListNew.add(rolListNewRolToAttach);
-            }
-            rolListNew = attachedRolListNew;
-            usuario.setRolList(rolListNew);
-            usuario = em.merge(usuario);
-            for (Cajaefectivo cajaefectivoListOldCajaefectivo : cajaefectivoListOld) {
-                if (!cajaefectivoListNew.contains(cajaefectivoListOldCajaefectivo)) {
-                    cajaefectivoListOldCajaefectivo.setIdUsuario(null);
-                    cajaefectivoListOldCajaefectivo = em.merge(cajaefectivoListOldCajaefectivo);
-                }
-            }
-            for (Cajaefectivo cajaefectivoListNewCajaefectivo : cajaefectivoListNew) {
-                if (!cajaefectivoListOld.contains(cajaefectivoListNewCajaefectivo)) {
-                    Usuario oldIdUsuarioOfCajaefectivoListNewCajaefectivo = cajaefectivoListNewCajaefectivo.getIdUsuario();
-                    cajaefectivoListNewCajaefectivo.setIdUsuario(usuario);
-                    cajaefectivoListNewCajaefectivo = em.merge(cajaefectivoListNewCajaefectivo);
-                    if (oldIdUsuarioOfCajaefectivoListNewCajaefectivo != null && !oldIdUsuarioOfCajaefectivoListNewCajaefectivo.equals(usuario)) {
-                        oldIdUsuarioOfCajaefectivoListNewCajaefectivo.getCajaefectivoList().remove(cajaefectivoListNewCajaefectivo);
-                        oldIdUsuarioOfCajaefectivoListNewCajaefectivo = em.merge(oldIdUsuarioOfCajaefectivoListNewCajaefectivo);
-                    }
-                }
-            }
-            for (Comanda comandaListOldComanda : comandaListOld) {
-                if (!comandaListNew.contains(comandaListOldComanda)) {
-                    comandaListOldComanda.setIdUsuario(null);
-                    comandaListOldComanda = em.merge(comandaListOldComanda);
-                }
-            }
-            for (Comanda comandaListNewComanda : comandaListNew) {
-                if (!comandaListOld.contains(comandaListNewComanda)) {
-                    Usuario oldIdUsuarioOfComandaListNewComanda = comandaListNewComanda.getIdUsuario();
-                    comandaListNewComanda.setIdUsuario(usuario);
-                    comandaListNewComanda = em.merge(comandaListNewComanda);
-                    if (oldIdUsuarioOfComandaListNewComanda != null && !oldIdUsuarioOfComandaListNewComanda.equals(usuario)) {
-                        oldIdUsuarioOfComandaListNewComanda.getComandaList().remove(comandaListNewComanda);
-                        oldIdUsuarioOfComandaListNewComanda = em.merge(oldIdUsuarioOfComandaListNewComanda);
-                    }
-                }
-            }
-            for (Rol rolListOldRol : rolListOld) {
-                if (!rolListNew.contains(rolListOldRol)) {
-                    rolListOldRol.setIdUsuario(null);
-                    rolListOldRol = em.merge(rolListOldRol);
-                }
-            }
-            for (Rol rolListNewRol : rolListNew) {
-                if (!rolListOld.contains(rolListNewRol)) {
-                    Usuario oldIdUsuarioOfRolListNewRol = rolListNewRol.getIdUsuario();
-                    rolListNewRol.setIdUsuario(usuario);
-                    rolListNewRol = em.merge(rolListNewRol);
-                    if (oldIdUsuarioOfRolListNewRol != null && !oldIdUsuarioOfRolListNewRol.equals(usuario)) {
-                        oldIdUsuarioOfRolListNewRol.getRolList().remove(rolListNewRol);
-                        oldIdUsuarioOfRolListNewRol = em.merge(oldIdUsuarioOfRolListNewRol);
-                    }
-                }
-            }
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                Integer id = usuario.getIdUsuario();
-                if (findUsuario(id) == null) {
-                    throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
-                }
-            }
-            throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
+
+public void edit(Usuario usuario) throws NonexistentEntityException, Exception {
+    EntityManager em = null;
+    try {
+        em = getEntityManager();
+        em.getTransaction().begin();
+
+        Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
+        if (persistentUsuario == null) {
+            throw new NonexistentEntityException("Usuario no encontrado");
+        }
+
+        // --------------------------
+        // Contraseña: encriptar solo si viene algo nuevo
+        // --------------------------
+        String oldPasswordHash = persistentUsuario.getPassword();
+        String newPassword = usuario.getPassword();
+
+        if (newPassword != null && !newPassword.isEmpty()) {
+            String nuevoHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            usuario.setPassword(nuevoHash);
+        } else {
+            usuario.setPassword(oldPasswordHash);
+        }
+
+        // --------------------------
+        // Mantener listas relacionadas sin cambios
+        // --------------------------
+        usuario.setCajaefectivoList(persistentUsuario.getCajaefectivoList());
+        usuario.setComandaList(persistentUsuario.getComandaList());
+        usuario.setRolList(persistentUsuario.getRolList()); // no tocamos roles
+
+        em.merge(usuario);
+        em.getTransaction().commit();
+
+    } catch (Exception ex) {
+        String msg = ex.getLocalizedMessage();
+        if (msg == null || msg.length() == 0) {
+            Integer id = usuario.getIdUsuario();
+            if (findUsuario(id) == null) {
+                throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
             }
         }
+        throw ex;
+    } finally {
+        if (em != null) {
+            em.close();
+        }
     }
+}
+
+
 
     public Usuario findUsuarioByNombre(String nombreUsuario) {
         EntityManager em = getEntityManager();
@@ -232,6 +202,101 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
+    
+    
+    
+    public boolean existeUsuarioPorNombre(String nombreUsuario) {
+        EntityManager em = getEntityManager();
+        try {
+            Long count = em.createQuery(
+                    "SELECT COUNT(u) FROM Usuario u WHERE u.nombreUsuario = :nombre",
+                    Long.class
+            ).setParameter("nombre", nombreUsuario)
+             .getSingleResult();
+
+            return count > 0;
+        } finally {
+            em.close();
+        }
+    }
+    
+    
+    public Usuario iniciarSesion(String nombreUsuario, String passwordIngresada){   
+        EntityManager em = getEntityManager();
+               try {
+                   // 1. Buscar usuario por nombre
+                   TypedQuery<Usuario> query = em.createQuery(
+                           "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombre",
+                           Usuario.class
+                   );
+                   query.setParameter("nombre", nombreUsuario);
+                   query.setMaxResults(1); // Solo queremos uno
+
+                   List<Usuario> resultados = query.getResultList();
+
+                   if (resultados.isEmpty()) {
+                       return null; // No existe usuario
+                   }
+
+                   Usuario usuario = resultados.get(0);
+
+                   // 2. Validar contraseña con BCrypt
+                   if (BCrypt.checkpw(passwordIngresada, usuario.getPassword())) {
+                       return usuario; // Credenciales correctas → devolver entidad
+                   }
+
+                   return null; // Contraseña incorrecta
+
+               } finally {
+                   em.close();
+               }
+   }
+
+    
+    
+    
+    public void generarNuevoPorDefecto(){
+        
+        try {
+        Usuario usuarioAdmin = new Usuario();
+        usuarioAdmin.setEstado(1);
+        usuarioAdmin.setNombreUsuario("admin");
+        usuarioAdmin.setPassword("admin");
+        usuarioAdmin.setIdUsuario(1);
+        
+        
+        
+        Rol rol = new Rol();
+        rol.setIdUsuario(usuarioAdmin);
+        rol.setNombre("Administrador");
+        rol.setIdRol(1);
+        
+        Rol rol2 = new Rol();
+        rol2.setIdUsuario(usuarioAdmin);
+        rol2.setNombre("Atendiente");
+        rol2.setIdRol(2);
+        
+        RolJpaController ctrlRol = new RolJpaController();
+        
+        
+            create(usuarioAdmin);
+            ctrlRol.create(rol);
+            ctrlRol.create(rol2);
+
+        
+
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioJpaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+               
+                
+                
+        
+    }
+
+    
+    
+    
 
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;

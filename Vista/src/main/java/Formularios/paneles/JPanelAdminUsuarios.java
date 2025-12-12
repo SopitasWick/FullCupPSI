@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import org.mindrot.jbcrypt.BCrypt;
 import utilerias.ConstantesGUI;
 import utilerias.HintToTextField;
 
@@ -50,9 +52,11 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
 
         HintToTextField.addHint(txtBuscarUsuario, "Buscar Usuario");
 
-        pruebas();
+        //pruebas();
 
         btnAccion.setText("Guardar");
+        
+        cargarUsuario("", "");
 
     }
 
@@ -76,10 +80,10 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 txtNombreUsuario.setText(prueba.getNombreUsuario());
-                txtContraUsuario.setText(prueba.getPassword());
+                pwdContra.setText(prueba.getPassword());
 
                 txtNombreUsuario.setEditable(true);
-                txtContraUsuario.setEditable(true);
+                pwdContra.setEditable(true);
 
                 jRadioAdmin.setEnabled(true);
                 jRadioAtendiente.setEnabled(true);
@@ -106,10 +110,10 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 txtNombreUsuario.setText(prueba.getNombreUsuario());
-                txtContraUsuario.setText(prueba.getPassword());
+                pwdContra.setText(prueba.getPassword());
 
                 txtNombreUsuario.setEditable(false);
-                txtContraUsuario.setEditable(false);
+                pwdContra.setEditable(false);
 
                 jRadioAdmin.setEnabled(false);
                 jRadioAtendiente.setEnabled(false);
@@ -176,7 +180,7 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                 Usuario u = listaProvicional.get(i);
 
                 JPanelUsuario usuarioPanel = new JPanelUsuario();
-                usuarioPanel.setBounds(0, alturaProducto * i, 772, 62);
+                usuarioPanel.setBounds(0, alturaProducto * i, 472, 62);
                 usuarioPanel.setBackground(Color.decode("#FFFFFF"));
 
                 if (u.getEstado() != null && u.getEstado() == 0) {
@@ -205,11 +209,11 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                         usuarioSeleccionadoId = u.getIdUsuario();
 
                         txtNombreUsuario.setText(u.getNombreUsuario());
-                        txtContraUsuario.setText(u.getPassword());
+                        //pwdContra.setText(u.getPassword());
 
                         txtNombreUsuario.setEditable(true);
-                        txtContraUsuario.setEditable(true);
-                        jRadioAdmin.setEnabled(true);
+                        pwdContra.setEditable(true);
+                        pwdContra.setEnabled(true);
                         jRadioAtendiente.setEnabled(true);
 
                         if (!u.getRolList().isEmpty()) {
@@ -265,10 +269,10 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
 
                                 // LIMPIAR CAMPOS DEL PANEL DERECHA
                                 txtNombreUsuario.setText("");
-                                txtContraUsuario.setText("");
+                                pwdContra.setText("");
 
                                 txtNombreUsuario.setEditable(true);
-                                txtContraUsuario.setEditable(true);
+                                pwdContra.setEditable(true);
                                 jRadioAdmin.setEnabled(true);
                                 jRadioAtendiente.setEnabled(true);
 
@@ -379,7 +383,8 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
     private void guardarUsuario() {
 
         String nombre = txtNombreUsuario.getText().trim();
-        String pass = txtContraUsuario.getText().trim();
+        char[] passwordChars = pwdContra.getPassword();
+        String pass = new String(passwordChars);
         String rol = jRadioAdmin.isSelected() ? "Administrador" : "Atendiente";
 
         if (nombre.isEmpty() || pass.isEmpty()) {
@@ -412,64 +417,73 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
             u.setNombreUsuario(nombre);
             u.setPassword(pass);
             u.setEstado(1);
+            
+            if(!ctrlUsuario.existeUsuarioPorNombre(nombre)){
 
-            ctrlUsuario.create(u);
+                ctrlUsuario.create(u);
 
-            Rol r = new Rol();
-            r.setIdRol(generarIdRol());
-            r.setNombre(rol);
-            r.setIdUsuario(u);
+                Rol r = new Rol();
+                r.setIdRol(generarIdRol());
+                r.setNombre(rol);
+                r.setIdUsuario(u);
 
-            ctrlRol.create(r);
+                ctrlRol.create(r);
 
-            javax.swing.JOptionPane.showMessageDialog(null,
-                    "Usuario registrado correctamente.",
-                    "Completado",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(null,
+                        "Usuario registrado correctamente.",
+                        "Completado",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
-            cargarUsuario("Todos", "");
+                cargarUsuario("Todos", "");
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "El nombre de usuario ya esta en uso");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
     }
 
     private void editarUsuario() {
 
-        if (usuarioSeleccionadoId == -1) {
-            javax.swing.JOptionPane.showMessageDialog(null,
-                    "Selecciona un usuario de la lista.",
-                    "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         try {
-
             Usuario u = ctrlUsuario.findUsuario(usuarioSeleccionadoId);
 
-            // DATOS ANTES
             String nombreAntes = u.getNombreUsuario();
-            String passAntes = u.getPassword();
-            String rolAntes = u.getRolList().isEmpty() ? "Sin rol" : u.getRolList().get(0).getNombre();
-
-            // DATOS NUEVOS
             String nombreNuevo = txtNombreUsuario.getText().trim();
-            String passNuevo = txtContraUsuario.getText().trim();
-            String rolNuevo = jRadioAdmin.isSelected() ? "Administrador" : "Atendiente";
+            String password = new String(pwdContra.getPassword()).trim(); // contraseña nueva
 
+            // --------------------------
+            // Verificar si el nuevo nombre ya existe en otros usuarios
+            // --------------------------
+            boolean nombreDuplicado = false;
+            List<Usuario> usuarios = ctrlUsuario.findUsuarioEntities();
+            for (Usuario usuario : usuarios) {
+                if (!usuario.getIdUsuario().equals(u.getIdUsuario()) // ignorar el mismo usuario
+                        && usuario.getNombreUsuario().equalsIgnoreCase(nombreNuevo)) {
+                    nombreDuplicado = true;
+                    break;
+                }
+            }
+
+            if (nombreDuplicado) {
+                JOptionPane.showMessageDialog(this, "El nombre de usuario ya está en uso");
+                return;
+            }
+
+            // --------------------------
             // Confirmación
+            // --------------------------
             int confirm = javax.swing.JOptionPane.showConfirmDialog(
                     null,
                     "¿Deseas EDITAR este usuario?\n\n"
                     + "ANTES:\n"
-                    + "• Nombre: " + nombreAntes + "\n"
-                    + "• Contraseña: " + passAntes + "\n"
-                    + "• Rol: " + rolAntes + "\n\n"
+                    + "• Nombre: " + nombreAntes + "\n\n"
                     + "DESPUÉS:\n"
                     + "• Nombre: " + nombreNuevo + "\n"
-                    + "• Contraseña: " + passNuevo + "\n"
-                    + "• Rol: " + rolNuevo,
+                    + "• Contraseña: " + (password.isEmpty() ? "(sin cambios)" : "******"),
                     "Confirmar edición",
                     javax.swing.JOptionPane.YES_NO_OPTION,
                     javax.swing.JOptionPane.QUESTION_MESSAGE
@@ -479,15 +493,12 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                 return;
             }
 
-            // EDITAR USUARIO
+            // --------------------------
+            // Editar usuario
+            // --------------------------
             u.setNombreUsuario(nombreNuevo);
-            u.setPassword(passNuevo);
+            u.setPassword(password.isEmpty() ? null : password); // null indica sin cambios
             ctrlUsuario.edit(u);
-
-            // EDITAR ROL
-            Rol r = u.getRolList().get(0);
-            r.setNombre(rolNuevo);
-            ctrlRol.edit(r);
 
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Usuario editado correctamente.",
@@ -495,11 +506,11 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                     javax.swing.JOptionPane.INFORMATION_MESSAGE
             );
 
-            // RESET
+            // Reset UI
             usuarioSeleccionadoId = -1;
             btnAccion.setText("Guardar");
             txtNombreUsuario.setText("");
-            txtContraUsuario.setText("");
+            pwdContra.setText("");
 
             cargarUsuario("Todos", "");
 
@@ -511,6 +522,7 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
                     javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void eliminarUsuario() {
 
@@ -558,7 +570,6 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         jScrollPaneProductos = new javax.swing.JScrollPane();
         jPanelListaUsuarios = new javax.swing.JPanel();
         jPanelDatosUsuario = new javax.swing.JPanel();
-        txtContraUsuario = new javax.swing.JTextField();
         txtNombreUsuario = new javax.swing.JTextField();
         jblRolUsuario = new javax.swing.JLabel();
         jblNombreUsuario = new javax.swing.JLabel();
@@ -566,6 +577,8 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         jRadioAtendiente = new javax.swing.JRadioButton();
         jRadioAdmin = new javax.swing.JRadioButton();
         btnAccion = new javax.swing.JButton();
+        pwdContra = new javax.swing.JPasswordField();
+        cbMostrarContra = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(965, 620));
@@ -617,8 +630,6 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         jPanelDatosUsuario.setBackground(new java.awt.Color(255, 255, 255));
         jPanelDatosUsuario.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanelDatosUsuario.setLayout(null);
-        jPanelDatosUsuario.add(txtContraUsuario);
-        txtContraUsuario.setBounds(20, 140, 310, 30);
         jPanelDatosUsuario.add(txtNombreUsuario);
         txtNombreUsuario.setBounds(20, 50, 310, 30);
 
@@ -665,6 +676,19 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         });
         jPanelDatosUsuario.add(btnAccion);
         btnAccion.setBounds(25, 320, 300, 40);
+        jPanelDatosUsuario.add(pwdContra);
+        pwdContra.setBounds(20, 150, 310, 30);
+
+        cbMostrarContra.setText("Mostrar contraseña");
+        cbMostrarContra.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        cbMostrarContra.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        cbMostrarContra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbMostrarContraActionPerformed(evt);
+            }
+        });
+        jPanelDatosUsuario.add(cbMostrarContra);
+        cbMostrarContra.setBounds(179, 125, 150, 20);
 
         add(jPanelDatosUsuario);
         jPanelDatosUsuario.setBounds(590, 94, 350, 380);
@@ -714,10 +738,22 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAccionActionPerformed
 
+    private void cbMostrarContraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMostrarContraActionPerformed
+        // TODO add your handling code here:
+        if(cbMostrarContra.isSelected()){
+            pwdContra.setEchoChar((char)0);
+        }
+        else{
+            pwdContra.setEchoChar('*');
+        }
+        
+    }//GEN-LAST:event_cbMostrarContraActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccion;
     private javax.swing.JCheckBox cbInactivas;
+    private javax.swing.JCheckBox cbMostrarContra;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelDatosUsuario;
     private javax.swing.JPanel jPanelListaUsuarios;
@@ -727,8 +763,8 @@ public class JPanelAdminUsuarios extends javax.swing.JPanel {
     private javax.swing.JLabel jblContrasenaUsuario;
     private javax.swing.JLabel jblNombreUsuario;
     private javax.swing.JLabel jblRolUsuario;
+    private javax.swing.JPasswordField pwdContra;
     private javax.swing.JTextField txtBuscarUsuario;
-    private javax.swing.JTextField txtContraUsuario;
     private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 }

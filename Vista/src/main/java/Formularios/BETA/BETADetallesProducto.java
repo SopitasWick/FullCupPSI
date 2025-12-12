@@ -1,5 +1,6 @@
-package Formularios;
+package Formularios.BETA;
 
+import Formularios.BETA.BETAFrmListaProductos;
 import Entidades.Categoria;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
-public class DetallesProducto extends javax.swing.JFrame {
+public class BETADetallesProducto extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaLecheControlador fLeche = new GestionarLecheControlador();
@@ -49,7 +50,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     Producto producto;
     Comanda comandaEditar;
     Detallecomanda detalle;
-    FrmListaProductos listaProductos;
+    BETAFrmListaProductos listaProductos;
     public static List<Detallecomanda> listaDetalleComandas = new ArrayList<>();
 
     float precioTamano;
@@ -64,7 +65,7 @@ public class DetallesProducto extends javax.swing.JFrame {
     /**
      * Creates new form DetallesProducto
      */
-    public DetallesProducto(FrmListaProductos listaProducto, Producto producto, Comanda comandaEditar, Detallecomanda detalle) {
+    public BETADetallesProducto(BETAFrmListaProductos listaProducto, Producto producto, Comanda comandaEditar, Detallecomanda detalle) {
         initComponents();
 
         ButtonGroup grupoTamaño = new ButtonGroup();
@@ -202,7 +203,7 @@ public class DetallesProducto extends javax.swing.JFrame {
             //Lista que tienen los detalles por producto
             vopcion = fProductos.obtenerDetallesPorProducto(producto.getIdProducto());
         } catch (Exception ex) {
-            Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETADetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
         //Buscamos los detalles del producto
         for (Valoropcion opciones : vopcion) {
@@ -410,7 +411,6 @@ public class DetallesProducto extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
-        setMaximumSize(new java.awt.Dimension(1440, 1024));
         setResizable(false);
 
         Fondo.setBackground(new java.awt.Color(242, 243, 245));
@@ -526,7 +526,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBase)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -603,7 +603,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 .addGroup(panelTamanoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addComponent(radioMediano3)
-                        .addContainerGap(88, Short.MAX_VALUE))
+                        .addContainerGap(87, Short.MAX_VALUE))
                     .addGroup(panelTamanoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jrbTamañoNo)
@@ -1297,20 +1297,20 @@ public class DetallesProducto extends javax.swing.JFrame {
         Detallecomanda detalleCo = new Detallecomanda();
 
         if (comandaEditar == null) { // Es una comanda nueva
-            if (FrmListaProductos.comanda == null || FrmListaProductos.comanda.getIdComanda() == null) {
+            if (BETAFrmListaProductos.comanda == null || BETAFrmListaProductos.comanda.getIdComanda() == null) {
                 try {
-                    FrmListaProductos.comanda.setEstadoComanda("Abierta");
-                    FrmListaProductos.comanda.setFechaHoracomanda(new Date());
-                    FrmListaProductos.comanda.setTotalComanda(total);
-                    FComandas.GuardarComanda(FrmListaProductos.comanda);
-                    FrmListaProductos.idComanda = FrmListaProductos.comanda.getIdComanda();
-                    comandaEditar = FrmListaProductos.comanda;
+                    BETAFrmListaProductos.comanda.setEstadoComanda("Abierta");
+                    BETAFrmListaProductos.comanda.setFechaHoracomanda(new Date());
+                    BETAFrmListaProductos.comanda.setTotalComanda(total);
+                    FComandas.GuardarComanda(BETAFrmListaProductos.comanda);
+                    BETAFrmListaProductos.idComanda = BETAFrmListaProductos.comanda.getIdComanda();
+                    comandaEditar = BETAFrmListaProductos.comanda;
                 } catch (Exception ex) {
-                    Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(BETADetallesProducto.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
             } else {
-                comandaEditar = FrmListaProductos.comanda;
+                comandaEditar = BETAFrmListaProductos.comanda;
             }
         }
 
@@ -1345,7 +1345,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 fDC.editarDetallesComandas(detalleParaGuardar);
 
             } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al ACTUALIZAR el detalle", ex);
+                Logger.getLogger(BETADetallesProducto.class.getName()).log(Level.SEVERE, "Error al ACTUALIZAR el detalle", ex);
                 return; // Salir si hay un error
             }
 
@@ -1364,7 +1364,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 // Guardar el nuevo detalle en la BD (usando la fachada de Comandas, como lo tenías)
                 FComandas.GuardarDetalleComanda(detalleParaGuardar);
             } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al GUARDAR nuevo detalle", ex);
+                Logger.getLogger(BETADetallesProducto.class.getName()).log(Level.SEVERE, "Error al GUARDAR nuevo detalle", ex);
                 return;
             }
         }
@@ -1416,7 +1416,7 @@ public class DetallesProducto extends javax.swing.JFrame {
                 System.out.println("Guardando extras...");
                 fExtras.agregarExtrasProductos(extra); //
             } catch (Exception ex) {
-                Logger.getLogger(DetallesProducto.class.getName()).log(Level.SEVERE, "Error al guardar extras", ex);
+                Logger.getLogger(BETADetallesProducto.class.getName()).log(Level.SEVERE, "Error al guardar extras", ex);
             }
         }
 

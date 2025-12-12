@@ -1225,7 +1225,7 @@ public class JPanelComandasDetalleProducto extends javax.swing.JPanel {
             FrmComandas.comanda = new Comanda();
             FrmComandas.comanda.setEstadoComanda("Abierta");
             FrmComandas.comanda.setFechaHoracomanda(new Date());
-            //comanda.setIdUsuario(idUsuario);
+            FrmComandas.comanda.setIdUsuario(FrmComandas.usuario);
             FrmComandas.comanda.setTotalComanda(Float.valueOf(txtTotal.getText()));
             
             FrmComandas.comanda = FComandas.GuardarComanda(FrmComandas.comanda);

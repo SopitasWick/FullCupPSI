@@ -7,8 +7,20 @@ package Formularios;
 
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
+import Entidades.Usuario;
 import Formularios.paneles.JPanelComandasGeneral;
+import JPA.RolJpaController;
+import JPA.UsuarioJpaController;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Polygon;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 
 /**
@@ -17,8 +29,15 @@ import java.awt.Color;
  */
 public class FrmComandas extends javax.swing.JFrame {
 
+    
+    
+    UsuarioJpaController ctrlUsuario = new UsuarioJpaController();
+    RolJpaController ctrlRol = new RolJpaController();
+    
   
     FrmLogin login;
+    
+    public static Usuario usuario;
     
     
     Color colorSeleccion = Color.decode("#E0E0E0");
@@ -37,15 +56,32 @@ public class FrmComandas extends javax.swing.JFrame {
     /**
      * Creates new form FrmDetallesProductos
      */
-    public FrmComandas(FrmLogin login) {
+    public FrmComandas(FrmLogin login, Usuario usuario) {
         initComponents();
         
         this.login = login;
+        FrmComandas.usuario = usuario;
         
         cargarPanel();
         
+        cargarDiseno();
+        
     }
     
+    
+    private void cargarDiseno(){
+        
+        jblConfiguaracion.setVisible(false);
+        
+        for(int i = 0; i < usuario.getRolList().size(); i++){
+            if(usuario.getRolList().get(i).getNombre().equalsIgnoreCase("Administrador")){
+                jblConfiguaracion.setVisible(true);
+            }
+        }
+
+        jblUsuario.setText(usuario.getNombreUsuario());
+        
+    }
     
     
     
@@ -62,48 +98,18 @@ public class FrmComandas extends javax.swing.JFrame {
         jPanelSeccion.repaint();
         
         
-        jPanelNavegacion.setVisible(false);
         
         
     }
    
     
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new FrmComandas().setVisible(true);
-//            }
-//        });
-//    }
-    
+
+    public Icon escalarImagen(URL path, int w, int h) {
+        Image img = new ImageIcon(path).getImage();
+        Image nueva = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        return new ImageIcon(nueva);
+    }
+
  
     
     
@@ -123,15 +129,13 @@ public class FrmComandas extends javax.swing.JFrame {
         jPanelEncabezado = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jPanelSalir = new javax.swing.JPanel();
         jblSalir = new javax.swing.JLabel();
+        jblConfiguaracion = new javax.swing.JLabel();
         jPanelSeccion = new javax.swing.JPanel();
         jPanelNavegacion = new javax.swing.JPanel();
-        jblNavegacionSeparador1 = new javax.swing.JLabel();
-        jblNavegacionComandas = new javax.swing.JLabel();
-        jblNavegacionComandas1 = new javax.swing.JLabel();
-        jblNavegacionComandas2 = new javax.swing.JLabel();
-        jblNavegacionSeparador2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jblUsuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Full Cup: Panel Administrador");
@@ -174,20 +178,42 @@ public class FrmComandas extends javax.swing.JFrame {
         jPanelEncabezado.add(jLabel2);
         jLabel2.setBounds(50, 15, 400, 24);
 
-        jblSalir.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jblSalir.setForeground(new java.awt.Color(39, 24, 17));
-        jblSalir.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jblSalir.setText("Salir");
-        jblSalir.setAlignmentX(16.0F);
-        jblSalir.setAlignmentY(0.0F);
-        jblSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jblSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+        jPanelSalir.setBackground(new java.awt.Color(255, 51, 51));
+        jPanelSalir.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanelSalir.setPreferredSize(new java.awt.Dimension(32, 32));
+        jPanelSalir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jblSalirMouseClicked(evt);
+                jPanelSalirMouseClicked(evt);
             }
         });
-        jPanelEncabezado.add(jblSalir);
-        jblSalir.setBounds(1140, 15, 50, 24);
+        jPanelSalir.setLayout(null);
+
+        jblSalir.setBackground(new java.awt.Color(255, 255, 255));
+        jblSalir.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblSalir.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jblSalir.setText("Cerrar Sesion");
+        jPanelSalir.add(jblSalir);
+        jblSalir.setBounds(0, 0, 130, 30);
+
+        jPanelEncabezado.add(jPanelSalir);
+        jPanelSalir.setBounds(1060, 10, 130, 32);
+
+        jblConfiguaracion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/config.png"))); // NOI18N
+        jblConfiguaracion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jblConfiguaracion.setPreferredSize(new java.awt.Dimension(36, 36));
+        jblConfiguaracion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jblConfiguaracionMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jblConfiguaracionMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jblConfiguaracionMouseExited(evt);
+            }
+        });
+        jPanelEncabezado.add(jblConfiguaracion);
+        jblConfiguaracion.setBounds(1000, 8, 32, 32);
 
         jPanelFondo.add(jPanelEncabezado);
         jPanelEncabezado.setBounds(0, 0, 1216, 50);
@@ -203,51 +229,15 @@ public class FrmComandas extends javax.swing.JFrame {
         jPanelNavegacion.setMinimumSize(new java.awt.Dimension(1216, 60));
         jPanelNavegacion.setPreferredSize(new java.awt.Dimension(1216, 60));
         jPanelNavegacion.setLayout(null);
-
-        jblNavegacionSeparador1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jblNavegacionSeparador1.setForeground(new java.awt.Color(102, 102, 102));
-        jblNavegacionSeparador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jblNavegacionSeparador1.setText(">");
-        jPanelNavegacion.add(jblNavegacionSeparador1);
-        jblNavegacionSeparador1.setBounds(90, 16, 20, 27);
-
-        jblNavegacionComandas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jblNavegacionComandas.setForeground(new java.awt.Color(102, 102, 102));
-        jblNavegacionComandas.setText("Detalle Comanda\n");
-        jblNavegacionComandas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jblNavegacionComandas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jblNavegacionComandasMouseClicked(evt);
-            }
-        });
-        jPanelNavegacion.add(jblNavegacionComandas);
-        jblNavegacionComandas.setBounds(125, 20, 110, 25);
-
-        jblNavegacionComandas1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jblNavegacionComandas1.setForeground(new java.awt.Color(102, 102, 102));
-        jblNavegacionComandas1.setText("Comandas");
-        jblNavegacionComandas1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jblNavegacionComandas1MouseClicked(evt);
-            }
-        });
-        jPanelNavegacion.add(jblNavegacionComandas1);
-        jblNavegacionComandas1.setBounds(20, 20, 60, 25);
-
-        jblNavegacionComandas2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jblNavegacionComandas2.setForeground(new java.awt.Color(102, 102, 102));
-        jblNavegacionComandas2.setText("<html> <u>Detalle del Producto</u> </html> ");
-        jPanelNavegacion.add(jblNavegacionComandas2);
-        jblNavegacionComandas2.setBounds(275, 20, 120, 25);
-
-        jblNavegacionSeparador2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jblNavegacionSeparador2.setForeground(new java.awt.Color(102, 102, 102));
-        jblNavegacionSeparador2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jblNavegacionSeparador2.setText(">");
-        jPanelNavegacion.add(jblNavegacionSeparador2);
-        jblNavegacionSeparador2.setBounds(235, 16, 20, 27);
         jPanelNavegacion.add(jSeparator1);
         jSeparator1.setBounds(20, 50, 1190, 10);
+
+        jblUsuario.setBackground(new java.awt.Color(255, 255, 255));
+        jblUsuario.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jblUsuario.setText("Usuario");
+        jPanelNavegacion.add(jblUsuario);
+        jblUsuario.setBounds(968, 15, 220, 30);
 
         jPanelFondo.add(jPanelNavegacion);
         jPanelNavegacion.setBounds(0, 50, 1216, 60);
@@ -259,33 +249,34 @@ public class FrmComandas extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jblNavegacionComandasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblNavegacionComandasMouseClicked
+    private void jPanelSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSalirMouseClicked
         // TODO add your handling code here:
-
-
-    }//GEN-LAST:event_jblNavegacionComandasMouseClicked
-
-    private void jblNavegacionComandas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblNavegacionComandas1MouseClicked
-        // TODO add your handling code here:
-        FrmComandas.jPanelSeccion.removeAll();
-        
-        JPanelComandasGeneral panelGeneral = new JPanelComandasGeneral();
-        
-        panelGeneral.setBounds(0, 0, FrmComandas.jPanelSeccion.getWidth(), FrmComandas.jPanelSeccion.getHeight());
-        FrmComandas.jPanelSeccion.add(panelGeneral);
-
-        FrmComandas.jPanelSeccion.revalidate();
-        FrmComandas.jPanelSeccion.repaint();
-        
-        
-    }//GEN-LAST:event_jblNavegacionComandas1MouseClicked
-
-    private void jblSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblSalirMouseClicked
-        // TODO add your handling code here:
+        usuario = null;
         login.setVisible(true);
         this.dispose();
 
-    }//GEN-LAST:event_jblSalirMouseClicked
+    }//GEN-LAST:event_jPanelSalirMouseClicked
+
+    private void jblConfiguaracionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblConfiguaracionMouseClicked
+        // TODO add your handling code here:
+        FrmPanelAdministrador administrador = new FrmPanelAdministrador(login);
+        administrador.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jblConfiguaracionMouseClicked
+
+    private void jblConfiguaracionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblConfiguaracionMouseEntered
+        // TODO add your handling code here:
+
+        jblConfiguaracion.setIcon(escalarImagen(getClass().getResource("/iconos/configSelect.png"), 32, 32));
+    
+
+
+    }//GEN-LAST:event_jblConfiguaracionMouseEntered
+
+    private void jblConfiguaracionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jblConfiguaracionMouseExited
+        // TODO add your handling code here:
+        jblConfiguaracion.setIcon(escalarImagen(getClass().getResource("/iconos/config.png"), 32, 32));
+    }//GEN-LAST:event_jblConfiguaracionMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
@@ -293,13 +284,11 @@ public class FrmComandas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelEncabezado;
     private javax.swing.JPanel jPanelFondo;
     private javax.swing.JPanel jPanelNavegacion;
+    private javax.swing.JPanel jPanelSalir;
     public static javax.swing.JPanel jPanelSeccion;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel jblNavegacionComandas;
-    private javax.swing.JLabel jblNavegacionComandas1;
-    private javax.swing.JLabel jblNavegacionComandas2;
-    private javax.swing.JLabel jblNavegacionSeparador1;
-    private javax.swing.JLabel jblNavegacionSeparador2;
+    private javax.swing.JLabel jblConfiguaracion;
     private javax.swing.JLabel jblSalir;
+    private javax.swing.JLabel jblUsuario;
     // End of variables declaration//GEN-END:variables
 }

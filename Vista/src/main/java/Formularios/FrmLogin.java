@@ -5,10 +5,32 @@
 package Formularios;
 
 import Entidades.Cajaefectivo;
+import Entidades.Usuario;
+import static Entidades.Usuario_.password;
 import JPA.CajaefectivoJpaController;
+import JPA.RolJpaController;
+import JPA.UsuarioJpaController;
+import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGException;
+import com.kitfox.svg.SVGUniverse;
+import com.sun.tools.javac.Main;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.net.URI;
+import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.mindrot.jbcrypt.BCrypt;
+import utilerias.HintToTextField;
 
 /**
  *
@@ -16,12 +38,113 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class FrmLogin extends javax.swing.JFrame {
 
+    
+    UsuarioJpaController ctrlUsuario = new UsuarioJpaController();
+    RolJpaController ctrlRol = new RolJpaController();
+    
+    
     /**
      * Creates new form FrmLogin
      */
     public FrmLogin() {
         initComponents();
+        
+        cargarDiseno();
+        
     }
+    
+    
+    private void cargarDiseno(){
+    
+       HintToTextField.addHint(txtNombreUsuario, "Nombre de usuario");
+       HintToTextField.addHintContra(pwdContra, "Contraseña");
+
+       jblContraIncorrecta.setVisible(false);
+       jblUsuarioNoExiste.setVisible(false);
+       
+       verificarSiHayUsuarios();
+       
+       cbMostrarContra.setOpaque(false);
+
+       //jLabel1.setIcon(renderSVGToLabel("/iconos/file.svg", jLabel1));
+       
+       
+
+    }
+    
+
+   
+    public ImageIcon renderSVGToLabel(String resourcePath, JLabel label) {
+
+    try {
+        int w = label.getWidth();
+        int h = label.getHeight();
+
+        SVGUniverse universe = new SVGUniverse();
+        URL url = getClass().getResource(resourcePath);
+        URI uri = universe.loadSVG(url);
+        SVGDiagram diagram = universe.getDiagram(uri);
+
+        // ------ OBTENER EL VIEWBOX REAL ------
+        Rectangle2D vb = diagram.getViewRect();
+        double svgW = vb.getWidth();
+        double svgH = vb.getHeight();
+
+        if (svgW == 0 || svgH == 0) {
+            System.out.println("ERROR: SVG viewBox inválido.");
+            return null;
+        }
+
+        // ------ ESCALA AL LABEL ------
+        double scale = Math.min(w / svgW, h / svgH);
+
+        int finalW = (int)(svgW * scale);
+        int finalH = (int)(svgH * scale);
+
+        BufferedImage result = new BufferedImage(finalW, finalH, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+        // Centrar *real* dentro del viewbox:
+        g.translate(-vb.getX(), -vb.getY());
+        g.scale(scale, scale);
+
+        // Renderizar
+        diagram.render(g);
+        g.dispose();
+
+        return new ImageIcon(result);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
+
+
+
+
+    
+    private boolean ValidarContra(String texto, String hashed){
+        return BCrypt.checkpw(texto, hashed);
+    }
+
+    
+    private void verificarSiHayUsuarios(){
+        
+        List <Usuario> listaUsuarios = ctrlUsuario.findUsuarioEntities();
+        
+        if(listaUsuarios == null || listaUsuarios.isEmpty()){
+            ctrlUsuario.generarNuevoPorDefecto();
+            System.out.println("Usuario Nuevo generado por defecto");
+        }
+        
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,36 +156,114 @@ public class FrmLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnAdmin = new javax.swing.JButton();
-        btnAtendiente = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jblFullCup = new javax.swing.JLabel();
+        jblFullCup1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jblContraIncorrecta = new javax.swing.JLabel();
+        txtNombreUsuario = new javax.swing.JTextField();
+        btnNuevaComanda = new javax.swing.JButton();
+        pwdContra = new javax.swing.JPasswordField();
+        jblUsuario2 = new javax.swing.JLabel();
+        jblUsuarioNoExiste = new javax.swing.JLabel();
+        cbMostrarContra = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Full Cup: Login");
         setResizable(false);
         setSize(new java.awt.Dimension(1230, 620));
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setMinimumSize(new java.awt.Dimension(1230, 620));
         jPanel1.setLayout(null);
 
-        btnAdmin.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        btnAdmin.setText("Administrador");
-        btnAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdminActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnAdmin);
-        btnAdmin.setBounds(468, 120, 291, 97);
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(null);
 
-        btnAtendiente.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        btnAtendiente.setText("Atendiente");
-        btnAtendiente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAtendienteActionPerformed(evt);
+        jblFullCup.setBackground(new java.awt.Color(255, 255, 255));
+        jblFullCup.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        jblFullCup.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jblFullCup.setText("Full Cup");
+        jPanel2.add(jblFullCup);
+        jblFullCup.setBounds(70, 220, 380, 50);
+
+        jblFullCup1.setBackground(new java.awt.Color(255, 255, 255));
+        jblFullCup1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jblFullCup1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jblFullCup1.setText("Sistema de Venta");
+        jPanel2.add(jblFullCup1);
+        jblFullCup1.setBounds(70, 320, 380, 50);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/FullCupBanner.png"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        jPanel2.add(jLabel2);
+        jLabel2.setBounds(0, 1, 540, 620);
+
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(0, 0, 540, 620);
+
+        jblContraIncorrecta.setBackground(new java.awt.Color(255, 255, 255));
+        jblContraIncorrecta.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblContraIncorrecta.setForeground(new java.awt.Color(255, 51, 51));
+        jblContraIncorrecta.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jblContraIncorrecta.setText("*Contraseña incorrecta");
+        jPanel1.add(jblContraIncorrecta);
+        jblContraIncorrecta.setBounds(690, 290, 200, 30);
+
+        txtNombreUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtNombreUsuarioMouseClicked(evt);
             }
         });
-        jPanel1.add(btnAtendiente);
-        btnAtendiente.setBounds(470, 320, 291, 97);
+        jPanel1.add(txtNombreUsuario);
+        txtNombreUsuario.setBounds(690, 190, 420, 50);
+
+        btnNuevaComanda.setBackground(new java.awt.Color(17, 24, 39));
+        btnNuevaComanda.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
+        btnNuevaComanda.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevaComanda.setText("Ingresar");
+        btnNuevaComanda.setBorder(null);
+        btnNuevaComanda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaComandaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnNuevaComanda);
+        btnNuevaComanda.setBounds(780, 460, 230, 40);
+
+        pwdContra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pwdContraMouseClicked(evt);
+            }
+        });
+        jPanel1.add(pwdContra);
+        pwdContra.setBounds(690, 322, 420, 50);
+
+        jblUsuario2.setBackground(new java.awt.Color(255, 255, 255));
+        jblUsuario2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jblUsuario2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jblUsuario2.setText("Iniciar Sesion");
+        jPanel1.add(jblUsuario2);
+        jblUsuario2.setBounds(760, 100, 260, 50);
+
+        jblUsuarioNoExiste.setBackground(new java.awt.Color(255, 255, 255));
+        jblUsuarioNoExiste.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jblUsuarioNoExiste.setForeground(new java.awt.Color(255, 51, 51));
+        jblUsuarioNoExiste.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jblUsuarioNoExiste.setText("*El usuario no existe");
+        jPanel1.add(jblUsuarioNoExiste);
+        jblUsuarioNoExiste.setBounds(690, 160, 180, 30);
+
+        cbMostrarContra.setText("Mostrar contraseña");
+        cbMostrarContra.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        cbMostrarContra.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        cbMostrarContra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbMostrarContraActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cbMostrarContra);
+        cbMostrarContra.setBounds(920, 300, 190, 20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,102 +280,109 @@ public class FrmLogin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAtendienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtendienteActionPerformed
-        CajaefectivoJpaController cajaController = new CajaefectivoJpaController();
-        Cajaefectivo cajaAbierta = cajaController.obtenerCajaAbierta();
-
-        if (cajaAbierta == null) {
-            // -----------------------
-            // NO EXISTE CAJA ABIERTA
-            // -----------------------
-            String montoStr = javax.swing.JOptionPane.showInputDialog(
-                    this,
-                    "Ingresa el monto inicial de la caja:",
-                    "Monto Inicial",
-                    javax.swing.JOptionPane.PLAIN_MESSAGE
-            );
-
-            if (montoStr == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Debes ingresar un monto para continuar.");
-                return;
-            }
-
-            float montoInicial;
-            try {
-                montoInicial = Float.parseFloat(montoStr);
-            } catch (NumberFormatException e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Ingresa un valor numérico válido.");
-                return;
-            }
-
-            // Crear nueva caja
-            Cajaefectivo nuevaCaja = new Cajaefectivo();
-            nuevaCaja.setIdCorte((int) (System.currentTimeMillis() % Integer.MAX_VALUE));
-            nuevaCaja.setMontoInicial(montoInicial);
-            nuevaCaja.setEstado((short) 0); // 0 = ABIERTA
-            nuevaCaja.setTipoCorte('X'); // Corte del día
-            nuevaCaja.setIdUsuario(null);
-
-            try {
-                cajaController.create(nuevaCaja);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al crear caja.");
-                return;
-            }
-
-            javax.swing.JOptionPane.showMessageDialog(this, "Caja iniciada correctamente.");
-        } else {
-
-            System.out.println("La caja ya estaba abierta, no se pide monto.");
-        }
-
-      
-        FrmComandas comandas = new FrmComandas(this);
-        comandas.setVisible(true);
-        this.setVisible(false);
-
-    }//GEN-LAST:event_btnAtendienteActionPerformed
-
-    private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
+    private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
 
-        FrmPanelAdministrador admin = new FrmPanelAdministrador(this);
-        admin.setVisible(true);
-        this.setVisible(false);
+        String nombreUsuario = txtNombreUsuario.getText();
+        char[] passwordChars = pwdContra.getPassword();
+        String password = new String(passwordChars);
+                
+        String hashContra = BCrypt.hashpw(password, BCrypt.gensalt());
+        
+        
+        if(ctrlUsuario.existeUsuarioPorNombre(nombreUsuario)){
+            Usuario usuario = ctrlUsuario.iniciarSesion(nombreUsuario, password);
+                
+            if(usuario != null){
+                FrmComandas comandas = new FrmComandas(this, usuario);
+                comandas.setVisible(true);
+                
+                
+                txtNombreUsuario.setText("");
+                pwdContra.setText("");
+                
+                this.setVisible(false);
+            }
+            
+            else{
+                jblContraIncorrecta.setVisible(true);
+            }
+        }
+        else{
+            jblUsuarioNoExiste.setVisible(true);
+        }
+        
+        
+        
 
+    }//GEN-LAST:event_btnNuevaComandaActionPerformed
 
-    }//GEN-LAST:event_btnAdminActionPerformed
+    private void pwdContraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pwdContraMouseClicked
+        // TODO add your handling code here:
+        jblContraIncorrecta.setVisible(false);
+    }//GEN-LAST:event_pwdContraMouseClicked
 
+    private void txtNombreUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNombreUsuarioMouseClicked
+        // TODO add your handling code here:
+        jblUsuarioNoExiste.setVisible(false);
+    }//GEN-LAST:event_txtNombreUsuarioMouseClicked
+
+    private void cbMostrarContraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMostrarContraActionPerformed
+        // TODO add your handling code here:
+        if(cbMostrarContra.isSelected()){
+            pwdContra.setEchoChar((char)0);
+        }
+        else{
+            pwdContra.setEchoChar('*');
+        }
+
+    }//GEN-LAST:event_cbMostrarContraActionPerformed
+
+    
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
+    // Look & Feel
+       try {
+           javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+       } catch (Exception ex) {
+           java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+       }
 
-        try {
-            javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+       // Crear y mostrar el formulario
+       java.awt.EventQueue.invokeLater(new Runnable() {
+           public void run() {
+               FrmLogin login = new FrmLogin();
 
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrmLogin.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(FrmLogin.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(FrmLogin.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(FrmLogin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+               // Cargar icono
+               URL url = login.getClass().getResource("/iconos/cafeIcon.png");
+               if (url != null) {
+                   ImageIcon icon = new ImageIcon(url);
+                   login.setIconImage(icon.getImage());
+               } else {
+                   System.err.println("No se encontró el recurso");
+               }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmLogin().setVisible(true);
-            }
-        });
+               login.setVisible(true);
+           }
+       });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdmin;
-    private javax.swing.JButton btnAtendiente;
+    private javax.swing.JButton btnNuevaComanda;
+    private javax.swing.JCheckBox cbMostrarContra;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jblContraIncorrecta;
+    private javax.swing.JLabel jblFullCup;
+    private javax.swing.JLabel jblFullCup1;
+    private javax.swing.JLabel jblUsuario2;
+    private javax.swing.JLabel jblUsuarioNoExiste;
+    private javax.swing.JPasswordField pwdContra;
+    private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,4 +1,4 @@
-package Formularios;
+package Formularios.BETA;
 
 import Entidades.Comanda;
 import Facades.IFachadaComandasControlador;
@@ -12,19 +12,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
-public class Comandas extends javax.swing.JFrame {
+public class BETAComandas extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     
     
-    FrmListaProductos listaProductos;
+    BETAFrmListaProductos listaProductos;
     
 
     /**
      * Creates new form frmComandas
      */
-    public Comandas() {
+    public BETAComandas() {
         initComponents();
         initCustom();
     }
@@ -150,9 +150,9 @@ public class Comandas extends javax.swing.JFrame {
                 try {
                     
                    
-                   listaProductos = new FrmListaProductos(this, id, false);
+                   listaProductos = new BETAFrmListaProductos(this, id, false);
                    listaProductos.setVisible(true);
-                   Comandas.this.setVisible(false);
+                   BETAComandas.this.setVisible(false);
 
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
@@ -199,9 +199,9 @@ public class Comandas extends javax.swing.JFrame {
                 try {
                     
                    
-                   listaProductos = new FrmListaProductos(this, id, true);
+                   listaProductos = new BETAFrmListaProductos(this, id, true);
                    listaProductos.setVisible(true);
-                   Comandas.this.setVisible(false);
+                   BETAComandas.this.setVisible(false);
 
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error al completar: " + ex.getMessage());
@@ -275,7 +275,6 @@ public class Comandas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Comandas");
-        setPreferredSize(new java.awt.Dimension(1440, 755));
         setResizable(false);
         setSize(new java.awt.Dimension(1440, 775));
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -491,12 +490,12 @@ public class Comandas extends javax.swing.JFrame {
     private void btnNuevaComandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaComandaActionPerformed
         // TODO add your handling code here:
          // Limpiar la sesión anterior
-    FrmListaProductos.comanda = new Comanda();
-    FrmListaProductos.detalleComanda.clear();
-    FrmListaProductos.idComanda = null;
+    BETAFrmListaProductos.comanda = new Comanda();
+    BETAFrmListaProductos.detalleComanda.clear();
+    BETAFrmListaProductos.idComanda = null;
 
     // Abrir nueva ventana
-    listaProductos = new FrmListaProductos(this, null, false);
+    listaProductos = new BETAFrmListaProductos(this, null, false);
     listaProductos.setVisible(true);
     this.setVisible(false);
         

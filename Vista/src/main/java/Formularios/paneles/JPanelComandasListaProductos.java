@@ -14,7 +14,7 @@ import Facades.IFachadaComandasControlador;
 import Facades.IFachadaDetallesComandaControlador;
 import Facades.IFachadaProductoControlador;
 import Formularios.FrmComandas;
-import Formularios.FrmListaProductos;
+import Formularios.BETA.BETAFrmListaProductos;
 import Formularios.paneles.elementos.JPanelComandas;
 import Formularios.paneles.elementos.JPanelExtra;
 import Formularios.paneles.elementos.JPanelProducto;
@@ -856,7 +856,7 @@ public class JPanelComandasListaProductos extends javax.swing.JPanel {
                 volverSeccionAnterior();
 
             } catch (Exception ex) {
-                Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                     "Error al guardar los cambios en la comanda: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);

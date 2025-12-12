@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Formularios;
+package Formularios.BETA;
 
+import Formularios.BETA.BETAComandas;
 import Entidades.Categoria;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
@@ -51,7 +52,7 @@ import utilerias.HintToTextField;
  *
  * @author Sergio Arturo
  */
-public class FrmListaProductos extends javax.swing.JFrame {
+public class BETAFrmListaProductos extends javax.swing.JFrame {
 
     private final IFachadaComandasControlador FComandas = new GestionarComandaControlador();
     private final IFachadaProductoControlador fProducto = new GestionarProductoControlador();
@@ -68,7 +69,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     public static Comanda comanda = new Comanda();
     public static List<Detallecomanda> detalleComanda = new ArrayList<>();
 
-    private Comandas comandas;
+    private BETAComandas comandas;
     FrmDetallesProductos detalle;
 
     static Integer idComanda;
@@ -80,7 +81,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     /**
      * Creates new form FrmListaProductos
      */
-    public FrmListaProductos() {
+    public BETAFrmListaProductos() {
         initComponents();
 
 //        buscarProductos();
@@ -92,7 +93,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
 //        cargarPanelComanda();
     }
 
-    public FrmListaProductos(Comandas comand, Integer idComanda, boolean soloLectura) {
+    public BETAFrmListaProductos(BETAComandas comand, Integer idComanda, boolean soloLectura) {
         initComponents();
 
         this.comandas = comand;
@@ -170,7 +171,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
             cbCategorias.setModel(modelo);
 
         } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -190,7 +191,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
             
         } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         int margenY = 68;
@@ -245,14 +246,14 @@ public class FrmListaProductos extends javax.swing.JFrame {
                 jlabelBotonEliminar.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        int confirm = JOptionPane.showConfirmDialog(FrmListaProductos.this, "¿Seguro que deseas eliminar este item?",
+                        int confirm = JOptionPane.showConfirmDialog(BETAFrmListaProductos.this, "¿Seguro que deseas eliminar este item?",
                                 "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
                         if (confirm == JOptionPane.YES_OPTION) {
                             try {
                                 fDC.eliminarDetallesComandas(detalleComanda.get(id).getIdDetalleComanda());
                                 cargarPanelComanda();
                             } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(FrmListaProductos.this, "Error al eliminar: " + ex.getMessage());
+                                JOptionPane.showMessageDialog(BETAFrmListaProductos.this, "Error al eliminar: " + ex.getMessage());
                                 ex.printStackTrace();
                             }
                         }
@@ -267,14 +268,14 @@ public class FrmListaProductos extends javax.swing.JFrame {
                 public void mouseClicked(MouseEvent e) {
                     FrmDetallesProductos pantallaDetalles;
                     if (soloLectura) {
-                        pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), true);
+                        pantallaDetalles = new FrmDetallesProductos(BETAFrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), true);
 
                     } else {
-                        pantallaDetalles = new FrmDetallesProductos(FrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), false);
+                        pantallaDetalles = new FrmDetallesProductos(BETAFrmListaProductos.this, detalleComanda.get(id), detalleComanda.get(id).getIdProducto(), false);
 
                     }
                     pantallaDetalles.setVisible(true);
-                    FrmListaProductos.this.setVisible(false);
+                    BETAFrmListaProductos.this.setVisible(false);
 
                 }
 
@@ -338,7 +339,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         System.out.println("Se encontraron " + todosLosProductos.size() + " productos");
@@ -435,19 +436,19 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
                             try {
                                 comanda = FComandas.obtenerComanda(idComanda);
-                                detalle = new FrmDetallesProductos(FrmListaProductos.this, comanda, null, producto, soloLectura);
+                                detalle = new FrmDetallesProductos(BETAFrmListaProductos.this, comanda, null, producto, soloLectura);
 
                             } catch (Exception ex) {
-                                Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
                             }
 
                         } else {
-                            detalle = new FrmDetallesProductos(FrmListaProductos.this, null, producto, soloLectura);
+                            detalle = new FrmDetallesProductos(BETAFrmListaProductos.this, null, producto, soloLectura);
                         }
 
                         detalle.setVisible(true);
 
-                        FrmListaProductos.this.setVisible(false);
+                        BETAFrmListaProductos.this.setVisible(false);
 
                     }
                 }
@@ -472,7 +473,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
         try {
             detalleComanda = fDC.obtenerDetallesComandasPorComanda(comanda);
         } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         for (int i = 0; i < detalleComanda.size(); i++) {
@@ -505,7 +506,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
 
             System.out.println("Pantalla actualizada correctamente.");
         } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
                     "Error al refrescar la pantalla: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -951,7 +952,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_cbCategoriasActionPerformed
 
     private void btnGuardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar2ActionPerformed
-        if (FrmListaProductos.comanda != null && !detalleComanda.isEmpty()) {
+        if (BETAFrmListaProductos.comanda != null && !detalleComanda.isEmpty()) {
         try {
             // Reiniciar el total para evitar acumulación en múltiples clics
             this.total = 0f;
@@ -982,34 +983,33 @@ public class FrmListaProductos extends javax.swing.JFrame {
             // El texto debe incluir "Cliente: "
             String descripcion = nombre + ", " + paraLlevar;
 
-            FrmListaProductos.comanda.setDescripcionGeneral(descripcion);
+            BETAFrmListaProductos.comanda.setDescripcionGeneral(descripcion);
 
             // Actualizar el total EN LA BASE DE DATOS (ya trae IVA)
-            FComandas.EditarTotalComanda(FrmListaProductos.idComanda, this.total);
+            FComandas.EditarTotalComanda(BETAFrmListaProductos.idComanda, this.total);
 
-            if (FrmListaProductos.idComanda != null) {
+            if (BETAFrmListaProductos.idComanda != null) {
 
                 // --- MODO EDITAR ---
                 // La comanda ya existe, solo actualizamos la descripción.
                 System.out.println("Guardando descripción en comanda existente ID: " + idComanda);
-                FComandas.EditarDescripcionComanda(FrmListaProductos.idComanda, descripcion);
+                FComandas.EditarDescripcionComanda(BETAFrmListaProductos.idComanda, descripcion);
             }
 
             // IMPRIMIR **********************************************
             // Imprimir ticket
-            FrmListaProductos.comanda.setDetallecomandaList(
-                fDC.obtenerDetallesComandasPorComanda(FrmListaProductos.comanda)
+            BETAFrmListaProductos.comanda.setDetallecomandaList(fDC.obtenerDetallesComandasPorComanda(BETAFrmListaProductos.comanda)
             );
             
             System.out.println("Asignando fecha a comanda");
-            FrmListaProductos.comanda.setFechaHoracomanda(new Date());
+            BETAFrmListaProductos.comanda.setFechaHoracomanda(new Date());
             System.out.println("Imprimir lista detalles comanda: " + detalleComanda);
 
             PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
             if (defaultPrinter != null) {
                 PrinterJob job = PrinterJob.getPrinterJob();
                 job.setPrintService(defaultPrinter);
-                job.setPrintable(new TicketPrinter(FrmListaProductos.comanda)); 
+                job.setPrintable(new TicketPrinter(BETAFrmListaProductos.comanda)); 
                 try {
                     job.print();
                 }
@@ -1029,7 +1029,7 @@ public class FrmListaProductos extends javax.swing.JFrame {
             this.dispose();
 
         } catch (Exception ex) {
-            Logger.getLogger(FrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BETAFrmListaProductos.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
                     "Error al guardar los cambios en la comanda: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);

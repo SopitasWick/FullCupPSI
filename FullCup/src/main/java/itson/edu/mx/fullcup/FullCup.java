@@ -5,6 +5,11 @@
 package itson.edu.mx.fullcup;
 
 import Formularios.FrmLogin;
+import com.sun.tools.javac.Main;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
+import javax.swing.UIManager;
 
 /**
  *
@@ -13,6 +18,13 @@ import Formularios.FrmLogin;
 public class FullCup {
 
     public static void main(String[] args) {
+        
+        
+        
+        
+        
+        
+        
           FrmLogin viston = new FrmLogin();
           viston.setVisible(true);
     }

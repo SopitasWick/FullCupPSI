@@ -45,11 +45,9 @@ public class TicketPrinter implements Printable {
         y += 20;
 
         // ===== INFO GENERAL =====
-        g2d.drawString("Comanda ID: " + comanda.getIdComanda(), 10, y);
+        g2d.drawString("Pedido ID: " + comanda.getIdComanda(), 10, y);
         y += 15;
         g2d.drawString("Fecha: " + sdf.format(new Date()), 10, y);
-        y += 15;
-        g2d.drawString("Estado: " + comanda.getEstadoComanda(), 10, y);
         y += 15;
         g2d.drawString("------------------------------------", 10, y);
         y += 15;

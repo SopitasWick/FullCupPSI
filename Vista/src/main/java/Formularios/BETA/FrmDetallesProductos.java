@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Formularios;
+package Formularios.BETA;
 
+import Formularios.BETA.BETAFrmListaProductos;
 import Entidades.Comanda;
 import Entidades.Detallecomanda;
 import Entidades.Extra;
@@ -20,8 +21,8 @@ import Facades.IFachadaExtrasControlador;
 import Facades.IFachadaLecheControlador;
 import Facades.IFachadaProductoControlador;
 import Facades.IFachadaTamanoVasosControlador;
-import static Formularios.FrmListaProductos.comanda;
-import static Formularios.FrmListaProductos.detalleComanda;
+import static Formularios.BETA.BETAFrmListaProductos.comanda;
+import static Formularios.BETA.BETAFrmListaProductos.detalleComanda;
 import Formularios.paneles.elementos.JPanelExtra;
 import Implementaciones.GestionarCategoriaControlador;
 import Implementaciones.GestionarComandaControlador;
@@ -95,7 +96,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     Extra extrao = null;
     
     
-    FrmListaProductos pantallaProductos;
+    BETAFrmListaProductos pantallaProductos;
     
     
     Detallecomanda detalle;
@@ -117,7 +118,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     }
     
     
-    public FrmDetallesProductos(FrmListaProductos pantallaProductos, Detallecomanda detalle, Producto producto, boolean soloLectura) {
+    public FrmDetallesProductos(BETAFrmListaProductos pantallaProductos, Detallecomanda detalle, Producto producto, boolean soloLectura) {
         initComponents();
         
         
@@ -156,7 +157,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
     }
     
     
-    public FrmDetallesProductos(FrmListaProductos pantallaProductos, Comanda comanda, Detallecomanda detalle, Producto producto, boolean soloLectura) {
+    public FrmDetallesProductos(BETAFrmListaProductos pantallaProductos, Comanda comanda, Detallecomanda detalle, Producto producto, boolean soloLectura) {
         initComponents();
         
         
@@ -1506,15 +1507,15 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         
         try{
                 
-            FrmListaProductos.comanda.setEstadoComanda("Abierta");
-            FrmListaProductos.comanda.setFechaHoracomanda(new Date());
-            FrmListaProductos.comanda.setTotalComanda(Float.valueOf(txtTotal.getText()));    
+            BETAFrmListaProductos.comanda.setEstadoComanda("Abierta");
+            BETAFrmListaProductos.comanda.setFechaHoracomanda(new Date());
+            BETAFrmListaProductos.comanda.setTotalComanda(Float.valueOf(txtTotal.getText()));    
                     
-            FComandas.GuardarComanda(FrmListaProductos.comanda);
+            FComandas.GuardarComanda(BETAFrmListaProductos.comanda);
                     
-            FrmListaProductos.idComanda = FrmListaProductos.comanda.getIdComanda(); 
+            BETAFrmListaProductos.idComanda = BETAFrmListaProductos.comanda.getIdComanda(); 
             
-            comanda = FrmListaProductos.comanda;
+            comanda = BETAFrmListaProductos.comanda;
             
         }
               
@@ -1647,7 +1648,7 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
                 
             }
 
-            FrmListaProductos.comanda = detalleCoEditada.getIdComanda();
+            BETAFrmListaProductos.comanda = detalleCoEditada.getIdComanda();
             pantallaProductos.cargarPanelComanda();
             pantallaProductos.setVisible(true);
             this.dispose();
@@ -1770,7 +1771,6 @@ public class FrmDetallesProductos extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Comanda: Detalles del Producto");
         setMinimumSize(new java.awt.Dimension(1230, 620));
-        setPreferredSize(new java.awt.Dimension(1230, 720));
         setResizable(false);
         setSize(new java.awt.Dimension(1230, 620));
         getContentPane().setLayout(null);
